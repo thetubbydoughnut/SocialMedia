@@ -1,31 +1,36 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import io from 'socket.io-client';
 import './Messenger.css';
+
+const socket = io('http://localhost:9000'); // Ensure this matches your server URL and port
 
 const Messenger = () => {
     const [messages, setMessages] = useState([]);
     const [newMessage, setNewMessage] = useState('');
 
     useEffect(() => {
-        // Fetch messages from the server
-        axios.get('/messages')
-            .then(response => setMessages(response.data))
-            .catch(error => console.error('Error fetching messages:', error));
+        console.log('Messenger component mounted');
+        socket.on('receiveMessage', (message) => {
+            console.log('Message received:', message);
+            setMessages((prevMessages) => [...prevMessages, message]);
+        });
+
+        return () => {
+            socket.off('receiveMessage');
+        };
     }, []);
 
     const sendMessage = () => {
         const message = {
             sender: 'User1', // Replace with actual sender
             receiver: 'User2', // Replace with actual receiver
-            content: newMessage
+            content: newMessage,
+            timestamp: new Date()
         };
 
-        axios.post('/messages', message)
-            .then(response => {
-                setMessages([...messages, response.data]);
-                setNewMessage('');
-            })
-            .catch(error => console.error('Error sending message:', error));
+        console.log('Sending message:', message);
+        socket.emit('sendMessage', message);
+        setNewMessage('');
     };
 
     return (

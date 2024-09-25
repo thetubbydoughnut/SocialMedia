@@ -1,18 +1,17 @@
 const express = require('express');
 const router = express.Router();
-
-let messages = []; // In-memory storage for messages
+const Message = require('../models/messageModel');
 
 // Get all messages
-router.get('/', (req, res) => {
+router.get('/', async (req, res) => {
+    const messages = await Message.findAll();
     res.json(messages);
 });
 
 // Send a new message
-router.post('/', (req, res) => {
-    const { sender, receiver, content } = req.body;
-    const newMessage = { sender, receiver, content, timestamp: new Date() };
-    messages.push(newMessage);
+router.post('/', async (req, res) => {
+    const { senderId, receiverId, content } = req.body;
+    const newMessage = await Message.create({ senderId, receiverId, content });
     res.status(201).json(newMessage);
 });
 
