@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import HamburgerMenu from '../HamburgerMenu/HamburgerMenu';
 import { useTheme } from '../../ThemeContext';
@@ -8,18 +8,23 @@ const Header = () => {
   const { theme, toggleTheme } = useTheme();
   const navigate = useNavigate();
   const token = localStorage.getItem('token');
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   const handleLogout = () => {
     localStorage.removeItem('token');
     navigate('/login');
   };
 
+  const handleMenuToggle = (isOpen) => {
+    setIsMenuOpen(isOpen);
+  };
+
   return (
     <header className="header">
-      <HamburgerMenu />
+      <HamburgerMenu onToggle={handleMenuToggle} />
       {token ? (
         <>
-          <ul className="nav-links">
+          <ul className={`nav-links ${isMenuOpen ? 'hidden' : ''}`}>
             <li><Link to="/">Home</Link></li>
             <li><Link to="/newsfeed">News Feed</Link></li>
             <li><Link to="/marketplace">Marketplace</Link></li>

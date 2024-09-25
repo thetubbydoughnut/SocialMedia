@@ -1,8 +1,16 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { getImageOrPlaceholder } from '../../utils/imageUtils';
 import './Profile.css';
+import FriendsList from '../FriendsList/FriendsList';
+import Modal from '../Modal/Modal';
 
 const Profile = () => {
+    const [showFriends, setShowFriends] = useState(false);
+
+    const toggleFriendsList = () => {
+        setShowFriends(!showFriends);
+    };
+
     const coverPhoto = getImageOrPlaceholder('/path/to/cover/photo.jpg', 'https://via.placeholder.com/150');
     const profilePhoto = getImageOrPlaceholder('/path/to/profile/photo.jpg', 'https://via.placeholder.com/150');
 
@@ -21,7 +29,7 @@ const Profile = () => {
             <div className="profile__body">
                 <div className="profile__sidebar">
                     <div className="profile__sidebarOption">About</div>
-                    <div className="profile__sidebarOption">Friends</div>
+                    <div className="profile__sidebarOption" onClick={toggleFriendsList}>Friends</div>
                     <div className="profile__sidebarOption">Photos</div>
                     <div className="profile__sidebarOption">More</div>
                 </div>
@@ -30,6 +38,14 @@ const Profile = () => {
                     {/* User's posts */}
                 </div>
             </div>
+            <button onClick={toggleFriendsList} className="toggle-friends-button">
+                {showFriends ? 'Hide Friends' : 'Show Friends'}
+            </button>
+            {showFriends && (
+                <Modal onClose={toggleFriendsList}>
+                    <FriendsList />
+                </Modal>
+            )}
         </div>
     );
 };

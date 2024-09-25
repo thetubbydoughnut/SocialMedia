@@ -28,6 +28,10 @@
     gap: 1rem;
 }
 
+.nav-links.hidden {
+    display: none;
+}
+
 .nav-links a {
     color: white;
     text-decoration: none;
