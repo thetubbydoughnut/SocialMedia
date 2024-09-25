@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import axiosInstance from '../../utils/axiosInstance';
 import './Register.css';
 
 const Register = () => {
@@ -14,14 +14,14 @@ const Register = () => {
         e.preventDefault();
         setError('');
         try {
-            const response = await axios.post('http://localhost:9000/auth/register', { username, email, password });
+            const response = await axiosInstance.post('/auth/register', { username, email, password });
             localStorage.setItem('token', response.data.token);
-            navigate('/login');
+            navigate('/'); // Redirect to home or dashboard after registration
         } catch (error) {
             if (error.response && error.response.data && error.response.data.message) {
                 setError(error.response.data.message);
             } else {
-                setError('Registration failed');
+                setError('Registration failed. Please try again.');
             }
             console.error('Registration failed:', error);
         }
@@ -37,23 +37,26 @@ const Register = () => {
                     placeholder="Username"
                     value={username}
                     onChange={(e) => setUsername(e.target.value)}
+                    required
                 />
                 <input
                     type="email"
                     placeholder="Email"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
+                    required
                 />
                 <input
                     type="password"
                     placeholder="Password"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
+                    required
                 />
                 <button type="submit">Register</button>
             </form>
         </div>
     );
-};
+}
 
 export default Register;

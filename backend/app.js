@@ -1,4 +1,4 @@
-require('dotenv').config(); // Add this line at the top
+require('dotenv').config(); // Load environment variables
 
 const express = require('express');
 const cors = require('cors');
@@ -9,8 +9,9 @@ const loggerMiddleware = require('./middleware/logger');
 const authMiddleware = require('./middleware/authMiddleware');
 const errorHandler = require('./middleware/errorHandler');
 const bodyParser = require('body-parser');
-const path = require('path'); // Import the path module
+const path = require('path');
 
+// Import Routers
 const homeRouter = require('./routes/homeRouter');
 const profileRouter = require('./routes/profileRouter');
 const newsfeedRouter = require('./routes/newsfeedRouter');
@@ -23,6 +24,7 @@ const chatsRouter = require('./routes/chatsRouter');
 
 const app = express();
 const server = http.createServer(app);
+
 const io = new Server(server, {
     cors: {
         origin: "http://localhost:3000", // Ensure this matches your frontend URL
@@ -30,10 +32,19 @@ const io = new Server(server, {
     },
 });
 
+// Socket.io Connection Handling
 io.on('connection', (socket) => {
-    console.log('a user connected');
+    console.log('A user connected');
+
+    // Handle events as needed
     socket.on('disconnect', () => {
-        console.log('user disconnected');
+        console.log('User disconnected');
+    });
+
+    // Example: Listen for sending messages
+    socket.on('sendMessage', (message) => {
+        // Broadcast the message to other connected clients
+        socket.broadcast.emit('message', message);
     });
 });
 
@@ -57,9 +68,10 @@ app.use('/chats', chatsRouter);
 // Serve static files from the uploads directory
 app.use('/uploads', express.static(path.join(__dirname, '../uploads')));
 
-// Error handling middleware
+// Error handling middleware (should be after all other app.use())
 app.use(errorHandler);
 
+// Start Server
 const PORT = process.env.PORT || 9000;
 
 sequelize.sync().then(() => {
@@ -68,6 +80,7 @@ sequelize.sync().then(() => {
     });
 });
 
+// Graceful Shutdown
 process.on('SIGINT', () => {
     console.log('Shutting down server...');
     server.close(() => {

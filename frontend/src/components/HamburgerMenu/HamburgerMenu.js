@@ -1,12 +1,11 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
+import { useSelector } from 'react-redux';
 import './HamburgerMenu.css';
-import { useUser } from '../../UserContext';
 
 const HamburgerMenu = ({ onToggle }) => {
     const [isOpen, setIsOpen] = useState(false);
-
-    const username = useUser();
+    const user = useSelector((state) => state.user.user);
 
     const toggleMenu = () => {
         setIsOpen(!isOpen);
@@ -24,7 +23,7 @@ const HamburgerMenu = ({ onToggle }) => {
                         <li><Link to="/newsfeed" onClick={toggleMenu}>News Feed</Link></li>
                         <li><Link to="/marketplace" onClick={toggleMenu}>Marketplace</Link></li>
                         <li><Link to="/watch" onClick={toggleMenu}>Watch</Link></li>
-                        <li><Link to={`/profile/${username}`} onClick={toggleMenu}>Profile</Link></li>
+                        {user && <li><Link to={`/profile/${user.id}`} onClick={toggleMenu}>Profile</Link></li>}
                         <li><Link to="/messenger" onClick={toggleMenu}>Messenger</Link></li>
                     </ul>
                 </nav>

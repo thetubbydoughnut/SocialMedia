@@ -4,22 +4,29 @@ import './Chat.css';
 
 const Chat = ({ chatId }) => {
     const [chat, setChat] = useState(null);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
 
     useEffect(() => {
         const fetchChat = async () => {
             try {
+                setLoading(true);
                 const response = await axios.get(`http://localhost:9000/api/chats/${chatId}`);
                 setChat(response.data);
+                setError(null);
             } catch (error) {
                 console.error('Error fetching chat:', error);
+                setError('Failed to fetch chat data');
+            } finally {
+                setLoading(false);
             }
         };
         fetchChat();
     }, [chatId]);
 
-    if (!chat) {
-        return <div>Loading...</div>;
-    }
+    if (loading) return <div>Loading chat...</div>;
+    if (error) return <div>{error}</div>;
+    if (!chat) return <div>Chat not found</div>;
 
     return (
         <div className="chat">

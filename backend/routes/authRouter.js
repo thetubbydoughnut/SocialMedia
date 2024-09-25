@@ -1,44 +1,62 @@
 const express = require('express');
 const jwt = require('jsonwebtoken');
-const User = require('../models/userModel');
+const bcrypt = require('bcryptjs');
+const User = require('../models/userModel'); // Adjust the path as needed
 const router = express.Router();
 
-router.post('/login', async (req, res, next) => {
-    const { username, password } = req.body;
+// User Registration
+router.post('/register', async (req, res) => {
     try {
-        const user = await User.findOne({ where: { username } });
-        if (!user || !(await user.comparePassword(password))) {
-            const error = new Error('Invalid credentials');
-            error.statusCode = 401;
-            throw error;
+        const { username, email, password } = req.body;
+
+        // Check if user already exists
+        let user = await User.findOne({ where: { email } });
+        if (user) {
+            return res.status(400).json({ message: 'User already exists' });
+        }
+
+        // Create new user
+        user = await User.create({
+            username,
+            email,
+            password
+        });
+
+        // Hash password
+        const salt = await bcrypt.genSalt(10);
+        user.password = await bcrypt.hash(password, salt);
+        await user.save(); // Save the hashed password
+
+        // Create and return JWT token
+        const token = jwt.sign({ userId: user.id }, process.env.JWT_SECRET, { expiresIn: '1h' });
+
+        res.status(201).json({ token });
+    } catch (err) {
+        console.error(err.message);
+        res.status(500).send('Server error');
+    }
+});
+
+// User Login
+router.post('/login', async (req, res, next) => {
+    const { email, password } = req.body;
+    try {
+        const user = await User.findOne({ where: { email } });
+        if (!user) {
+            console.error('User not found');
+            return res.status(401).json({ message: 'Invalid credentials' });
+        }
+
+        const isMatch = await bcrypt.compare(password, user.password);
+        if (!isMatch) {
+            console.error('Invalid password');
+            return res.status(401).json({ message: 'Invalid credentials' });
         }
 
         const token = jwt.sign({ userId: user.id }, process.env.JWT_SECRET, { expiresIn: '1h' });
         res.json({ token });
     } catch (error) {
-        next(error);
-    }
-});
-
-router.post('/register', async (req, res, next) => {
-    const { username, email, password } = req.body;
-    if (!username || !email || !password) {
-        const error = new Error('Username, email, and password are required');
-        error.statusCode = 400;
-        return next(error);
-    }
-    try {
-        const existingUser = await User.findOne({ where: { username } });
-        if (existingUser) {
-            const error = new Error('Username already exists');
-            error.statusCode = 400;
-            throw error;
-        }
-
-        const user = await User.create({ username, email, password });
-        const token = jwt.sign({ userId: user.id }, process.env.JWT_SECRET, { expiresIn: '1h' });
-        res.status(201).json({ token });
-    } catch (error) {
+        console.error('Login error:', error);
         next(error);
     }
 });

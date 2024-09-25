@@ -1,10 +1,10 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { useUser } from '../../UserContext';
+import { useSelector } from 'react-redux';
 import './Sidebar.css';
 
 const Sidebar = () => {
-    const user = useUser();
+    const user = useSelector((state) => state.user.user);
 
     if (!user) {
         return <div>Loading...</div>;
