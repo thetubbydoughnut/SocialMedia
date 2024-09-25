@@ -1,10 +1,67 @@
 .messenger {
     display: flex;
-    flex-direction: column;
     height: 100vh;
-    padding: 1rem;
     background-color: #f7f7f7;
     font-family: 'Arial', sans-serif;
+}
+
+.chat-list-container {
+    width: 25%;
+    padding: 1rem;
+    background-color: #fff;
+    border-right: 1px solid #ddd;
+    overflow-y: auto;
+    margin-left: 20px;
+}
+
+.chat-list {
+    list-style: none;
+    padding: 0;
+    
+}
+
+.chat-list-item {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    margin-bottom: 1rem;
+    padding: 0.5rem;
+    background-color: #f9f9f9;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.chat-participant {
+    display: flex;
+    align-items: center;
+    margin-bottom: 0.5rem;
+}
+
+.chat-participant-picture {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    margin-right: 0.5rem;
+}
+
+.chat-link {
+    align-self: flex-end;
+    text-decoration: none;
+    color: #007bff;
+    font-weight: bold;
+}
+
+.chat-link:hover {
+    text-decoration: underline;
+}
+
+.chat-container {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    padding: 1rem;
+    overflow-y: auto;
+    
 }
 
 .messages {
@@ -25,8 +82,28 @@
     color: #00796b;
 }
 
-.message strong {
-    color: #004d40;
+.message--sent {
+    align-self: flex-end;
+    background-color: #e0f7fa;
+}
+
+.message--received {
+    align-self: flex-start;
+    background-color: #fff;
+}
+
+.message-sender {
+    font-weight: bold;
+}
+
+.message-text {
+    margin-top: 0.5rem;
+}
+
+.message-timestamp {
+    margin-top: 0.5rem;
+    font-size: 0.8rem;
+    color: #888;
 }
 
 .message-input {

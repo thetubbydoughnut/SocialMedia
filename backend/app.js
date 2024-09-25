@@ -18,6 +18,7 @@ const watchRouter = require('./routes/watchRouter');
 const messageRouter = require('./routes/messageRouter');
 const authRouter = require('./routes/authRouter');
 const postsRouter = require('./routes/postsRouter');
+const chatsRouter = require('./routes/chatsRouter');
 
 const app = express();
 const server = http.createServer(app);
@@ -43,6 +44,7 @@ app.use('/marketplace', marketplaceRouter);
 app.use('/watch', watchRouter);
 app.use('/messages', messageRouter);
 app.use('/api/posts', postsRouter);
+app.use('/api/chats', chatsRouter);
 
 // Error handling middleware
 app.use(errorHandler);
