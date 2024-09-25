@@ -4,6 +4,20 @@
     margin-left: 20px;
 }
 
+.marketplace__filter {
+    margin-bottom: 2rem;
+}
+
+.marketplace__filter label {
+    margin-right: 1rem;
+}
+
+.marketplace__filter select {
+    padding: 0.5rem;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
 .marketplace__form {
     display: flex;
     flex-direction: column;
@@ -12,7 +26,8 @@
 }
 
 .marketplace__form input,
-.marketplace__form textarea {
+.marketplace__form textarea,
+.marketplace__form select {
     padding: 0.5rem;
     border: 1px solid #ccc;
     border-radius: 5px;

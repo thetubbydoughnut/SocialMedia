@@ -2,37 +2,53 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import './Marketplace.css';
 
+const categories = ['All', 'Sports', 'Electronics', 'Furniture', 'Clothing'];
+
 const Marketplace = () => {
     const [items, setItems] = useState([]);
     const [newItem, setNewItem] = useState({
         name: '',
         image: '',
         price: '',
-        description: ''
+        description: '',
+        category: 'All'
     });
+    const [selectedCategory, setSelectedCategory] = useState('All');
 
     useEffect(() => {
-        axios.get('http://localhost:9000/api/posts')
-            .then(response => setItems(response.data))
-            .catch(error => console.error('Error fetching posts:', error));
-    }, []);
+        const fetchItems = async () => {
+            try {
+                const response = await axios.get('http://localhost:9000/api/posts', {
+                    params: { category: selectedCategory !== 'All' ? selectedCategory : undefined }
+                });
+                setItems(response.data);
+            } catch (error) {
+                console.error('Error fetching posts:', error);
+            }
+        };
+        fetchItems();
+    }, [selectedCategory]);
 
     const handleInputChange = (e) => {
         const { name, value } = e.target;
         setNewItem({ ...newItem, [name]: value });
     };
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        axios.post('http://localhost:9000/api/posts', newItem)
-            .then(response => setItems([...items, response.data]))
-            .catch(error => console.error('Error creating post:', error));
-        setNewItem({
-            name: '',
-            image: '',
-            price: '',
-            description: ''
-        });
+        try {
+            const response = await axios.post('http://localhost:9000/api/posts', newItem);
+            setItems([...items, response.data]);
+            setNewItem({
+                name: '',
+                image: '',
+                price: '',
+                description: '',
+                category: 'All'
+            });
+        } catch (error) {
+            console.error('Error creating post:', error);
+        }
     };
 
     const handleMessage = (user) => {
@@ -42,6 +58,18 @@ const Marketplace = () => {
     return (
         <div className="marketplace">
             <h1>Marketplace</h1>
+            <div className="marketplace__filter">
+                <label htmlFor="category">Filter by Category:</label>
+                <select
+                    id="category"
+                    value={selectedCategory}
+                    onChange={(e) => setSelectedCategory(e.target.value)}
+                >
+                    {categories.map(category => (
+                        <option key={category} value={category}>{category}</option>
+                    ))}
+                </select>
+            </div>
             <form className="marketplace__form" onSubmit={handleSubmit}>
                 <input
                     type="text"
@@ -74,6 +102,16 @@ const Marketplace = () => {
                     placeholder="Description"
                     required
                 />
+                <select
+                    name="category"
+                    value={newItem.category}
+                    onChange={handleInputChange}
+                    required
+                >
+                    {categories.map(category => (
+                        <option key={category} value={category}>{category}</option>
+                    ))}
+                </select>
                 <button type="submit">Create Post</button>
             </form>
             <div className="marketplace__items">

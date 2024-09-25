@@ -11,7 +11,8 @@ let posts = [
         name: 'Mountain Bike',
         image: 'https://via.placeholder.com/150',
         price: '$200',
-        description: 'A great mountain bike for all terrains.'
+        description: 'A great mountain bike for all terrains.',
+        category: 'Sports'
     },
     {
         id: 2,
@@ -22,7 +23,8 @@ let posts = [
         name: 'Laptop',
         image: 'https://via.placeholder.com/150',
         price: '$800',
-        description: 'A powerful laptop for all your needs.'
+        description: 'A powerful laptop for all your needs.',
+        category: 'Electronics'
     },
     {
         id: 3,
@@ -33,13 +35,20 @@ let posts = [
         name: 'Smartphone',
         image: 'https://via.placeholder.com/150',
         price: '$500',
-        description: 'A latest model smartphone with all features.'
+        description: 'A latest model smartphone with all features.',
+        category: 'Electronics'
     }
 ];
 
-// Get all posts
+// Get all posts or filter by category
 router.get('/', (req, res) => {
-    res.json(posts);
+    const { category } = req.query;
+    if (category) {
+        const filteredPosts = posts.filter(post => post.category === category);
+        res.json(filteredPosts);
+    } else {
+        res.json(posts);
+    }
 });
 
 // Create a new post
