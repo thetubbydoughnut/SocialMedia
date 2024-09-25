@@ -24,7 +24,7 @@ const Header = () => {
 
   return (
     <header className="header">
-      <HamburgerMenu onToggle={handleMenuToggle} />
+      <HamburgerMenu onToggle={handleMenuToggle} username={username} />
       {token ? (
         <>
           <ul className={`nav-links ${isMenuOpen ? 'hidden' : ''}`}>

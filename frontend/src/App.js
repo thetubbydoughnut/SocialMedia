@@ -12,6 +12,7 @@ import Messenger from './components/Messenger/Messenger';
 import Login from './components/Login/Login';
 import PrivateRoute from './components/PrivateRoutes/PrivateRoute';
 import Register from './components/Register/Register';
+import { UserProvider } from '../src/UserContext';
 
 function App() {
     const { theme } = useTheme();
@@ -22,18 +23,20 @@ function App() {
 
     return (
         <Router>
-            <Header />
-            <Routes>
-                <Route path="/login" element={<Login />} />
-                <Route path="/register" element={<Register />} />
-                <Route path="/" element={<PrivateRoute><Home /></PrivateRoute>} />
-                <Route path="/newsfeed" element={<PrivateRoute><NewsFeed /></PrivateRoute>} />
-                <Route path="/marketplace" element={<PrivateRoute><Marketplace /></PrivateRoute>} />
-                <Route path="/watch" element={<PrivateRoute><Watch /></PrivateRoute>} />
-                <Route path="/profile/:username/*" element={<PrivateRoute><Profile /></PrivateRoute>} />
-                <Route path="/messenger" element={<PrivateRoute><Messenger /></PrivateRoute>} />
-                <Route path="/messenger/:id" element={<PrivateRoute><Messenger /></PrivateRoute>} />
-            </Routes>
+            <UserProvider>
+                <Header />
+                <Routes>
+                    <Route path="/login" element={<Login />} />
+                    <Route path="/register" element={<Register />} />
+                    <Route path="/" element={<PrivateRoute><Home /></PrivateRoute>} />
+                    <Route path="/newsfeed" element={<PrivateRoute><NewsFeed /></PrivateRoute>} />
+                    <Route path="/marketplace" element={<PrivateRoute><Marketplace /></PrivateRoute>} />
+                    <Route path="/watch" element={<PrivateRoute><Watch /></PrivateRoute>} />
+                    <Route path="/profile/:username/*" element={<PrivateRoute><Profile /></PrivateRoute>} />
+                    <Route path="/messenger" element={<PrivateRoute><Messenger /></PrivateRoute>} />
+                    <Route path="/messenger/:id" element={<PrivateRoute><Messenger /></PrivateRoute>} />
+                </Routes>
+            </UserProvider>
         </Router>
     );
 }
