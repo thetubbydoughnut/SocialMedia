@@ -1,3 +1,5 @@
+require('dotenv').config(); // Add this line at the top
+
 const express = require('express');
 const cors = require('cors');
 const http = require('http');
@@ -44,8 +46,16 @@ app.use(errorHandler);
 // Sync database and start server
 sequelize.sync().then(() => {
     console.log('Database synced');
-    const PORT = process.env.PORT || 9000; // Use environment variable or default to 900
+    const PORT = process.env.PORT || 9000; // Use environment variable or default to 9000
     server.listen(PORT, () => {
         console.log(`Server is running on port ${PORT}`);
+    });
+});
+
+process.on('SIGINT', () => {
+    console.log('Shutting down server...');
+    server.close(() => {
+        console.log('Server shut down');
+        process.exit(0);
     });
 });
