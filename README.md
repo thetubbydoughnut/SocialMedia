@@ -1,4 +1,5 @@
 # SocialMedia
+
 I am creating a social media app.
 
 THIS IS A WORK IN PROGRESS.
@@ -26,8 +27,11 @@ THIS IS A WORK IN PROGRESS.
 - React Router
 - React Hook Form
 - Yup
-- Nodemon
+- Axios
+- Socket.io
+- FontAwesome
 - Dotenv
+- Web Vitals
 
 ## Installation
 1. Clone the repository:

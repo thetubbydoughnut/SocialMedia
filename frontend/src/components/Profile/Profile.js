@@ -38,9 +38,6 @@ const Profile = () => {
                     {/* User's posts */}
                 </div>
             </div>
-            <button onClick={toggleFriendsList} className="toggle-friends-button">
-                {showFriends ? 'Hide Friends' : 'Show Friends'}
-            </button>
             {showFriends && (
                 <Modal onClose={toggleFriendsList}>
                     <FriendsList />
