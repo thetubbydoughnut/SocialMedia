@@ -12,6 +12,7 @@ const Navbar = () => {
                 <li><Link to="/newsfeed">News Feed</Link></li>
                 <li><Link to="/marketplace">Marketplace</Link></li>
                 <li><Link to="/watch">Watch</Link></li>
+                <li><Link to="/profile">Profile</Link></li>
             </ul>
         </nav>
     );

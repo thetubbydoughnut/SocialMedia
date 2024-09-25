@@ -1,11 +1,19 @@
 import React from 'react';
+import Header from '../Header/Header';
+import Sidebar from '../Sidebar/Sidebar';
+import NewsFeed from '../NewsFeed/NewsFeed';
+import Widgets from '../Widgets/Widgets';
 import './Home.css';
 
 const Home = () => {
     return (
         <div className="home">
-            <h1>Home Page</h1>
-            {/* Home page content */}
+            <Header />
+            <div className="home__body">
+                <Sidebar />
+                <NewsFeed />
+                <Widgets />
+            </div>
         </div>
     );
 };
