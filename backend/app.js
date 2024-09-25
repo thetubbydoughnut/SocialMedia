@@ -5,6 +5,7 @@ const { Server } = require('socket.io');
 const sequelize = require('./config/database');
 const loggerMiddleware = require('./middleware/logger');
 const authMiddleware = require('./middleware/auth');
+const errorHandler = require('./middleware/errorHandler');
 
 const homeRouter = require('./routes/homeRouter');
 const profileRouter = require('./routes/profileRouter');
@@ -36,6 +37,9 @@ app.use('/newsfeed', newsfeedRouter);
 app.use('/marketplace', marketplaceRouter);
 app.use('/watch', watchRouter);
 app.use('/messages', messageRouter);
+
+// Error handling middleware
+app.use(errorHandler);
 
 // Sync database and start server
 sequelize.sync().then(() => {
