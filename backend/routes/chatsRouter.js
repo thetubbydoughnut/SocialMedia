@@ -22,13 +22,12 @@ router.get('/', (req, res) => {
     res.json(chats);
 });
 
-// Get a specific chat by ID
 router.get('/:id', (req, res) => {
     const chat = chats.find(c => c.id === parseInt(req.params.id));
     if (chat) {
         res.json(chat);
     } else {
-        res.status(404).send('Chat not found');
+        res.status(404).json({ message: 'Chat not found' });
     }
 });
 

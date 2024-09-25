@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import HamburgerMenu from '../HamburgerMenu/HamburgerMenu';
 import { useTheme } from '../../ThemeContext';
+import { useUser } from '../../UserContext';
 import './Navbar.css';
 
 const Header = () => {
@@ -10,8 +11,7 @@ const Header = () => {
   const token = localStorage.getItem('token');
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
-  // Replace this with actual logic to get the current user's username
-  const username = 'currentUsername';
+  const username = useUser();
 
   const handleLogout = () => {
     localStorage.removeItem('token');

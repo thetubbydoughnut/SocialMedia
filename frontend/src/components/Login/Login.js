@@ -15,7 +15,7 @@ const Login = () => {
         try {
             const response = await axios.post('http://localhost:9000/auth/login', { username, password });
             localStorage.setItem('token', response.data.token);
-            navigate('/profile');
+            navigate('/');
         } catch (error) {
             if (error.response && error.response.data && error.response.data.message) {
                 setError(error.response.data.message);

@@ -5,6 +5,7 @@ import './Register.css';
 
 const Register = () => {
     const [username, setUsername] = useState('');
+    const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
     const navigate = useNavigate();
@@ -13,9 +14,9 @@ const Register = () => {
         e.preventDefault();
         setError('');
         try {
-            const response = await axios.post('http://localhost:9000/auth/register', { username, password });
+            const response = await axios.post('http://localhost:9000/auth/register', { username, email, password });
             localStorage.setItem('token', response.data.token);
-            navigate('/profile');
+            navigate('/login');
         } catch (error) {
             if (error.response && error.response.data && error.response.data.message) {
                 setError(error.response.data.message);
@@ -36,6 +37,12 @@ const Register = () => {
                     placeholder="Username"
                     value={username}
                     onChange={(e) => setUsername(e.target.value)}
+                />
+                <input
+                    type="email"
+                    placeholder="Email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
                 />
                 <input
                     type="password"

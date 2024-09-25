@@ -6,7 +6,7 @@ const http = require('http');
 const { Server } = require('socket.io');
 const sequelize = require('./config/database');
 const loggerMiddleware = require('./middleware/logger');
-const authMiddleware = require('./middleware/auth');
+const authMiddleware = require('./middleware/authMiddleware');
 const errorHandler = require('./middleware/errorHandler');
 const bodyParser = require('body-parser');
 

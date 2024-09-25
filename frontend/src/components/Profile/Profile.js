@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, Route, Routes, Link } from 'react-router-dom';
+import axios from 'axios';
 import { getImageOrPlaceholder } from '../../utils/imageUtils';
 import './Profile.css';
 import Timeline from '../Timeline/Timeline';
@@ -10,7 +11,7 @@ import More from '../More/More';
 import sampleFriends from '../../data/sampleFriends'; // Assuming you have a sampleFriends data file
 
 const Profile = () => {
-    const { username } = useParams();
+    const { id } = useParams();
     const [isEditing, setIsEditing] = useState(false);
     const [userName, setUserName] = useState('');
     const [userBio, setUserBio] = useState('');
@@ -18,13 +19,26 @@ const Profile = () => {
     const [coverPhoto, setCoverPhoto] = useState('');
 
     useEffect(() => {
-        // Fetch user data based on the username
-        // This is a placeholder for the actual data fetching logic
-        setUserName(username);
-        setUserBio('This is the user\'s bio');
-        setProfilePhoto(getImageOrPlaceholder('/path/to/profile/photo.jpg', 'https://via.placeholder.com/150'));
-        setCoverPhoto(getImageOrPlaceholder('/path/to/cover/photo.jpg', 'https://via.placeholder.com/150'));
-    }, [username]);
+        const fetchUserData = async () => {
+            try {
+                const token = localStorage.getItem('token');
+                const response = await axios.get(`http://localhost:9000/profile/${id}`, {
+                    headers: {
+                        Authorization: `Bearer ${token}`
+                    }
+                });
+                const userData = response.data;
+                setUserName(userData.username);
+                setUserBio(userData.bio);
+                setProfilePhoto(getImageOrPlaceholder(userData.profilePhoto, 'https://via.placeholder.com/150'));
+                setCoverPhoto(getImageOrPlaceholder(userData.coverPhoto, 'https://via.placeholder.com/150'));
+            } catch (error) {
+                console.error('Error fetching user data:', error);
+            }
+        };
+
+        fetchUserData();
+    }, [id]);
 
     const toggleEditProfile = () => {
         setIsEditing(!isEditing);
@@ -65,53 +79,53 @@ const Profile = () => {
                 </div>
                 <div className="profile__info">
                     <img src={profilePhoto} alt="Profile" className="profile__photo" />
-                    <div className="profile__details">
-                        {isEditing ? (
-                            <form onSubmit={handleSaveProfile} className="profile__edit-form">
-                                <input
-                                    type="text"
-                                    value={userName}
-                                    onChange={(e) => setUserName(e.target.value)}
-                                    className="profile__edit-input"
-                                />
-                                <textarea
-                                    value={userBio}
-                                    onChange={(e) => setUserBio(e.target.value)}
-                                    className="profile__edit-textarea"
-                                />
-                                <label className="profile__edit-label">Profile Photo</label>
-                                <input
-                                    type="file"
-                                    accept="image/*"
-                                    onChange={handleProfilePhotoChange}
-                                    className="profile__edit-file-input"
-                                />
-                                <label className="profile__edit-label">Cover Photo</label>
-                                <input
-                                    type="file"
-                                    accept="image/*"
-                                    onChange={handleCoverPhotoChange}
-                                    className="profile__edit-file-input"
-                                />
-                                <button type="submit" className="profile__save-button">Save</button>
-                            </form>
-                        ) : (
-                            <>
-                                <h1 className="profile__name">{userName}</h1>
-                                <p className="profile__bio">{userBio}</p>
-                                <button className="profile__edit-button" onClick={toggleEditProfile}>Edit Profile</button>
-                            </>
-                        )}
-                    </div>
+                    {isEditing ? (
+                        <form onSubmit={handleSaveProfile} className="profile__edit-form">
+                            <label className="profile__edit-label">Username</label>
+                            <input
+                                type="text"
+                                value={userName}
+                                onChange={(e) => setUserName(e.target.value)}
+                                className="profile__edit-input"
+                            />
+                            <label className="profile__edit-label">Bio</label>
+                            <textarea
+                                value={userBio}
+                                onChange={(e) => setUserBio(e.target.value)}
+                                className="profile__edit-textarea"
+                            />
+                            <label className="profile__edit-label">Profile Photo</label>
+                            <input
+                                type="file"
+                                accept="image/*"
+                                onChange={handleProfilePhotoChange}
+                                className="profile__edit-file-input"
+                            />
+                            <label className="profile__edit-label">Cover Photo</label>
+                            <input
+                                type="file"
+                                accept="image/*"
+                                onChange={handleCoverPhotoChange}
+                                className="profile__edit-file-input"
+                            />
+                            <button type="submit" className="profile__save-button">Save</button>
+                        </form>
+                    ) : (
+                        <>
+                            <h1 className="profile__name">{userName}</h1>
+                            <p className="profile__bio">{userBio}</p>
+                            <button className="profile__edit-button" onClick={toggleEditProfile}>Edit Profile</button>
+                        </>
+                    )}
                 </div>
             </div>
             <div className="profile__body">
                 <div className="profile__sidebar">
-                    <Link to={`/profile/${username}/timeline`} className="profile__sidebarOption">Timeline</Link>
-                    <Link to={`/profile/${username}/about`} className="profile__sidebarOption">About</Link>
-                    <Link to={`/profile/${username}/friends`} className="profile__sidebarOption">Friends</Link>
-                    <Link to={`/profile/${username}/photos`} className="profile__sidebarOption">Photos</Link>
-                    <Link to={`/profile/${username}/more`} className="profile__sidebarOption">More</Link>
+                    <Link to={`/profile/${id}/timeline`} className="profile__sidebarOption">Timeline</Link>
+                    <Link to={`/profile/${id}/about`} className="profile__sidebarOption">About</Link>
+                    <Link to={`/profile/${id}/friends`} className="profile__sidebarOption">Friends</Link>
+                    <Link to={`/profile/${id}/photos`} className="profile__sidebarOption">Photos</Link>
+                    <Link to={`/profile/${id}/more`} className="profile__sidebarOption">More</Link>
                 </div>
                 <div className="profile__content">
                     <Routes>

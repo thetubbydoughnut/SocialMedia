@@ -21,9 +21,9 @@ router.post('/login', async (req, res, next) => {
 });
 
 router.post('/register', async (req, res, next) => {
-    const { username, password } = req.body;
-    if (!username || !password) {
-        const error = new Error('Username and password are required');
+    const { username, email, password } = req.body;
+    if (!username || !email || !password) {
+        const error = new Error('Username, email, and password are required');
         error.statusCode = 400;
         return next(error);
     }
@@ -35,7 +35,7 @@ router.post('/register', async (req, res, next) => {
             throw error;
         }
 
-        const user = await User.create({ username, password });
+        const user = await User.create({ username, email, password });
         const token = jwt.sign({ userId: user.id }, process.env.JWT_SECRET, { expiresIn: '1h' });
         res.status(201).json({ token });
     } catch (error) {

@@ -35,9 +35,7 @@ const Messenger = () => {
                 console.error('Error fetching chat:', error);
             }
         };
-        if (id) {
-            fetchChat();
-        }
+        fetchChat();
     }, [id]);
 
     useEffect(() => {
@@ -50,42 +48,19 @@ const Messenger = () => {
         };
     }, []);
 
-    const sendMessage = (e) => {
+    const sendMessage = async (e) => {
         e.preventDefault();
-        const newMessage = {
-            sender: 'Current User', // Replace with actual user data
-            text: message,
-            timestamp: new Date().toISOString()
-        };
-        socket.emit('sendMessage', newMessage);
-        setMessages((prevMessages) => [...prevMessages, newMessage]);
-        setMessage('');
+        if (message.trim()) {
+            const newMessage = {
+                sender: 'Current User', // Replace with actual user data
+                text: message,
+                timestamp: new Date().toISOString(),
+            };
+            socket.emit('sendMessage', newMessage);
+            setMessages((prevMessages) => [...prevMessages, newMessage]);
+            setMessage('');
+        }
     };
-
-    if (!id) {
-        return (
-            <div className="messenger">
-                <div className="chat-list-container">
-                    <h2>Available Chats</h2>
-                    <ul className="chat-list">
-                        {chats.map(chat => (
-                            <li key={chat.id} className="chat-list-item">
-                                {chat.participants.map(participant => (
-                                    <div key={participant.name} className="chat-participant">
-                                        <img src={participant.profilePicture} alt={participant.name} className="chat-participant-picture" />
-                                        <span>{participant.name}</span>
-                                    </div>
-                                ))}
-                                <Link to={`/messenger/${chat.id}`} className="chat-link">
-                                    Open Chat
-                                </Link>
-                            </li>
-                        ))}
-                    </ul>
-                </div>
-            </div>
-        );
-    }
 
     if (!chat) {
         return <div>Loading...</div>;
