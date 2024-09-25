@@ -1,6 +1,6 @@
-const { DataTypes } = require('sequelize');
-const sequelize = require('../config/database');
+const { Sequelize, DataTypes } = require('sequelize');
 const bcrypt = require('bcrypt');
+const sequelize = require('../config/database');
 
 const User = sequelize.define('User', {
     username: {
@@ -12,16 +12,17 @@ const User = sequelize.define('User', {
         type: DataTypes.STRING,
         allowNull: false
     }
+}, {
+    hooks: {
+        beforeCreate: async (user) => {
+            const salt = await bcrypt.genSalt(10);
+            user.password = await bcrypt.hash(user.password, salt);
+        }
+    }
 });
 
-// Hash password before saving
-User.beforeCreate(async (user) => {
-    user.password = await bcrypt.hash(user.password, 10);
-});
-
-// Method to compare password
-User.prototype.comparePassword = function (password) {
-    return bcrypt.compare(password, this.password);
+User.prototype.comparePassword = async function (password) {
+    return await bcrypt.compare(password, this.password);
 };
 
 module.exports = User;

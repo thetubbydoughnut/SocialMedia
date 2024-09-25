@@ -37,23 +37,10 @@ app.use('/marketplace', marketplaceRouter);
 app.use('/watch', watchRouter);
 app.use('/messages', messageRouter);
 
-// Socket.IO connection
-io.on('connection', (socket) => {
-    console.log('a user connected');
-
-    socket.on('sendMessage', (message) => {
-        io.emit('receiveMessage', message);
-    });
-
-    socket.on('disconnect', () => {
-        console.log('user disconnected');
-    });
-});
-
 // Sync database and start server
 sequelize.sync().then(() => {
     console.log('Database synced');
-    const PORT = process.env.PORT || 9000; // Use environment variable or default to 9000
+    const PORT = process.env.PORT || 9000; // Use environment variable or default to 900
     server.listen(PORT, () => {
         console.log(`Server is running on port ${PORT}`);
     });

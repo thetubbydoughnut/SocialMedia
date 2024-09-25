@@ -9,6 +9,9 @@ import Header from './components/Navbar/Navbar';
 import { useTheme } from './ThemeContext';
 import './App.css';
 import Messenger from './components/Messenger/Messenger';
+import Login from './components/Login/Login';
+import PrivateRoute from './components/PrivateRoutes/PrivateRoute';
+import Register from './components/Register/Register';
 
 function App() {
     const { theme } = useTheme();
@@ -21,12 +24,14 @@ function App() {
         <Router>
             <Header />
             <Routes>
-                <Route path="/" element={<Home />} />
-                <Route path="/newsfeed" element={<NewsFeed />} />
-                <Route path="/marketplace" element={<Marketplace />} />
-                <Route path="/watch" element={<Watch />} />
-                <Route path="/profile" element={<Profile />} />
-                <Route path="/messenger" element={<Messenger />} />
+                <Route path="/login" element={<Login />} />
+                <Route path="/register" element={<Register />} />
+                <Route path="/" element={<PrivateRoute><Home /></PrivateRoute>} />
+                <Route path="/newsfeed" element={<PrivateRoute><NewsFeed /></PrivateRoute>} />
+                <Route path="/marketplace" element={<PrivateRoute><Marketplace /></PrivateRoute>} />
+                <Route path="/watch" element={<PrivateRoute><Watch /></PrivateRoute>} />
+                <Route path="/profile" element={<PrivateRoute><Profile /></PrivateRoute>} />
+                <Route path="/messenger" element={<PrivateRoute><Messenger /></PrivateRoute>} />
             </Routes>
         </Router>
     );
