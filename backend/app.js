@@ -8,6 +8,7 @@ const sequelize = require('./config/database');
 const loggerMiddleware = require('./middleware/logger');
 const authMiddleware = require('./middleware/auth');
 const errorHandler = require('./middleware/errorHandler');
+const bodyParser = require('body-parser');
 
 const homeRouter = require('./routes/homeRouter');
 const profileRouter = require('./routes/profileRouter');
@@ -16,6 +17,7 @@ const marketplaceRouter = require('./routes/marketplaceRouter');
 const watchRouter = require('./routes/watchRouter');
 const messageRouter = require('./routes/messageRouter');
 const authRouter = require('./routes/authRouter');
+const postsRouter = require('./routes/postsRouter');
 
 const app = express();
 const server = http.createServer(app);
@@ -30,6 +32,7 @@ const io = new Server(server, {
 app.use(cors());
 app.use(express.json());
 app.use(loggerMiddleware);
+app.use(bodyParser.json());
 
 // Routes
 app.use('/auth', authRouter);
@@ -39,6 +42,7 @@ app.use('/newsfeed', newsfeedRouter);
 app.use('/marketplace', marketplaceRouter);
 app.use('/watch', watchRouter);
 app.use('/messages', messageRouter);
+app.use('/api/posts', postsRouter);
 
 // Error handling middleware
 app.use(errorHandler);
