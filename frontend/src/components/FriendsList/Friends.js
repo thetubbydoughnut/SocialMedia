@@ -1,7 +1,7 @@
 import React from 'react';
-import './Friend.css';
+import './Friends.css';
 
-const Friend = ({ friend }) => {
+const Friends = ({ friend }) => {
     return (
         <div className="friend">
             <img src={friend.picture} alt={friend.name} className="friend-picture" />
@@ -13,4 +13,4 @@ const Friend = ({ friend }) => {
     );
 };
 
-export default Friend;
+export default Friends;

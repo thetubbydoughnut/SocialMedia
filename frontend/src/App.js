@@ -30,7 +30,7 @@ function App() {
                 <Route path="/newsfeed" element={<PrivateRoute><NewsFeed /></PrivateRoute>} />
                 <Route path="/marketplace" element={<PrivateRoute><Marketplace /></PrivateRoute>} />
                 <Route path="/watch" element={<PrivateRoute><Watch /></PrivateRoute>} />
-                <Route path="/profile" element={<PrivateRoute><Profile /></PrivateRoute>} />
+                <Route path="/profile/:username/*" element={<PrivateRoute><Profile /></PrivateRoute>} />
                 <Route path="/messenger" element={<PrivateRoute><Messenger /></PrivateRoute>} />
                 <Route path="/messenger/:id" element={<PrivateRoute><Messenger /></PrivateRoute>} />
             </Routes>

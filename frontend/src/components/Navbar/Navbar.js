@@ -10,6 +10,9 @@ const Header = () => {
   const token = localStorage.getItem('token');
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
+  // Replace this with actual logic to get the current user's username
+  const username = 'currentUsername';
+
   const handleLogout = () => {
     localStorage.removeItem('token');
     navigate('/login');
@@ -29,7 +32,7 @@ const Header = () => {
             <li><Link to="/newsfeed">News Feed</Link></li>
             <li><Link to="/marketplace">Marketplace</Link></li>
             <li><Link to="/watch">Watch</Link></li>
-            <li><Link to="/profile">Profile</Link></li>
+            <li><Link to={`/profile/${username}`}>Profile</Link></li>
             <li><Link to="/messenger">Messenger</Link></li>
           </ul>
           <div className="header__right">

@@ -1,14 +1,13 @@
 import React from 'react';
-import Friend from './Friend';
-import sampleFriends from '../../data/sampleFriends.js';
+import Friends from './Friends';
 import './FriendsList.css';
 
-const FriendsList = () => {
+const FriendsList = ({ friends }) => {
     return (
         <div className="friends-list">
             <h2>Friends</h2>
-            {sampleFriends.map(friend => (
-                <Friend key={friend.id} friend={friend} />
+            {friends.map(friend => (
+                <Friends key={friend.id} friend={friend} />
             ))}
         </div>
     );
