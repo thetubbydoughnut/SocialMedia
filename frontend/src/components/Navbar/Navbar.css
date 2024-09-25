@@ -1,9 +1,25 @@
-.navbar {
+.header {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    padding: 10px;
     background-color: #333;
-    padding: 1rem;
+    color: white;
+}
+
+.header__middle input {
+    padding: 5px;
+    border: none;
+    border-radius: 5px;
+}
+
+.header__right {
+    display: flex;
+    gap: 20px;
+}
+
+.header__option {
+    cursor: pointer;
 }
 
 .nav-links {
@@ -15,4 +31,13 @@
 .nav-links a {
     color: white;
     text-decoration: none;
+}
+
+.theme-toggle {
+    background: none;
+    border: 1px solid white;
+    color: white;
+    padding: 0.5rem 1rem;
+    cursor: pointer;
+    border-radius: 5px;
 }

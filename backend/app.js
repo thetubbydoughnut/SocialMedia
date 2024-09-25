@@ -8,6 +8,7 @@ const profileRouter = require('./routes/profileRouter');
 const newsfeedRouter = require('./routes/newsfeedRouter');
 const marketplaceRouter = require('./routes/marketplaceRouter');
 const watchRouter = require('./routes/watchRouter');
+const messageRouter = require('./routes/messageRouter');
 
 // Middleware
 app.use(loggerMiddleware);
@@ -19,5 +20,6 @@ app.use('/profile', profileRouter);
 app.use('/newsfeed', newsfeedRouter);
 app.use('/marketplace', marketplaceRouter);
 app.use('/watch', watchRouter);
+app.use('/messages', messageRouter);
 
 module.exports = app;
