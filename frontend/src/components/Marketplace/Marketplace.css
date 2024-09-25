@@ -1,3 +1,38 @@
 .marketplace {
     padding: 2rem;
+    margin-top: 60px;
+    margin-left: 20px;
+}
+
+.marketplace__items {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 2rem;
+}
+
+.marketplace__item {
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    padding: 1rem;
+    width: calc(33.333% - 2rem);
+    box-sizing: border-box;
+}
+
+.marketplace__item-image {
+    width: 100%;
+    border-radius: 10px;
+}
+
+.marketplace__item-name {
+    margin: 0.5rem 0;
+}
+
+.marketplace__item-price {
+    color: #007bff;
+    font-weight: bold;
+}
+
+.marketplace__item-description {
+    color: #555;
 }

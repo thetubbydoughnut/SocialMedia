@@ -1,6 +1,5 @@
 .home {
     display: flex;
-    justify-content: center;
     padding-top: 60px; /* Adjust this value based on the height of your navigation bar */
 }
 
@@ -9,7 +8,8 @@
     justify-content: center;
     width: 100%;
     max-width: 1200px; /* Adjust this value based on your desired max width */
-    margin-right: 20%; /* Space for the sidebar */
+    margin-left: auto; /* Ensure content is not overlapped by the sidebar */
+    padding: 20px; /* Add padding to ensure content is not touching the edges */
 }
 
 .newsfeed {
