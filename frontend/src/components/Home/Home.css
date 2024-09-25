@@ -1,8 +1,22 @@
 .home {
     display: flex;
-    flex-direction: column;
+    justify-content: center;
+    padding-top: 60px; /* Adjust this value based on the height of your navigation bar */
 }
 
-.home__body {
+.home__content {
     display: flex;
+    justify-content: center;
+    width: 100%;
+    max-width: 1200px; /* Adjust this value based on your desired max width */
+    margin-right: 20%; /* Space for the sidebar */
+}
+
+.newsfeed {
+    flex: 2;
+    margin-right: 20px;
+}
+
+.widgets {
+    flex: 1;
 }
