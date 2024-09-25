@@ -5,10 +5,12 @@ import NewsFeed from './components/NewsFeed/NewsFeed';
 import Marketplace from './components/Marketplace/Marketplace';
 import Watch from './components/Watch/Watch';
 import Profile from './components/Profile/Profile';
+import Header from './components/Header/Header';
 
 function App() {
     return (
         <Router>
+            <Header />
             <Routes>
                 <Route path="/" element={<Home />} />
                 <Route path="/newsfeed" element={<NewsFeed />} />

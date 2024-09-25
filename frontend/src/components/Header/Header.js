@@ -5,7 +5,7 @@ import { getImageOrPlaceholder } from '../../utils/imageUtils';
 import './Header.css';
 
 const Header = () => {
-    const logo = getImageOrPlaceholder('/path/to/logo.jpg', '/path/to/placeholder/logo.jpg');
+    const logo = getImageOrPlaceholder('/path/to/logo.jpg', 'https://via.placeholder.com/150');
 
     return (
         <div className="header">

@@ -3,8 +3,8 @@ import { getImageOrPlaceholder } from '../../utils/imageUtils';
 import './Profile.css';
 
 const Profile = () => {
-    const coverPhoto = getImageOrPlaceholder('/path/to/cover/photo.jpg', '/path/to/placeholder/cover.jpg');
-    const profilePhoto = getImageOrPlaceholder('/path/to/profile/photo.jpg', '/path/to/placeholder/profile.jpg');
+    const coverPhoto = getImageOrPlaceholder('/path/to/cover/photo.jpg', 'https://via.placeholder.com/150');
+    const profilePhoto = getImageOrPlaceholder('/path/to/profile/photo.jpg', 'https://via.placeholder.com/150');
 
     return (
         <div className="profile">

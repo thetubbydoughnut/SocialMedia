@@ -1,6 +1,5 @@
 import React from 'react';
 import './NewsFeed.css';
-
 const NewsFeed = () => {
     return (
         <div className="newsfeed">
