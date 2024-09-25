@@ -5,9 +5,9 @@ import { faThumbsUp as faThumbsUpSolid, faHeart as faHeartSolid, faLaugh as faLa
 import './Post.css';
 
 const Post = ({ post }) => {
-    const [reactions, setReactions] = useState(post.reactions);
+    const [reactions, setReactions] = useState(post.reactions || {});
     const [userReaction, setUserReaction] = useState(null);
-    const [comments, setComments] = useState(post.comments);
+    const [comments, setComments] = useState(post.comments || []);
     const [newComment, setNewComment] = useState('');
 
     const handleReaction = (type) => {
@@ -15,7 +15,7 @@ const Post = ({ post }) => {
 
         setReactions({
             ...reactions,
-            [type]: reactions[type] + 1
+            [type]: (reactions[type] || 0) + 1,
         });
         setUserReaction(type);
     };
@@ -55,10 +55,10 @@ const Post = ({ post }) => {
             </div>
             <div className="post__content">
                 <p>{post.content}</p>
-                {post.image && <img src={post.image} alt="Post" className="post__image" />}
+                {post.mediaUrl && <img src={post.mediaUrl} alt="Post" className="post__image" />}
             </div>
             <div className="post__reactions">
-                {Object.keys(reactions).map(type => (
+                {Object.keys(reactions).map((type) => (
                     <button
                         key={type}
                         onClick={() => handleReaction(type)}

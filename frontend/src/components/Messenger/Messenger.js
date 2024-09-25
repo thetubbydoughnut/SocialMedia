@@ -1,10 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { useParams, Link } from 'react-router-dom';
-import io from 'socket.io-client';
 import axios from 'axios';
+import { useParams, Link } from 'react-router-dom';
+import socket from '../../utils/socket'; // Import the singleton socket
 import './Messenger.css';
-
-const socket = io('http://localhost:9000'); // Ensure this matches your server URL and port
 
 const Messenger = () => {
     const { id } = useParams();
@@ -39,12 +37,27 @@ const Messenger = () => {
     }, [id]);
 
     useEffect(() => {
-        socket.on('receiveMessage', (message) => {
-            setMessages((prevMessages) => [...prevMessages, message]);
-        });
+        const handleConnect = () => {
+            console.log('Connected to Socket.io server');
+        };
+
+        const handleMessage = (msg) => {
+            setMessages((prevMessages) => [...prevMessages, msg]);
+        };
+
+        const handleDisconnect = () => {
+            console.log('Disconnected from Socket.io server');
+        };
+
+        socket.on('connect', handleConnect);
+        socket.on('message', handleMessage);
+        socket.on('disconnect', handleDisconnect);
 
         return () => {
-            socket.off('receiveMessage');
+            socket.off('connect', handleConnect);
+            socket.off('message', handleMessage);
+            socket.off('disconnect', handleDisconnect);
+            // Do not disconnect the socket here to keep it alive for other components
         };
     }, []);
 

@@ -2,8 +2,6 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import './Marketplace.css';
 
-const categories = ['All', 'Sports', 'Electronics', 'Furniture', 'Clothing'];
-
 const Marketplace = () => {
     const [items, setItems] = useState([]);
     const [newItem, setNewItem] = useState({
@@ -38,7 +36,7 @@ const Marketplace = () => {
         e.preventDefault();
         try {
             const response = await axios.post('http://localhost:9000/api/posts', newItem);
-            setItems([...items, response.data]);
+            setItems((prevItems) => [...prevItems, response.data]);
             setNewItem({
                 name: '',
                 image: '',
@@ -51,33 +49,16 @@ const Marketplace = () => {
         }
     };
 
-    const handleMessage = (user) => {
-        alert(`Message ${user.name}`);
-    };
-
     return (
         <div className="marketplace">
-            <h1>Marketplace</h1>
-            <div className="marketplace__filter">
-                <label htmlFor="category">Filter by Category:</label>
-                <select
-                    id="category"
-                    value={selectedCategory}
-                    onChange={(e) => setSelectedCategory(e.target.value)}
-                >
-                    {categories.map(category => (
-                        <option key={category} value={category}>{category}</option>
-                    ))}
-                </select>
-            </div>
-            <form className="marketplace__form" onSubmit={handleSubmit}>
+            <h2>Marketplace</h2>
+            <form onSubmit={handleSubmit}>
                 <input
                     type="text"
                     name="name"
                     value={newItem.name}
                     onChange={handleInputChange}
                     placeholder="Item Name"
-                    required
                 />
                 <input
                     type="text"
@@ -85,7 +66,6 @@ const Marketplace = () => {
                     value={newItem.image}
                     onChange={handleInputChange}
                     placeholder="Image URL"
-                    required
                 />
                 <input
                     type="text"
@@ -93,39 +73,32 @@ const Marketplace = () => {
                     value={newItem.price}
                     onChange={handleInputChange}
                     placeholder="Price"
-                    required
                 />
                 <textarea
                     name="description"
                     value={newItem.description}
                     onChange={handleInputChange}
                     placeholder="Description"
-                    required
                 />
                 <select
                     name="category"
                     value={newItem.category}
                     onChange={handleInputChange}
-                    required
                 >
-                    {categories.map(category => (
-                        <option key={category} value={category}>{category}</option>
-                    ))}
+                    <option value="All">All</option>
+                    <option value="Sports">Sports</option>
+                    <option value="Electronics">Electronics</option>
+                    {/* Add more categories as needed */}
                 </select>
-                <button type="submit">Create Post</button>
+                <button type="submit">Add Item</button>
             </form>
             <div className="marketplace__items">
-                {items.map(item => (
+                {items.map((item) => (
                     <div key={item.id} className="marketplace__item">
-                        <div className="marketplace__item-header">
-                            <img src={item.user.profilePicture} alt={item.user.name} className="marketplace__item-profile-picture" />
-                            <h3 className="marketplace__item-user">{item.user.name}</h3>
-                        </div>
-                        <img src={item.image} alt={item.name} className="marketplace__item-image" />
-                        <h2 className="marketplace__item-name">{item.name}</h2>
-                        <p className="marketplace__item-price">{item.price}</p>
-                        <p className="marketplace__item-description">{item.description}</p>
-                        <button onClick={() => handleMessage(item.user)} className="marketplace__item-message-button">Message</button>
+                        <img src={item.image} alt={item.name} />
+                        <h3>{item.name}</h3>
+                        <p>{item.price}</p>
+                        <p>{item.description}</p>
                     </div>
                 ))}
             </div>

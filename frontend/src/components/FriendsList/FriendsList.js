@@ -1,16 +1,32 @@
-import React from 'react';
-import Friends from './Friends';
-import './FriendsList.css';
+import React, { useEffect, useState } from 'react';
+import axiosInstance from '../../utils/axiosInstance';
 
-const FriendsList = ({ friends }) => {
+const FriendList = () => {
+    const [friends, setFriends] = useState([]);
+
+    useEffect(() => {
+        const fetchFriends = async () => {
+            try {
+                const response = await axiosInstance.get('/friends/list');
+                setFriends(response.data);
+            } catch (error) {
+                console.error('Error fetching friends:', error);
+            }
+        };
+
+        fetchFriends();
+    }, []);
+
     return (
-        <div className="friends-list">
+        <div>
             <h2>Friends</h2>
-            {friends.map(friend => (
-                <Friends key={friend.id} friend={friend} />
-            ))}
+            <ul>
+                {friends.map((friend) => (
+                    <li key={friend.id}>{friend.username}</li>
+                ))}
+            </ul>
         </div>
     );
 };
 
-export default FriendsList;
+export default FriendList;

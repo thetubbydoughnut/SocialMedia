@@ -1,5 +1,8 @@
 import React, { useEffect } from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import { Provider } from 'react-redux';
+import store from './store';
+import { UserProvider } from './UserContext';
 import Home from './components/Home/Home';
 import NewsFeed from './components/NewsFeed/NewsFeed';
 import Marketplace from './components/Marketplace/Marketplace';
@@ -12,7 +15,6 @@ import Messenger from './components/Messenger/Messenger';
 import Login from './components/Login/Login';
 import PrivateRoute from './components/PrivateRoutes/PrivateRoute';
 import Register from './components/Register/Register';
-import { UserProvider } from '../src/UserContext';
 
 function App() {
     const { theme } = useTheme();
@@ -22,22 +24,24 @@ function App() {
     }, [theme]);
 
     return (
-        <Router>
+        <Provider store={store}>
             <UserProvider>
-                <Header />
-                <Routes>
-                    <Route path="/login" element={<Login />} />
-                    <Route path="/register" element={<Register />} />
-                    <Route path="/" element={<PrivateRoute><Home /></PrivateRoute>} />
-                    <Route path="/newsfeed" element={<PrivateRoute><NewsFeed /></PrivateRoute>} />
-                    <Route path="/marketplace" element={<PrivateRoute><Marketplace /></PrivateRoute>} />
-                    <Route path="/watch" element={<PrivateRoute><Watch /></PrivateRoute>} />
-                    <Route path="/profile/:username/*" element={<PrivateRoute><Profile /></PrivateRoute>} />
-                    <Route path="/messenger" element={<PrivateRoute><Messenger /></PrivateRoute>} />
-                    <Route path="/messenger/:id" element={<PrivateRoute><Messenger /></PrivateRoute>} />
-                </Routes>
+                <Router>
+                    <Header />
+                    <Routes>
+                        <Route path="/login" element={<Login />} />
+                        <Route path="/register" element={<Register />} />
+                        <Route path="/" element={<PrivateRoute><Home /></PrivateRoute>} />
+                        <Route path="/newsfeed" element={<PrivateRoute><NewsFeed /></PrivateRoute>} />
+                        <Route path="/marketplace" element={<PrivateRoute><Marketplace /></PrivateRoute>} />
+                        <Route path="/watch" element={<PrivateRoute><Watch /></PrivateRoute>} />
+                        <Route path="/profile/:id/*" element={<PrivateRoute><Profile /></PrivateRoute>} />
+                        <Route path="/messenger" element={<PrivateRoute><Messenger /></PrivateRoute>} />
+                        <Route path="/messenger/:id" element={<PrivateRoute><Messenger /></PrivateRoute>} />
+                    </Routes>
+                </Router>
             </UserProvider>
-        </Router>
+        </Provider>
     );
 }
 

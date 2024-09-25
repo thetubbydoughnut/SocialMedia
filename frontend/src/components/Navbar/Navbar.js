@@ -1,5 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
+import { fetchUser } from '../../slices/userSlice';
 import HamburgerMenu from '../HamburgerMenu/HamburgerMenu';
 import { useTheme } from '../../ThemeContext';
 import { useUser } from '../../UserContext';
@@ -12,7 +14,12 @@ const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   const username = useUser();
+  const dispatch = useDispatch();
 
+  useEffect(() => {
+    dispatch(fetchUser());
+  }, [dispatch]);
+  
   const handleLogout = () => {
     localStorage.removeItem('token');
     navigate('/login');

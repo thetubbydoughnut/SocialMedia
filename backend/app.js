@@ -9,6 +9,7 @@ const loggerMiddleware = require('./middleware/logger');
 const authMiddleware = require('./middleware/authMiddleware');
 const errorHandler = require('./middleware/errorHandler');
 const bodyParser = require('body-parser');
+const path = require('path'); // Import the path module
 
 const homeRouter = require('./routes/homeRouter');
 const profileRouter = require('./routes/profileRouter');
@@ -24,35 +25,44 @@ const app = express();
 const server = http.createServer(app);
 const io = new Server(server, {
     cors: {
-        origin: "http://localhost:3000", // Adjust this to match your frontend URL
-        methods: ["GET", "POST"]
-    }
+        origin: "http://localhost:3000", // Ensure this matches your frontend URL
+        methods: ["GET", "POST"],
+    },
+});
+
+io.on('connection', (socket) => {
+    console.log('a user connected');
+    socket.on('disconnect', () => {
+        console.log('user disconnected');
+    });
 });
 
 // Middleware
 app.use(cors());
-app.use(express.json());
-app.use(loggerMiddleware);
 app.use(bodyParser.json());
+app.use(loggerMiddleware);
+app.use(authMiddleware);
 
 // Routes
-app.use('/auth', authRouter);
-app.use('/', homeRouter);
+app.use('/home', homeRouter);
 app.use('/profile', profileRouter);
 app.use('/newsfeed', newsfeedRouter);
 app.use('/marketplace', marketplaceRouter);
 app.use('/watch', watchRouter);
 app.use('/messages', messageRouter);
-app.use('/api/posts', postsRouter);
-app.use('/api/chats', chatsRouter);
+app.use('/auth', authRouter);
+app.use('/posts', postsRouter);
+app.use('/chats', chatsRouter);
+
+// Serve static files from the uploads directory
+app.use('/uploads', express.static(path.join(__dirname, '../uploads')));
 
 // Error handling middleware
 app.use(errorHandler);
 
-// Sync database and start server
+const PORT = process.env.PORT || 9000;
+
 sequelize.sync().then(() => {
-    console.log('Database synced');
-    const PORT = process.env.PORT || 9000; // Use environment variable or default to 9000
     server.listen(PORT, () => {
         console.log(`Server is running on port ${PORT}`);
     });

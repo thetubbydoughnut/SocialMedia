@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react';
-import { useParams, Route, Routes, Link } from 'react-router-dom';
-import axios from 'axios';
+import React, { useState, useEffect, useCallback } from 'react';
+import { useParams, Link, Routes, Route } from 'react-router-dom';
+import axiosInstance from '../../utils/axiosInstance';
 import { getImageOrPlaceholder } from '../../utils/imageUtils';
 import './Profile.css';
 import Timeline from '../Timeline/Timeline';
@@ -8,66 +8,102 @@ import About from '../About/About';
 import FriendsList from '../FriendsList/FriendsList';
 import Photos from '../Photos/Photos';
 import More from '../More/More';
-import sampleFriends from '../../data/sampleFriends'; // Assuming you have a sampleFriends data file
+import sampleFriends from '../../data/sampleFriends';
 
 const Profile = () => {
     const { id } = useParams();
+    const [user, setUser] = useState(null);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
     const [isEditing, setIsEditing] = useState(false);
-    const [userName, setUserName] = useState('');
-    const [userBio, setUserBio] = useState('');
-    const [profilePhoto, setProfilePhoto] = useState('');
-    const [coverPhoto, setCoverPhoto] = useState('');
+
+    const fetchUser = useCallback(async () => {
+        try {
+            setLoading(true);
+            const response = await axiosInstance.get(`/profile/${id}`);
+            setUser(response.data);
+            setError(null);
+        } catch (err) {
+            console.error('Error fetching user:', err);
+            setError('Failed to fetch user data');
+        } finally {
+            setLoading(false);
+        }
+    }, [id]);
 
     useEffect(() => {
-        const fetchUserData = async () => {
-            try {
-                const token = localStorage.getItem('token');
-                const response = await axios.get(`http://localhost:9000/profile/${id}`, {
-                    headers: {
-                        Authorization: `Bearer ${token}`
-                    }
-                });
-                const userData = response.data;
-                setUserName(userData.username);
-                setUserBio(userData.bio);
-                setProfilePhoto(getImageOrPlaceholder(userData.profilePhoto, 'https://via.placeholder.com/150'));
-                setCoverPhoto(getImageOrPlaceholder(userData.coverPhoto, 'https://via.placeholder.com/150'));
-            } catch (error) {
-                console.error('Error fetching user data:', error);
-            }
-        };
+        fetchUser();
+    }, [fetchUser]);
 
-        fetchUserData();
-    }, [id]);
+    if (loading) return <div>Loading...</div>;
+    if (error) return <div>{error}</div>;
+    if (!user) return <div>User not found</div>;
 
     const toggleEditProfile = () => {
         setIsEditing(!isEditing);
     };
 
-    const handleSaveProfile = (e) => {
+    const handleSaveProfile = async (e) => {
         e.preventDefault();
-        setIsEditing(false);
-    };
-
-    const handleProfilePhotoChange = (e) => {
-        const file = e.target.files[0];
-        if (file) {
-            const reader = new FileReader();
-            reader.onloadend = () => {
-                setProfilePhoto(reader.result);
+        try {
+            const updatedData = {
+                username: user.username,
+                bio: user.bio,
+                // Handle profilePhoto and coverPhoto if uploading to the server
             };
-            reader.readAsDataURL(file);
+            const response = await axiosInstance.put(`/profile/${id}`, updatedData);
+            setUser(response.data);
+            // Implement save profile logic here
+        } catch (error) {
+            console.error('Error updating profile:', error);
+            // Handle error (e.g., show a notification)
         }
     };
 
-    const handleCoverPhotoChange = (e) => {
+    const handleInputChange = (e) => {
+        const { name, value } = e.target;
+        setUser({ ...user, [name]: value });
+    };
+
+    const handleProfilePhotoChange = async (e) => {
         const file = e.target.files[0];
         if (file) {
-            const reader = new FileReader();
-            reader.onloadend = () => {
-                setCoverPhoto(reader.result);
-            };
-            reader.readAsDataURL(file);
+            const form = new FormData();
+            form.append('profilePhoto', file);
+            try {
+                const response = await axiosInstance.post(`/profile/${id}/upload/profilePhoto`, form, {
+                    headers: {
+                        'Content-Type': 'multipart/form-data',
+                    },
+                });
+                setUser((prevData) => ({
+                    ...prevData,
+                    profilePhoto: getImageOrPlaceholder(response.data.profilePhoto, 'https://via.placeholder.com/150'),
+                }));
+            } catch (error) {
+                console.error('Error uploading profile photo:', error);
+            }
+        }
+    };
+
+    const handleCoverPhotoChange = async (e) => {
+        const file = e.target.files[0];
+        if (file) {
+            const form = new FormData();
+            form.append('coverPhoto', file);
+            try {
+                const response = await axiosInstance.post(`/profile/${id}/upload/coverPhoto`, form, {
+                    headers: {
+                        'Content-Type': 'multipart/form-data',
+                    },
+                });
+                setUser((prevData) => ({
+                    ...prevData,
+                    coverPhoto: getImageOrPlaceholder(response.data.coverPhoto, 'https://via.placeholder.com/150'),
+                }));
+            } catch (error) {
+                console.error('Error uploading cover photo:', error);
+            }
         }
     };
 
@@ -75,48 +111,13 @@ const Profile = () => {
         <div className="profile">
             <div className="profile__header">
                 <div className="profile__cover">
-                    <img src={coverPhoto} alt="Cover" />
+                    <img src={user.coverPhoto} alt="Cover" />
+                    {/* Implement edit cover photo logic here */}
                 </div>
                 <div className="profile__info">
-                    <img src={profilePhoto} alt="Profile" className="profile__photo" />
-                    {isEditing ? (
-                        <form onSubmit={handleSaveProfile} className="profile__edit-form">
-                            <label className="profile__edit-label">Username</label>
-                            <input
-                                type="text"
-                                value={userName}
-                                onChange={(e) => setUserName(e.target.value)}
-                                className="profile__edit-input"
-                            />
-                            <label className="profile__edit-label">Bio</label>
-                            <textarea
-                                value={userBio}
-                                onChange={(e) => setUserBio(e.target.value)}
-                                className="profile__edit-textarea"
-                            />
-                            <label className="profile__edit-label">Profile Photo</label>
-                            <input
-                                type="file"
-                                accept="image/*"
-                                onChange={handleProfilePhotoChange}
-                                className="profile__edit-file-input"
-                            />
-                            <label className="profile__edit-label">Cover Photo</label>
-                            <input
-                                type="file"
-                                accept="image/*"
-                                onChange={handleCoverPhotoChange}
-                                className="profile__edit-file-input"
-                            />
-                            <button type="submit" className="profile__save-button">Save</button>
-                        </form>
-                    ) : (
-                        <>
-                            <h1 className="profile__name">{userName}</h1>
-                            <p className="profile__bio">{userBio}</p>
-                            <button className="profile__edit-button" onClick={toggleEditProfile}>Edit Profile</button>
-                        </>
-                    )}
+                    <img src={user.profilePhoto} alt="Profile" className="profile__photo" />
+                    {/* Implement edit profile photo logic here */}
+                    {/* Implement edit profile form logic here */}
                 </div>
             </div>
             <div className="profile__body">

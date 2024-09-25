@@ -1,30 +1,34 @@
-import React, { createContext, useContext, useState, useEffect } from 'react';
-import axios from 'axios';
+import React, { createContext, useContext, useState, useEffect, useMemo } from 'react';
+import axiosInstance from './utils/axiosInstance';
 
 const UserContext = createContext();
 
 export const UserProvider = ({ children }) => {
-    const [user, setUser] = useState({ id: '', username: '' });
+    const [user, setUser] = useState(null);
 
     useEffect(() => {
         const fetchUser = async () => {
+            const token = localStorage.getItem('token');
+            if (!token) {
+                setUser(null);
+                return;
+            }
             try {
-                const response = await axios.get('http://localhost:9000/profile/me', {
-                    headers: {
-                        Authorization: `Bearer ${localStorage.getItem('token')}`,
-                    },
-                });
-                setUser({ id: response.data.id, username: response.data.username });
+                const response = await axiosInstance.get('/profile/me');
+                setUser(response.data);
             } catch (error) {
                 console.error('Error fetching user:', error);
+                setUser(null);
             }
         };
 
         fetchUser();
     }, []);
 
+    const contextValue = useMemo(() => user, [user]);
+
     return (
-        <UserContext.Provider value={user}>
+        <UserContext.Provider value={contextValue}>
             {children}
         </UserContext.Provider>
     );
