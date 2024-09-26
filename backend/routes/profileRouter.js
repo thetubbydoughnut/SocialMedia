@@ -12,7 +12,7 @@ if (!fs.existsSync(uploadDir)) {
     fs.mkdirSync(uploadDir, { recursive: true });
 }
 
-// Configure Multer for file uploads (if needed)
+// Configure Multer for file uploads
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
         cb(null, uploadDir);
@@ -42,7 +42,7 @@ router.get('/me', async (req, res) => {
     }
 });
 
-// Update Profile (Example)
+// Update Profile
 router.put('/me', async (req, res) => {
     try {
         const { username, bio } = req.body;
@@ -61,7 +61,7 @@ router.put('/me', async (req, res) => {
     }
 });
 
-// Example route for uploading profile photo
+// Upload Profile Photo
 router.post('/me/profilePhoto', upload.single('profilePhoto'), async (req, res) => {
     try {
         const user = await User.findByPk(req.user.id);

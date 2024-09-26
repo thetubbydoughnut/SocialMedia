@@ -1,9 +1,14 @@
-import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import React, { useEffect, useState } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
+import { fetchItems, addItem, setSelectedCategory } from '../../slices/marketplaceSlice';
 import './Marketplace.css';
 
 const Marketplace = () => {
-    const [items, setItems] = useState([]);
+    const dispatch = useDispatch();
+    const items = useSelector((state) => state.marketplace.items);
+    const selectedCategory = useSelector((state) => state.marketplace.selectedCategory);
+    const status = useSelector((state) => state.marketplace.status);
+    const error = useSelector((state) => state.marketplace.error);
     const [newItem, setNewItem] = useState({
         name: '',
         image: '',
@@ -11,21 +16,12 @@ const Marketplace = () => {
         description: '',
         category: 'All'
     });
-    const [selectedCategory, setSelectedCategory] = useState('All');
 
     useEffect(() => {
-        const fetchItems = async () => {
-            try {
-                const response = await axios.get('http://localhost:9000/api/posts', {
-                    params: { category: selectedCategory !== 'All' ? selectedCategory : undefined }
-                });
-                setItems(response.data);
-            } catch (error) {
-                console.error('Error fetching posts:', error);
-            }
-        };
-        fetchItems();
-    }, [selectedCategory]);
+        if (status === 'idle') {
+            dispatch(fetchItems(selectedCategory));
+        }
+    }, [selectedCategory, status, dispatch]);
 
     const handleInputChange = (e) => {
         const { name, value } = e.target;
@@ -34,19 +30,14 @@ const Marketplace = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        try {
-            const response = await axios.post('http://localhost:9000/api/posts', newItem);
-            setItems((prevItems) => [...prevItems, response.data]);
-            setNewItem({
-                name: '',
-                image: '',
-                price: '',
-                description: '',
-                category: 'All'
-            });
-        } catch (error) {
-            console.error('Error creating post:', error);
-        }
+        dispatch(addItem(newItem));
+        setNewItem({
+            name: '',
+            image: '',
+            price: '',
+            description: '',
+            category: 'All'
+        });
     };
 
     return (

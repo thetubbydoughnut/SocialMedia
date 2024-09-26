@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const authMiddleware = require('../middleware/authMiddleware');
-const Friend = require('./models/friendModel');
+const Friend = require('../models/FriendModel')
 const User = require('../models/userModel');
 
 router.post('/send', authMiddleware, async (req, res) => {

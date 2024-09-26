@@ -21,6 +21,7 @@ const messageRouter = require('./routes/messageRouter');
 const authRouter = require('./routes/authRouter');
 const postsRouter = require('./routes/postsRouter');
 const chatsRouter = require('./routes/chatsRouter');
+const friendsRouter = require('./routes/friendsRouter');
 
 const app = express();
 const server = http.createServer(app);
@@ -55,7 +56,7 @@ app.use(loggerMiddleware);
 
 // Routes
 app.use('/home', homeRouter);
-app.use('/profile', authMiddleware, profileRouter);
+app.use('/profile', profileRouter);
 app.use('/newsfeed', newsfeedRouter);
 app.use('/marketplace', marketplaceRouter);
 app.use('/watch', watchRouter);
@@ -63,6 +64,7 @@ app.use('/messages', messageRouter);
 app.use('/auth', authRouter);
 app.use('/posts', postsRouter);
 app.use('/chats', chatsRouter);
+app.use('/friends', friendsRouter);
 
 // Serve static files from the uploads directory
 app.use('/uploads', express.static(path.join(__dirname, '../uploads')));

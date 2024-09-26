@@ -1,6 +1,6 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
-import { Provider } from 'react-redux';
+import { Provider, useDispatch } from 'react-redux';
 import store from './store';
 import Home from './components/Home/Home';
 import NewsFeed from './components/NewsFeed/NewsFeed';
@@ -14,8 +14,18 @@ import Messenger from './components/Messenger/Messenger';
 import Login from './components/Login/Login';
 import PrivateRoute from './components/PrivateRoutes/PrivateRoute';
 import Register from './components/Register/Register';
+import { fetchUser } from './slices/userSlice';
 
 const AppContent = () => {
+    const dispatch = useDispatch();
+
+    useEffect(() => {
+        const token = localStorage.getItem('token');
+        if (token) {
+            dispatch(fetchUser());
+        }
+    }, [dispatch]);
+
     return (
         <Router>
             <Header />
@@ -34,14 +44,12 @@ const AppContent = () => {
     );
 };
 
-function App() {
-    return (
-        <Provider store={store}>
-            <ThemeProvider>
-                <AppContent />
-            </ThemeProvider>
-        </Provider>
-    );
-}
+const App = () => (
+    <Provider store={store}>
+        <ThemeProvider>
+            <AppContent />
+        </ThemeProvider>
+    </Provider>
+);
 
 export default App;
