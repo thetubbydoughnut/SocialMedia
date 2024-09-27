@@ -19,6 +19,6 @@ body.light {
 }
 
 body.dark {
-  background-color: #121212;
-  color: #ffffff;
+  background-color: #333333; /* Dark grey background */
+  color: #ffffff; /* White text */
 }

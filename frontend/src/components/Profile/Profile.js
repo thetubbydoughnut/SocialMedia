@@ -12,7 +12,7 @@ import Photos from '../Photos/Photos';
 import More from '../More/More';
 
 const Profile = () => {
-    const { id } = useParams();
+    const { username } = useParams();
     const dispatch = useDispatch();
     const currentUser = useSelector((state) => state.user.user);
     const [user, setUser] = useState(null);
@@ -24,7 +24,7 @@ const Profile = () => {
         const fetchProfile = async () => {
             try {
                 setLoading(true);
-                const response = await axiosInstance.get(`/profile/${id}`);
+                const response = await axiosInstance.get(`/profile/username/${username}`);
                 setUser(response.data);
                 setError(null);
             } catch (err) {
@@ -36,7 +36,7 @@ const Profile = () => {
         };
 
         fetchProfile();
-    }, [id]);
+    }, [username]);
 
     if (loading) return <div>Loading...</div>;
     if (error) return <div>{error}</div>;
@@ -54,7 +54,7 @@ const Profile = () => {
                 bio: user.bio,
                 // Handle profilePhoto and coverPhoto if uploading to the server
             };
-            const response = await axiosInstance.put(`/profile/${id}`, updatedData);
+            const response = await axiosInstance.put(`/profile/${user.id}`, updatedData);
             setUser(response.data);
             setIsEditing(false);
             // Refresh current user data if editing own profile
@@ -118,7 +118,6 @@ const Profile = () => {
             </Routes>
         </div>
     );
-}
-
+};
 
 export default Profile;

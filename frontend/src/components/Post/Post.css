@@ -20,6 +20,7 @@
 
 .post__user-info h3 {
     margin: 0;
+    color: black; /* Set profile names to black */
 }
 
 .post__content {
@@ -84,4 +85,8 @@
     color: #fff;
     border-radius: 5px;
     cursor: pointer;
+}
+
+body.dark .post__user-info h3 {
+    color: black; /* Ensure profile names remain black in dark mode */
 }

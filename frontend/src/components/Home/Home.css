@@ -3,6 +3,11 @@
     padding-top: 60px; /* Adjust this value based on the height of your navigation bar */
 }
 
+body.dark .home {
+    background-color: #333333; /* Dark grey background */
+    color: #ffffff; /* White text */
+}
+
 .home__content {
     display: flex;
     justify-content: center;

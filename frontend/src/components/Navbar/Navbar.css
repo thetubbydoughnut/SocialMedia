@@ -3,61 +3,173 @@
     justify-content: space-between;
     align-items: center;
     padding: 10px;
-    background-color: #333;
-    color: white;
-    height: 60px; /* Ensure this matches the height used in the Sidebar and Home CSS */
+    background-color: white; /* Inverted color */
+    color: #3b5998; /* Inverted color */
+    height: 60px;
     position: fixed;
     width: 100%;
     top: 0;
     z-index: 1000;
-    
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-.header__middle input {
+body.dark .header {
+    background-color: #333333; /* Dark grey background */
+    color: #ffffff; /* White text */
+}
+
+.header__logo {
+    font-size: 24px;
+    font-weight: bold;
+    text-decoration: none;
+    color: #3b5998; /* Inverted color */
+    margin-right: 20px;
+}
+
+body.dark .header__logo {
+    color: #ffffff; /* White text */
+}
+
+.header__search {
     padding: 5px;
-    border: none;
+    border: 1px solid #ccc;
     border-radius: 5px;
+    width: 200px;
+}
+
+body.dark .header__search {
+    background-color: #555555; /* Darker grey background */
+    color: #ffffff; /* White text */
+    border: 1px solid #777777; /* Lighter grey border */
+}
+
+.header__center {
+    display: flex;
+    justify-content: center;
+    flex: 1;
+}
+
+.header__icon {
+    color: #3b5998; /* Inverted color */
+    font-size: 24px;
+    margin: 0 15px;
+    text-decoration: none;
+}
+
+body.dark .header__icon {
+    color: #ffffff; /* White text */
+}
+
+.header__icon:hover {
+    color: #555; /* Darker hover color */
+}
+
+body.dark .header__icon:hover {
+    color: #aaaaaa; /* Lighter grey hover color */
 }
 
 .header__right {
     display: flex;
+    align-items: center;
     gap: 20px;
 }
 
-.header__option {
-    cursor: pointer;
-}
-
-.nav-links {
+.header__nav {
     list-style: none;
     display: flex;
     gap: 1rem;
 }
 
-.nav-links.hidden {
-    display: none;
+.header__nav li {
+    display: inline;
 }
 
-.nav-links a {
-    color: white;
+.header__nav a {
     text-decoration: none;
+    color: #3b5998; /* Inverted color */
+    font-size: 16px;
 }
 
-.theme-toggle {
-    background: none;
-    border: 1px solid white;
-    color: white;
-    padding: 0.5rem 1rem;
-    cursor: pointer;
-    border-radius: 5px;
+body.dark .header__nav a {
+    color: #ffffff; /* White text */
+}
+
+.header__nav a:hover {
+    color: #555; /* Darker hover color */
+}
+
+body.dark .header__nav a:hover {
+    color: #aaaaaa; /* Lighter grey hover color */
+}
+
+.header__profile {
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+    color: #3b5998; /* Inverted color */
+}
+
+body.dark .header__profile {
+    color: #ffffff; /* White text */
+}
+
+.header__profileImage {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    margin-right: 10px;
+}
+
+.header__actions,
+.header__auth {
+    display: flex;
+    gap: 10px;
 }
 
 .auth-button {
     background: none;
-    border: 1px solid white;
-    color: white;
+    border: 1px solid #3b5998; /* Inverted color */
+    color: #3b5998; /* Inverted color */
     padding: 0.5rem 1rem;
     cursor: pointer;
     border-radius: 5px;
-    margin-right: 20px;
+}
+
+body.dark .auth-button {
+    border: 1px solid #ffffff; /* White border */
+    color: #ffffff; /* White text */
+}
+
+.auth-button:hover {
+    background-color: #3b5998; /* Inverted color */
+    color: white;
+}
+
+body.dark .auth-button:hover {
+    background-color: #555555; /* Darker grey background */
+    color: #ffffff; /* White text */
+}
+
+.theme-toggle {
+    background: none;
+    border: 1px solid #3b5998; /* Inverted color */
+    color: #3b5998; /* Inverted color */
+    padding: 0.5rem 1rem;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+body.dark .theme-toggle {
+    border: 1px solid #ffffff; /* White border */
+    color: #ffffff; /* White text */
+}
+
+.theme-toggle:hover {
+    background-color: #3b5998; /* Inverted color */
+    color: white;
+}
+
+body.dark .theme-toggle:hover {
+    background-color: #555555; /* Darker grey background */
+    color: #ffffff; /* White text */
 }

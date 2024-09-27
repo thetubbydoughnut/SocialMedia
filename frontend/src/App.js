@@ -22,13 +22,63 @@ const AppContent = () => {
             <Routes>
                 <Route path="/login" element={<Login />} />
                 <Route path="/register" element={<Register />} />
-                <Route path="/" element={<PrivateRoute element={<Home />} />} />
-                <Route path="/newsfeed" element={<PrivateRoute element={<NewsFeed />} />} />
-                <Route path="/marketplace" element={<PrivateRoute element={<Marketplace />} />} />
-                <Route path="/watch" element={<PrivateRoute element={<Watch />} />} />
-                <Route path="/profile/:id/*" element={<PrivateRoute element={<Profile />} />} />
-                <Route path="/messenger" element={<PrivateRoute element={<Messenger />} />} />
-                <Route path="/messenger/:id" element={<PrivateRoute element={<Messenger />} />} />
+                {/* Protected Routes */}
+                <Route 
+                    path="/" 
+                    element={
+                        <PrivateRoute>
+                            <Home />
+                        </PrivateRoute>
+                    } 
+                />
+                <Route 
+                    path="/newsfeed" 
+                    element={
+                        <PrivateRoute>
+                            <NewsFeed />
+                        </PrivateRoute>
+                    } 
+                />
+                <Route 
+                    path="/marketplace" 
+                    element={
+                        <PrivateRoute>
+                            <Marketplace />
+                        </PrivateRoute>
+                    } 
+                />
+                <Route 
+                    path="/watch" 
+                    element={
+                        <PrivateRoute>
+                            <Watch />
+                        </PrivateRoute>
+                    } 
+                />
+                <Route 
+                    path="/profile/:username" 
+                    element={
+                        <PrivateRoute>
+                            <Profile />
+                        </PrivateRoute>
+                    } 
+                />
+                <Route 
+                    path="/messenger" 
+                    element={
+                        <PrivateRoute>
+                            <Messenger />
+                        </PrivateRoute>
+                    } 
+                />
+                <Route 
+                    path="/messenger/:id" 
+                    element={
+                        <PrivateRoute>
+                            <Messenger />
+                        </PrivateRoute>
+                    } 
+                />
             </Routes>
         </Router>
     );

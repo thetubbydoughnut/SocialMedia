@@ -42,6 +42,22 @@ router.get('/me', async (req, res) => {
     }
 });
 
+// Get Profile by Username
+router.get('/username/:username', async (req, res) => {
+    try {
+        const user = await User.findOne({
+            where: { username: req.params.username },
+            attributes: ['id', 'username', 'bio', 'profilePhoto', 'coverPhoto'],
+        });
+        if (!user) {
+            return res.status(404).json({ message: 'User not found' });
+        }
+        res.json(user);
+    } catch (error) {
+        res.status(500).json({ message: 'Server error' });
+    }
+});
+
 // Update Profile
 router.put('/me', async (req, res) => {
     try {

@@ -2,6 +2,11 @@
   text-align: center;
 }
 
+body.dark .App {
+  background-color: #333333; /* Dark grey background */
+  color: #ffffff; /* White text */
+}
+
 .App-logo {
   height: 40vmin;
   pointer-events: none;
@@ -24,8 +29,16 @@
   color: white;
 }
 
+body.dark .App-header {
+  background-color: #333333; /* Dark grey background */
+}
+
 .App-link {
   color: #61dafb;
+}
+
+body.dark .App-link {
+  color: #80bfff; /* Lighter blue text */
 }
 
 @keyframes App-logo-spin {

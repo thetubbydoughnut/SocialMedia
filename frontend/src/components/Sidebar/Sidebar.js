@@ -10,11 +10,11 @@ const Sidebar = () => {
         return <div>Loading...</div>;
     }
 
-    const { id, username } = user;
+    const { username } = user;
     return (
         <div className="sidebar">
             <h2>{username}'s Sidebar</h2>
-            <div className="sidebar__option"><Link to={`/profile/${id}`}>Profile</Link></div>
+            <div className="sidebar__option"><Link to={`/profile/${username}`}>Profile</Link></div>
             <div className="sidebar__option"><Link to="/messenger">Messages</Link></div>
             <div className="sidebar__option"><Link to="/groups">Groups</Link></div>
             <div className="sidebar__option"><Link to="/events">Events</Link></div>

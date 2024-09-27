@@ -1,17 +1,20 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { logout } from '../../slices/userSlice';
+import HamburgerMenu from '../HamburgerMenu/HamburgerMenu';
 import './Navbar.css';
 
 const Header = () => {
     const navigate = useNavigate();
     const dispatch = useDispatch();
     const user = useSelector((state) => state.user.user);
-    const userStatus = useSelector((state) => state.user.status);
     const [isMenuOpen, setIsMenuOpen] = useState(false);
+    const [theme, setTheme] = useState('light');
 
-    // Removed useEffect that dispatches fetchUser
+    useEffect(() => {
+        document.body.className = theme;
+    }, [theme]);
 
     const handleLogout = () => {
         dispatch(logout());
@@ -19,39 +22,77 @@ const Header = () => {
         navigate('/login');
     };
 
-    const handleMenuToggle = () => {
-        setIsMenuOpen(!isMenuOpen);
+    const toggleTheme = () => {
+        setTheme((prevTheme) => (prevTheme === 'light' ? 'dark' : 'light'));
     };
 
     return (
         <header className="header">
-            <button onClick={handleMenuToggle} className="hamburger-menu">
-                ☰
-            </button>
-            {user ? (
-                <>
-                    <ul className={`nav-links ${isMenuOpen ? 'hidden' : ''}`}>
-                        <li><Link to="/">Home</Link></li>
-                        <li><Link to="/newsfeed">News Feed</Link></li>
-                        <li><Link to="/marketplace">Marketplace</Link></li>
-                        <li><Link to="/watch">Watch</Link></li>
-                        <li><Link to={`/profile/${user.id}`}>Profile</Link></li>
-                        <li><Link to="/messenger">Messenger</Link></li>
-                    </ul>
-                    <div className="header__right">
-                        <button onClick={() => { /* Implement toggleTheme if needed */ }} className="theme-toggle">
-                            {/* Theme toggle icon or text */}
-                            Toggle Theme
+            <div className="header__left">
+                <Link to="/" className="header__logo">
+                    MyApp
+                </Link>
+                <input type="text" placeholder="Search" className="header__search" />
+            </div>
+            <div className="header__center">
+                <Link to="/" className="header__icon">
+                    <i className="fas fa-home"></i>
+                </Link>
+                <Link to="/newsfeed" className="header__icon">
+                    <i className="fas fa-newspaper"></i>
+                </Link>
+                <Link to="/watch" className="header__icon">
+                    <i className="fas fa-tv"></i>
+                </Link>
+                <Link to="/marketplace" className="header__icon">
+                    <i className="fas fa-store"></i>
+                </Link>
+                <Link to="/groups" className="header__icon">
+                    <i className="fas fa-users"></i>
+                </Link>
+            </div>
+            <div className="header__right">
+                <HamburgerMenu />
+                {user ? (
+                    <>
+                        <ul className="header__nav">
+                            <li>
+                                <Link to={`/profile/${user.username}`} className="header__profile">
+                                    <img src={user.profilePhoto} alt="Profile" className="header__profileImage" />
+                                    <span>{user.username}</span>
+                                </Link>
+                            </li>
+                            <li>
+                                <Link to="/messenger" className="header__icon">
+                                    <i className="fas fa-comments"></i>
+                                </Link>
+                            </li>
+                            <li>
+                                <Link to="/notifications" className="header__icon">
+                                    <i className="fas fa-bell"></i>
+                                </Link>
+                            </li>
+                        </ul>
+                        <div className="header__actions">
+                            <button onClick={handleLogout} className="auth-button">
+                                Logout
+                            </button>
+                        </div>
+                    </>
+                ) : (
+                    <div className="header__auth">
+                        <button onClick={() => navigate('/login')} className="auth-button">
+                            Login
                         </button>
-                        <button onClick={handleLogout} className="auth-button">Logout</button>
+                        <button onClick={() => navigate('/register')} className="auth-button">
+                            Register
+                        </button>
                     </div>
-                </>
-            ) : (
-                <div className="header__right">
-                    <button onClick={() => navigate('/login')} className="auth-button">Login</button>
-                    <button onClick={() => navigate('/register')} className="auth-button">Register</button>
-                </div>
-            )}
+                )}
+                <button onClick={toggleTheme} className="theme-toggle">
+                    {theme === 'light' ? 'Dark Mode' : 'Light Mode'}
+                </button>
+            </div>
         </header>
     );
 };

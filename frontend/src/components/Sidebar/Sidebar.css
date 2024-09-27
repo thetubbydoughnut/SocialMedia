@@ -7,14 +7,23 @@
     right: 0;
     top: 75px; /* Adjust this value based on the height of your navigation bar */
     overflow-y: auto;
-}
-
-.sidebar__option {
+  }
+  
+  body.dark .sidebar {
+    background-color: #444444; /* Dark grey background */
+    color: #ffffff; /* White text */
+  }
+  
+  .sidebar__option {
     padding: 10px;
     cursor: pointer;
-}
-
-.sidebar__option a {
+  }
+  
+  .sidebar__option a {
     text-decoration: none;
     color: inherit;
-}
+  }
+  
+  body.dark .sidebar__option a {
+    color: #ffffff; /* White text */
+  }
