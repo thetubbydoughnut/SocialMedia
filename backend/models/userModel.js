@@ -2,14 +2,21 @@ const { DataTypes } = require('sequelize');
 const sequelize = require('../config/database');
 
 const User = sequelize.define('User', {
+    id: {
+        type: DataTypes.INTEGER,
+        primaryKey: true,
+        autoIncrement: true,
+        unique: true, // Ensure the id is unique
+    },
     username: {
         type: DataTypes.STRING,
         allowNull: false,
+        unique: true, // Ensure the username is unique
     },
     email: {
         type: DataTypes.STRING,
         allowNull: false,
-        unique: true,
+        unique: true, // Ensure the email is unique
     },
     password: {
         type: DataTypes.STRING,
@@ -30,10 +37,5 @@ const User = sequelize.define('User', {
 }, {
     timestamps: true,
 });
-
-sequelize.sync({ alter: true }) // This will update the table schema
-    .then(() => {
-        console.log('Database & tables created!');
-    });
 
 module.exports = User;

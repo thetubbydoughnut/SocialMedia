@@ -37,7 +37,7 @@ const NewsFeed = () => {
     return (
         <div>
             {posts.map((post) => (
-                <Post key={post.id} post={post} />
+                <Post key={post.id} post={post} /> // Ensure each post has a unique key
             ))}
             {loading && <p>Loading...</p>}
             {!hasMore && <p>No more posts</p>}

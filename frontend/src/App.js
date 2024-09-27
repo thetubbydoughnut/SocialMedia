@@ -1,6 +1,6 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
-import { Provider, useDispatch } from 'react-redux';
+import { Provider } from 'react-redux';
 import store from './store';
 import Home from './components/Home/Home';
 import NewsFeed from './components/NewsFeed/NewsFeed';
@@ -14,31 +14,21 @@ import Messenger from './components/Messenger/Messenger';
 import Login from './components/Login/Login';
 import PrivateRoute from './components/PrivateRoutes/PrivateRoute';
 import Register from './components/Register/Register';
-import { fetchUser } from './slices/userSlice';
 
 const AppContent = () => {
-    const dispatch = useDispatch();
-
-    useEffect(() => {
-        const token = localStorage.getItem('token');
-        if (token) {
-            dispatch(fetchUser());
-        }
-    }, [dispatch]);
-
     return (
         <Router>
             <Header />
             <Routes>
                 <Route path="/login" element={<Login />} />
                 <Route path="/register" element={<Register />} />
-                <Route path="/" element={<PrivateRoute><Home /></PrivateRoute>} />
-                <Route path="/newsfeed" element={<PrivateRoute><NewsFeed /></PrivateRoute>} />
-                <Route path="/marketplace" element={<PrivateRoute><Marketplace /></PrivateRoute>} />
-                <Route path="/watch" element={<PrivateRoute><Watch /></PrivateRoute>} />
-                <Route path="/profile/:id/*" element={<PrivateRoute><Profile /></PrivateRoute>} />
-                <Route path="/messenger" element={<PrivateRoute><Messenger /></PrivateRoute>} />
-                <Route path="/messenger/:id" element={<PrivateRoute><Messenger /></PrivateRoute>} />
+                <Route path="/" element={<PrivateRoute element={<Home />} />} />
+                <Route path="/newsfeed" element={<PrivateRoute element={<NewsFeed />} />} />
+                <Route path="/marketplace" element={<PrivateRoute element={<Marketplace />} />} />
+                <Route path="/watch" element={<PrivateRoute element={<Watch />} />} />
+                <Route path="/profile/:id/*" element={<PrivateRoute element={<Profile />} />} />
+                <Route path="/messenger" element={<PrivateRoute element={<Messenger />} />} />
+                <Route path="/messenger/:id" element={<PrivateRoute element={<Messenger />} />} />
             </Routes>
         </Router>
     );

@@ -2,6 +2,7 @@ const express = require('express');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
 const User = require('../models/userModel'); // Adjust the path as needed
+const authMiddleware = require('../middleware/authMiddleware');
 const router = express.Router();
 
 // User Registration
@@ -58,6 +59,21 @@ router.post('/login', async (req, res, next) => {
     } catch (error) {
         console.error('Login error:', error);
         next(error);
+    }
+});
+
+// Get Current User
+router.get('/me', authMiddleware, async (req, res) => {
+    try {
+        const user = await User.findByPk(req.user.id, {
+            attributes: ['id', 'username', 'bio', 'profilePhoto', 'coverPhoto'],
+        });
+        if (!user) {
+            return res.status(404).json({ message: 'User not found' });
+        }
+        res.json(user);
+    } catch (error) {
+        res.status(500).json({ message: 'Server error' });
     }
 });
 
