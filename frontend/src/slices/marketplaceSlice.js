@@ -2,14 +2,14 @@ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axiosInstance from '../utils/axiosInstance';
 
 export const fetchItems = createAsyncThunk('marketplace/fetchItems', async (category) => {
-    const response = await axiosInstance.get('/posts', {
+    const response = await axiosInstance.get('/marketplace/posts', {
         params: { category: category !== 'All' ? category : undefined }
     });
     return response.data;
 });
 
 export const addItem = createAsyncThunk('marketplace/addItem', async (newItem) => {
-    const response = await axiosInstance.post('/posts', newItem, {
+    const response = await axiosInstance.post('/marketplace/posts', newItem, {
         headers: {
             'Content-Type': 'multipart/form-data'
         }
