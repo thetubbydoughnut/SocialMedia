@@ -1,30 +1,24 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axiosInstance from '../utils/axiosInstance';
 
-export const fetchUser = createAsyncThunk('user/fetchUser', async (_, { rejectWithValue }) => {
-    try {
-        const response = await axiosInstance.get('/auth/me');
-        return response.data;
-    } catch (error) {
-        if (error.response && error.response.status === 401) {
-            // Handle unauthorized error gracefully
-            return rejectWithValue('Unauthorized');
-        }
-        return rejectWithValue(error.message);
-    }
+export const fetchUser = createAsyncThunk('user/fetchUser', async () => {
+    const response = await axiosInstance.get('/auth/me');
+    return response.data;
 });
 
 const userSlice = createSlice({
     name: 'user',
     initialState: {
-        user: null,
+        user: JSON.parse(localStorage.getItem('user')) || null,
         status: 'idle',
-        error: null
+        error: null,
     },
     reducers: {
-        logout(state) {
+        logout: (state) => {
             state.user = null;
-        }
+            localStorage.removeItem('user');
+            localStorage.removeItem('token');
+        },
     },
     extraReducers: (builder) => {
         builder
@@ -34,12 +28,13 @@ const userSlice = createSlice({
             .addCase(fetchUser.fulfilled, (state, action) => {
                 state.status = 'succeeded';
                 state.user = action.payload;
+                localStorage.setItem('user', JSON.stringify(action.payload));
             })
             .addCase(fetchUser.rejected, (state, action) => {
                 state.status = 'failed';
-                state.error = action.payload;
+                state.error = action.error.message;
             });
-    }
+    },
 });
 
 export const { logout } = userSlice.actions;

@@ -15,12 +15,12 @@ const Login = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            console.log('Attempting to login with URL:', axiosInstance.defaults.baseURL + '/auth/login');
             const response = await axiosInstance.post('/auth/login', { email, password });
             const token = response.data.token;
             localStorage.setItem('token', token);
-            dispatch(fetchUser());
-            navigate('/'); // Redirect to home or dashboard after login
+            const userResponse = await dispatch(fetchUser());
+            localStorage.setItem('user', JSON.stringify(userResponse.payload));
+            navigate('/'); // Redirect to home after login
         } catch (error) {
             if (error.response && error.response.data && error.response.data.message) {
                 setError(error.response.data.message);

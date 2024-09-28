@@ -3,7 +3,7 @@ const samplePosts = [
         id: 1,
         user: {
             name: 'John Doe',
-            profilePicture: 'https://via.placeholder.com/50'
+            profilePicture: 'https://picsum.photos/50?random=1'
         },
         content: 'Had a great day hiking!',
         image: 'https://via.placeholder.com/500',
@@ -30,7 +30,7 @@ const samplePosts = [
         id: 2,
         user: {
             name: 'Jane Smith',
-            profilePicture: 'https://via.placeholder.com/50'
+            profilePicture: 'https://picsum.photos/50?random=2'
         },
         content: 'Just finished reading a great book!',
         image: 'https://via.placeholder.com/500',

@@ -1,9 +1,10 @@
 .post {
-    background-color: #fff;
+    background-color: #ffcccc; /* Light Red */
     border-radius: 10px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     margin-bottom: 1rem;
     padding: 1rem;
+    color: #333; /* Ensure text is readable on light background */
 }
 
 .post__header {
@@ -20,7 +21,7 @@
 
 .post__user-info h3 {
     margin: 0;
-    color: black; /* Set profile names to black */
+    color: #333; /* Set profile names to dark color for better contrast */
 }
 
 .post__content {
@@ -43,14 +44,14 @@
     background: none;
     border: none;
     cursor: pointer;
-    color: #007bff;
+    color: #8b0000; /* Dark red for better contrast */
     display: flex;
     align-items: center;
     gap: 0.2rem;
 }
 
 .post__reactions button:hover {
-    color: #0056b3;
+    color: #a52a2a; /* Slightly lighter dark red on hover */
 }
 
 .post__reactions button.clicked {
@@ -63,6 +64,7 @@
 
 .post__comment {
     margin-bottom: 0.5rem;
+    color: #333; /* Ensure comment text is readable */
 }
 
 .post__comments form {
@@ -81,10 +83,14 @@
 .post__comments button {
     padding: 0.5rem 1rem;
     border: none;
-    background-color: #007bff;
+    background-color: #8b0000; /* Dark Red */
     color: #fff;
     border-radius: 5px;
     cursor: pointer;
+}
+
+.post__comments button:hover {
+    background-color: #a52a2a; /* Slightly lighter dark red */
 }
 
 body.dark .post__user-info h3 {

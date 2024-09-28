@@ -20,11 +20,16 @@ body.dark .header {
     color: #8B0000; /* Dark red text */
 }
 
+.header__left {
+    display: flex;
+    align-items: center;
+}
+
 .header__logo {
-    font-size: 24px;
+    font-size: 1.5rem;
     font-weight: bold;
-    text-decoration: none;
     color: #8B0000; /* Dark Red */
+    text-decoration: none;
     margin-right: 20px;
 }
 
@@ -46,16 +51,16 @@ body.dark .header__search {
 }
 
 .header__center {
+    flex-grow: 1;
     display: flex;
     justify-content: center;
-    flex: 1;
 }
 
 .header__icon {
-    color: #8b0000; /* Dark red */
-    font-size: 24px;
-    margin: 0 15px;
+    font-size: 1.5rem;
+    color: #8B0000; /* Dark Red */
     text-decoration: none;
+    margin: 0 15px;
 }
 
 body.dark .header__icon {
@@ -77,12 +82,15 @@ body.dark .header__icon:hover {
 }
 
 .header__nav {
-    list-style: none;
     display: flex;
+    list-style: none;
+    padding: 0;
+    margin: 0;
     gap: 1rem;
 }
 
 .header__nav li {
+    margin-right: 20px;
     display: inline;
 }
 
@@ -125,26 +133,26 @@ body.dark .header__profile {
 .header__actions,
 .header__auth {
     display: flex;
+    align-items: center;
     gap: 10px;
 }
 
 .auth-button {
-    background: none;
-    border: 1px solid #8b0000; /* Dark red */
-    color: #8b0000; /* Dark red */
-    padding: 0.5rem 1rem;
-    cursor: pointer;
+    background-color: #8B0000; /* Dark Red */
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
     border-radius: 5px;
+    cursor: pointer;
+    text-decoration: none;
 }
 
 body.dark .auth-button {
-    border: 1px solid #8B0000; /* Dark red border */
-    color: #8B0000; /* Dark red text */
+    color: #fff; /* White text */
 }
 
 .auth-button:hover {
-    background-color: #8b0000; /* Dark red */
-    color: white;
+    background-color: #A52A2A; /* Lighter Red */
 }
 
 body.dark .auth-button:hover {
@@ -153,22 +161,21 @@ body.dark .auth-button:hover {
 }
 
 .theme-toggle {
-    background: none;
-    border: 1px solid #8b0000; /* Dark red */
-    color: #8b0000; /* Dark red */
-    padding: 0.5rem 1rem;
-    cursor: pointer;
+    background-color: #8B0000; /* Dark Red */
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
     border-radius: 5px;
+    cursor: pointer;
+    margin-left: 10px;
 }
 
 body.dark .theme-toggle {
-    border: 1px solid #8B0000; /* Dark red border */
-    color: #8B0000; /* Dark red text */
+    color: #fff; /* White text */
 }
 
 .theme-toggle:hover {
-    background-color: #8b0000; /* Dark red */
-    color: white;
+    background-color: #A52A2A; /* Lighter Red */
 }
 
 body.dark .theme-toggle:hover {

@@ -6,37 +6,51 @@ let posts = [
         id: 1,
         user: {
             name: 'John Doe',
-            profilePicture: 'https://via.placeholder.com/50'
+            profilePicture: 'https://picsum.photos/50?random=1'
         },
-        name: 'Mountain Bike',
-        image: 'https://via.placeholder.com/150',
-        price: '$200',
-        description: 'A great mountain bike for all terrains.',
-        category: 'Sports'
+        content: 'Had a great day hiking!',
+        image: 'https://via.placeholder.com/500',
+        reactions: {
+            like: 10,
+            love: 5,
+            haha: 2,
+            wow: 1,
+            sad: 0,
+            angry: 0
+        },
+        comments: [
+            {
+                user: 'Jane Smith',
+                text: 'Looks amazing!'
+            },
+            {
+                user: 'Alice Johnson',
+                text: 'Wish I could join!'
+            }
+        ]
     },
     {
         id: 2,
         user: {
             name: 'Jane Smith',
-            profilePicture: 'https://via.placeholder.com/50'
+            profilePicture: 'https://picsum.photos/50?random=2'
         },
-        name: 'Laptop',
-        image: 'https://via.placeholder.com/150',
-        price: '$800',
-        description: 'A powerful laptop for all your needs.',
-        category: 'Electronics'
-    },
-    {
-        id: 3,
-        user: {
-            name: 'Alice Johnson',
-            profilePicture: 'https://via.placeholder.com/50'
+        content: 'Just finished reading a great book!',
+        image: 'https://via.placeholder.com/500',
+        reactions: {
+            like: 15,
+            love: 8,
+            haha: 1,
+            wow: 3,
+            sad: 0,
+            angry: 0
         },
-        name: 'Smartphone',
-        image: 'https://via.placeholder.com/150',
-        price: '$500',
-        description: 'A latest model smartphone with all features.',
-        category: 'Electronics'
+        comments: [
+            {
+                user: 'John Doe',
+                text: 'What book was it?'
+            }
+        ]
     }
 ];
 
@@ -57,7 +71,7 @@ router.post('/', (req, res) => {
         id: posts.length + 1,
         user: {
             name: 'Current User',
-            profilePicture: 'https://via.placeholder.com/50'
+            profilePicture: `https://picsum.photos/50?random=${posts.length + 1}`
         },
         ...req.body
     };

@@ -5,6 +5,7 @@ const User = require('../models/userModel');
 const multer = require('multer');
 const path = require('path');
 const fs = require('fs');
+const Op = require('sequelize').Op;
 
 // Ensure uploads directory exists
 const uploadDir = path.join(__dirname, '../../uploads');
@@ -106,6 +107,24 @@ router.post('/me/coverPhoto', upload.single('coverPhoto'), async (req, res) => {
         await user.save();
 
         res.json({ coverPhoto: user.coverPhoto });
+    } catch (error) {
+        res.status(500).json({ message: 'Server error' });
+    }
+});
+
+// Search Profiles
+router.get('/search/profiles', async (req, res) => {
+    const { query } = req.query;
+    try {
+        const profiles = await User.findAll({
+            where: {
+                username: {
+                    [Op.like]: `%${query}%`
+                }
+            },
+            attributes: ['id', 'username', 'profilePhoto']
+        });
+        res.json(profiles);
     } catch (error) {
         res.status(500).json({ message: 'Server error' });
     }
