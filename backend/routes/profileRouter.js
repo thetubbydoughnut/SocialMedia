@@ -44,7 +44,7 @@ router.get('/me', async (req, res) => {
 });
 
 // Get Profile by Username
-router.get('/username/:username', async (req, res) => {
+router.get('/:username', async (req, res) => {
     try {
         const user = await User.findOne({
             where: { username: req.params.username },

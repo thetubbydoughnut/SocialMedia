@@ -51,7 +51,11 @@ io.on('connection', (socket) => {
 });
 
 // Middleware
-app.use(cors());
+app.use(cors({
+    origin: 'http://localhost:3000', // Frontend URL
+    credentials: true, // Allow credentials (cookies, authorization headers, etc.)
+}));
+
 app.use(bodyParser.json());
 app.use(loggerMiddleware);
 
@@ -91,5 +95,3 @@ process.on('SIGINT', () => {
         process.exit(0);
     });
 });
-
-

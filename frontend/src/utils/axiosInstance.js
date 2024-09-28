@@ -1,8 +1,8 @@
 import axios from 'axios';
 
 const axiosInstance = axios.create({
-    baseURL: process.env.REACT_APP_API_URL || 'http://localhost:9000', // Adjust this to match your backend server URL
-    timeout: 1000,
+    baseURL: process.env.REACT_APP_API_URL || 'http://localhost:9000', // Ensure this matches your backend server URL and port
+    withCredentials: true, // Include credentials in requests
     headers: { 'Content-Type': 'application/json' }
 });
 
@@ -12,7 +12,6 @@ axiosInstance.interceptors.request.use(
         const token = localStorage.getItem('token');
         if (token) {
             config.headers['Authorization'] = `Bearer ${token}`;
-            // console.log('Token:', token); // Remove or comment out this line
         }
         return config;
     },

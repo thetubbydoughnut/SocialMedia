@@ -8,3 +8,20 @@
 .friends-list h2 {
     margin-top: 0;
 }
+
+.friendsList {
+    padding: 20px;
+}
+
+.friendsList h2 {
+    margin-bottom: 20px;
+}
+
+.friendsList ul {
+    list-style: none;
+    padding: 0;
+}
+
+.friendsList li {
+    margin-bottom: 10px;
+}

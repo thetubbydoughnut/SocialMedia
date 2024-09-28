@@ -21,14 +21,14 @@ const Profile = () => {
     const [isEditing, setIsEditing] = useState(false);
     const [profilePhotoFile, setProfilePhotoFile] = useState(null);
     const [coverPhotoFile, setCoverPhotoFile] = useState(null);
-    const [profilePhotoPreview, setProfilePhotoPreview] = useState(null); // Add this line
-    const [coverPhotoPreview, setCoverPhotoPreview] = useState(null); // Add this line
+    const [profilePhotoPreview, setProfilePhotoPreview] = useState(null);
+    const [coverPhotoPreview, setCoverPhotoPreview] = useState(null);
 
     useEffect(() => {
         const fetchProfile = async () => {
             try {
                 setLoading(true);
-                const response = await axiosInstance.get(`/profile/username/${username}`);
+                const response = await axiosInstance.get(`/profile/${username}`);
                 setUser(response.data);
                 setError(null);
             } catch (err) {
@@ -106,13 +106,13 @@ const Profile = () => {
     const handleProfilePhotoChange = (e) => {
         const file = e.target.files[0];
         setProfilePhotoFile(file);
-        setProfilePhotoPreview(URL.createObjectURL(file)); // Add this line
+        setProfilePhotoPreview(URL.createObjectURL(file));
     };
 
     const handleCoverPhotoChange = (e) => {
         const file = e.target.files[0];
         setCoverPhotoFile(file);
-        setCoverPhotoPreview(URL.createObjectURL(file)); // Add this line
+        setCoverPhotoPreview(URL.createObjectURL(file));
     };
 
     return (
@@ -153,13 +153,13 @@ const Profile = () => {
                     <label className="profile__edit-label">Profile Photo</label>
                     <input
                         type="file"
-                        onChange={handleProfilePhotoChange} // Update this line
+                        onChange={handleProfilePhotoChange}
                         className="profile__edit-file-input"
                     />
                     <label className="profile__edit-label">Cover Photo</label>
                     <input
                         type="file"
-                        onChange={handleCoverPhotoChange} // Update this line
+                        onChange={handleCoverPhotoChange}
                         className="profile__edit-file-input"
                     />
                     <button type="submit" className="profile__save-button">Save</button>
@@ -177,7 +177,7 @@ const Profile = () => {
                         <Routes>
                             <Route path="timeline" element={<Timeline />} />
                             <Route path="about" element={<About />} />
-                            <Route path="friends" element={<FriendsList />} />
+                            <Route path="friends" element={<FriendsList username={username} />} />
                             <Route path="photos" element={<Photos />} />
                             <Route path="more" element={<More />} />
                         </Routes>
@@ -187,5 +187,6 @@ const Profile = () => {
         </div>
     );
 };
+
 
 export default Profile;

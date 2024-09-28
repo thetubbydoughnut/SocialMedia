@@ -56,7 +56,7 @@ const AppContent = () => {
                     } 
                 />
                 <Route 
-                    path="/profile/:username" 
+                    path="/profile/:username/*" 
                     element={
                         <PrivateRoute>
                             <Profile />

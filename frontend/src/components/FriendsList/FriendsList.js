@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import axiosInstance from '../../utils/axiosInstance';
 import './FriendsList.css';
+import Friends from './Friends'; // Import the Friends component
 
-const FriendsList = () => {
+const FriendsList = ({ username }) => {
     const [friends, setFriends] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
@@ -10,7 +11,7 @@ const FriendsList = () => {
     useEffect(() => {
         const fetchFriends = async () => {
             try {
-                const response = await axiosInstance.get('/friends/list');
+                const response = await axiosInstance.get(`/profile/${username}/friends`);
                 setFriends(response.data);
                 setError(null);
             } catch (error) {
@@ -22,7 +23,7 @@ const FriendsList = () => {
         };
 
         fetchFriends();
-    }, []);
+    }, [username]);
 
     if (loading) return <div>Loading friends...</div>;
     if (error) return <div>{error}</div>;
@@ -34,8 +35,7 @@ const FriendsList = () => {
             <ul>
                 {friends.map((friend) => (
                     <li key={friend.id}>
-                        <img src={friend.profilePhoto} alt={friend.username} className="friend__photo" />
-                        <span>{friend.username}</span>
+                        <Friends friend={friend} />
                     </li>
                 ))}
             </ul>
