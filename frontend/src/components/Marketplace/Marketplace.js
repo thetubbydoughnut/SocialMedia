@@ -9,6 +9,7 @@ const Marketplace = () => {
     const selectedCategory = useSelector((state) => state.marketplace.selectedCategory);
     const status = useSelector((state) => state.marketplace.status);
     const error = useSelector((state) => state.marketplace.error);
+    const location = useSelector((state) => state.location);
     const [newItem, setNewItem] = useState({
         name: '',
         price: '',
@@ -49,7 +50,8 @@ const Marketplace = () => {
         formData.append('category', newItem.category);
         formData.append('image', image);
 
-        dispatch(addItem(formData));
+        await dispatch(addItem(formData));
+        dispatch(fetchItems(selectedCategory)); // Fetch updated items after adding new item
         setNewItem({
             name: '',
             price: '',
@@ -63,6 +65,14 @@ const Marketplace = () => {
         setImage(null);
         setImagePreview(null);
         setIsFormVisible(false);
+    };
+
+    const formatPrice = (price) => {
+        const formatter = new Intl.NumberFormat(location, {
+            style: 'currency',
+            currency: location === 'US' ? 'USD' : location === 'EU' ? 'EUR' : 'JPY',
+        });
+        return formatter.format(price);
     };
 
     return (
@@ -142,7 +152,7 @@ const Marketplace = () => {
                                 </div>
                                 {imagePreview && <img src={imagePreview} alt={newItem.name} className="marketplace__item-image" />}
                                 <h3 className="marketplace__item-name">{newItem.name}</h3>
-                                <p className="marketplace__item-price">{newItem.price}</p>
+                                <p className="marketplace__item-price">{formatPrice(newItem.price)}</p>
                                 <p className="marketplace__item-description">{newItem.description}</p>
                             </div>
                         </div>
@@ -157,7 +167,7 @@ const Marketplace = () => {
                             </div>
                             <img src={item.image} alt={item.name} className="marketplace__item-image" />
                             <h3 className="marketplace__item-name">{item.name}</h3>
-                            <p className="marketplace__item-price">{item.price}</p>
+                            <p className="marketplace__item-price">{formatPrice(item.price)}</p>
                             <p className="marketplace__item-description">{item.description}</p>
                         </div>
                     ))}

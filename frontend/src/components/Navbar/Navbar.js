@@ -2,16 +2,17 @@ import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { logout } from '../../slices/userSlice'; 
+import { setLocation } from '../../slices/locationSlice';
 import SearchBar from '../Searchbar/SearchBar';
 import HamburgerMenu from '../HamburgerMenu/HamburgerMenu'; // Ensure this is imported
 import './Navbar.css';
-
 
 const Header = () => {
     const navigate = useNavigate();
     const dispatch = useDispatch();
     const user = useSelector((state) => state.user.user);
     const [theme, setTheme] = useState('light'); // Add theme state
+    const [location, setLocationState] = useState('US'); // Correctly declare setLocationState
 
     useEffect(() => {
         document.body.className = theme;
@@ -20,6 +21,12 @@ const Header = () => {
     const handleLogout = () => {
         dispatch(logout());
         navigate('/login');
+    };
+
+    const handleLocationChange = (e) => {
+        const newLocation = e.target.value;
+        setLocationState(newLocation);
+        dispatch(setLocation(newLocation));
     };
 
     const toggleTheme = () => {
