@@ -48,7 +48,7 @@ const Header = () => {
                         <ul className="header__nav">
                             <li>
                                 <Link to={`/profile/${user.username}`} className="header__profile">
-                                    <img src={user.profilePhoto || '/path/to/default/profile/photo.jpg'} alt="Profile" className="header__profileImage" />
+                                    <img src={user.profilePhoto || '/default-profile-photo.jpg'} alt="Profile" className="header__profileImage" />
                                     <span>{user.username}</span>
                                 </Link>
                             </li>
@@ -73,14 +73,14 @@ const Header = () => {
                         </div>
                     </>
                 ) : (
-                  <>
-                    <Link to="/login" className="auth-button">
-                      Login
-                    </Link>
-                    <Link to="/register" className="auth-button"> {/* Ensure the register button is here */}
-                      Register
-                    </Link>
-                  </>
+                    <>
+                        <Link to="/login" className="auth-button">
+                            Login
+                        </Link>
+                        <Link to="/register" className="auth-button">
+                            Register
+                        </Link>
+                    </>
                 )}
             </div>
         </div>

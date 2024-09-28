@@ -1,21 +1,35 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axiosInstance from '../utils/axiosInstance';
 
-export const fetchUser = createAsyncThunk('user/fetchUser', async () => {
-    const response = await axiosInstance.get('/auth/me');
-    return response.data;
+export const fetchUser = createAsyncThunk('user/fetchUser', async (username, { rejectWithValue }) => {
+    try {
+        const response = await axiosInstance.get(`/profile/${username}`);
+        return response.data;
+    } catch (error) {
+        return rejectWithValue(error.response?.data?.message || 'Failed to fetch user');
+    }
 });
 
 const userSlice = createSlice({
     name: 'user',
     initialState: {
         user: JSON.parse(localStorage.getItem('user')) || null,
+        token: localStorage.getItem('token') || null,
         status: 'idle',
         error: null,
     },
     reducers: {
+        setUser: (state, action) => {
+            state.user = action.payload;
+            localStorage.setItem('user', JSON.stringify(action.payload));
+        },
+        setToken: (state, action) => {
+            state.token = action.payload;
+            localStorage.setItem('token', action.payload);
+        },
         logout: (state) => {
             state.user = null;
+            state.token = null;
             localStorage.removeItem('user');
             localStorage.removeItem('token');
         },
@@ -24,19 +38,18 @@ const userSlice = createSlice({
         builder
             .addCase(fetchUser.pending, (state) => {
                 state.status = 'loading';
+                state.error = null;
             })
             .addCase(fetchUser.fulfilled, (state, action) => {
                 state.status = 'succeeded';
                 state.user = action.payload;
-                localStorage.setItem('user', JSON.stringify(action.payload));
             })
             .addCase(fetchUser.rejected, (state, action) => {
                 state.status = 'failed';
-                state.error = action.error.message;
+                state.error = action.payload;
             });
     },
 });
 
-export const { logout } = userSlice.actions;
-
+export const { setUser, setToken, logout } = userSlice.actions;
 export default userSlice.reducer;
