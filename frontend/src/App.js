@@ -51,7 +51,7 @@ const AppContent = () => {
                     path="/watch" 
                     element={
                         <PrivateRoute>
-                            <Watch />
+                            <Watch component={Watch}/>
                         </PrivateRoute>
                     } 
                 />
