@@ -8,6 +8,11 @@ body.dark .home {
     color: #8B0000; /* Dark red text */
 }
 
+body.light .home {
+    background-color: #CEC363; /* Slightly darker cream */
+    color: #000000; /* Black text */
+}
+
 .home__content {
     display: flex;
     justify-content: center;

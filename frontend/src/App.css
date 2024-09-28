@@ -7,6 +7,11 @@ body.dark .App {
   color: #8B0000; /* Dark red text */
 }
 
+body.light .App {
+  background-color: #CEC363; /* Slightly darker cream */
+  color: #000000; /* Black text */
+}
+
 .App-logo {
   height: 40vmin;
   pointer-events: none;
@@ -32,6 +37,11 @@ body.dark .App {
 body.dark .App-header {
   background-color: #333333; /* Dark grey background */
   color: #8B0000; /* Dark red text */
+}
+
+body.light .App-header {
+  background-color: #CEC363; /* Slightly darker cream */
+  color: #000000; /* Black text */
 }
 
 .App-link {
