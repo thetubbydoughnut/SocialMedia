@@ -1,5 +1,17 @@
 const express = require('express');
+const multer = require('multer');
 const router = express.Router();
+
+const storage = multer.diskStorage({
+    destination: (req, file, cb) => {
+        cb(null, 'uploads/');
+    },
+    filename: (req, file, cb) => {
+        cb(null, Date.now() + '-' + file.originalname);
+    }
+});
+
+const upload = multer({ storage });
 
 let posts = [
     {
@@ -65,13 +77,13 @@ router.get('/', (req, res) => {
     }
 });
 
-// Create a new post
-router.post('/', (req, res) => {
+// Create a new post with file upload
+router.post('/', upload.single('image'), (req, res) => {
     const newPost = {
         id: posts.length + 1,
         user: {
             name: 'Current User',
-            profilePicture: `https://picsum.photos/50?random=${posts.length + 1}`
+            profilePicture: 'https://via.placeholder.com/50'
         },
         ...req.body
     };

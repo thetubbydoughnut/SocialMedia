@@ -1,28 +1,59 @@
 .marketplace {
+    display: flex;
     padding: 2rem;
     margin-top: 60px;
-    margin-left: 20px;
+    background-color: #f5f5f5; /* Light background */
+    color: #333; /* Dark text */
 }
 
-.marketplace__filter {
-    margin-bottom: 2rem;
+body.dark .marketplace {
+    background-color: #333333; /* Dark grey background */
+    color: #8B0000; /* Dark red text */
 }
 
-.marketplace__filter label {
-    margin-right: 1rem;
+.marketplace__sidebar {
+    flex: 0.2;
+    padding: 1rem;
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    margin-right: 2rem;
 }
 
-.marketplace__filter select {
-    padding: 0.5rem;
-    border: 1px solid #ccc;
+body.dark .marketplace__sidebar {
+    background-color: #444444; /* Dark grey background */
+}
+
+.marketplace__content {
+    flex: 0.8;
+    display: flex;
+    flex-direction: column;
+}
+
+.marketplace__new-listing-button {
+    padding: 0.5rem 1rem;
+    border: none;
+    background-color: #8b0000; /* Dark red */
+    color: #fff;
     border-radius: 5px;
+    cursor: pointer;
+    margin-bottom: 1rem;
+}
+
+.marketplace__new-listing-button:hover {
+    background-color: #a52a2a; /* Slightly lighter dark red */
+}
+
+.marketplace__form-preview-container {
+    display: flex;
+    gap: 2rem;
+    margin-bottom: 2rem;
 }
 
 .marketplace__form {
     display: flex;
     flex-direction: column;
     gap: 1rem;
-    margin-bottom: 2rem;
 }
 
 .marketplace__form input,
@@ -36,19 +67,41 @@
 .marketplace__form button {
     padding: 0.5rem 1rem;
     border: none;
-    background-color: #007bff;
+    background-color: #8b0000; /* Dark red */
     color: #fff;
     border-radius: 5px;
     cursor: pointer;
 }
 
 .marketplace__form button:hover {
-    background-color: #0056b3;
+    background-color: #a52a2a; /* Slightly lighter dark red */
+}
+
+.custom-file-upload {
+    display: inline-block;
+    padding: 0.5rem 1rem;
+    cursor: pointer;
+    background-color: #8b0000; /* Dark red */
+    color: #fff;
+    border-radius: 5px;
+    text-align: center;
+}
+
+.custom-file-upload:hover {
+    background-color: #a52a2a; /* Slightly lighter dark red */
+}
+
+.marketplace__form input[type="file"] {
+    display: none;
+}
+
+.marketplace__preview {
+    flex: 1;
 }
 
 .marketplace__items {
-    display: flex;
-    flex-wrap: wrap;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
     gap: 2rem;
 }
 
@@ -57,8 +110,11 @@
     border-radius: 10px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     padding: 1rem;
-    width: calc(33.333% - 2rem);
-    box-sizing: border-box;
+    text-align: center;
+}
+
+body.dark .marketplace__item {
+    background-color: #444444; /* Dark grey background */
 }
 
 .marketplace__item-header {
@@ -76,6 +132,11 @@
 
 .marketplace__item-user {
     margin: 0;
+    color: #333; /* Dark text */
+}
+
+body.dark .marketplace__item-user {
+    color: #8B0000; /* Dark red text */
 }
 
 .marketplace__item-image {
@@ -85,26 +146,18 @@
 
 .marketplace__item-name {
     margin: 0.5rem 0;
+    color: #333; /* Dark text */
+}
+
+body.dark .marketplace__item-name {
+    color: #8B0000; /* Dark red text */
 }
 
 .marketplace__item-price {
-    color: #007bff;
+    color: #8b0000; /* Dark red */
     font-weight: bold;
 }
 
 .marketplace__item-description {
     color: #555;
-}
-
-.marketplace__item-message-button {
-    padding: 0.5rem 1rem;
-    border: none;
-    background-color: #007bff;
-    color: #fff;
-    border-radius: 5px;
-    cursor: pointer;
-}
-
-.marketplace__item-message-button:hover {
-    background-color: #0056b3;
 }

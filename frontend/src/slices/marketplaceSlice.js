@@ -9,7 +9,11 @@ export const fetchItems = createAsyncThunk('marketplace/fetchItems', async (cate
 });
 
 export const addItem = createAsyncThunk('marketplace/addItem', async (newItem) => {
-    const response = await axiosInstance.post('/posts', newItem);
+    const response = await axiosInstance.post('/posts', newItem, {
+        headers: {
+            'Content-Type': 'multipart/form-data'
+        }
+    });
     return response.data;
 });
 
