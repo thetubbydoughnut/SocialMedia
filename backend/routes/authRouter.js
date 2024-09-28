@@ -10,28 +10,33 @@ router.post('/register', async (req, res) => {
     try {
         const { username, email, password } = req.body;
 
-        // Check if user already exists
+        // Check if user already exists by email
         let user = await User.findOne({ where: { email } });
         if (user) {
             return res.status(400).json({ message: 'User already exists' });
         }
 
-        // Create new user
+        // Check if username is taken
+        user = await User.findOne({ where: { username } });
+        if (user) {
+            return res.status(400).json({ message: 'Username already taken' });
+        }
+
+        // Hash password before storing
+        const salt = await bcrypt.genSalt(10);
+        const hashedPassword = await bcrypt.hash(password, salt);
+
+        // Create new user with hashed password
         user = await User.create({
             username,
             email,
-            password
+            password: hashedPassword
         });
 
-        // Hash password
-        const salt = await bcrypt.genSalt(10);
-        user.password = await bcrypt.hash(password, salt);
-        await user.save(); // Save the hashed password
-
-        // Create and return JWT token
+        // Generate JWT token
         const token = jwt.sign({ userId: user.id }, process.env.JWT_SECRET, { expiresIn: '1h' });
 
-        res.status(201).json({ token });
+        res.status(201).json({ token, username: user.username });
     } catch (err) {
         console.error(err.message);
         res.status(500).send('Server error');
@@ -42,7 +47,8 @@ router.post('/register', async (req, res) => {
 router.post('/login', async (req, res, next) => {
     const { email, password } = req.body;
     try {
-        const user = await User.findOne({ where: { email } });
+        // Use the 'withPassword' scope to include the password field
+        const user = await User.scope('withPassword').findOne({ where: { email } });
         if (!user) {
             console.error('User not found');
             return res.status(401).json({ message: 'Invalid credentials' });
@@ -55,7 +61,7 @@ router.post('/login', async (req, res, next) => {
         }
 
         const token = jwt.sign({ userId: user.id }, process.env.JWT_SECRET, { expiresIn: '1h' });
-        res.json({ token });
+        res.json({ token, username: user.username });
     } catch (error) {
         console.error('Login error:', error);
         next(error);

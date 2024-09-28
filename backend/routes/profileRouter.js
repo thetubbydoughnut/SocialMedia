@@ -6,7 +6,7 @@ const User = require('../models/userModel');
 const multer = require('multer');
 const path = require('path');
 const fs = require('fs');
-const Op = require('sequelize').Op;
+const { Op } = require('sequelize'); // Correct import
 
 // Ensure uploads directory exists
 const uploadDir = path.join(__dirname, '../../uploads');

@@ -1,28 +1,30 @@
-const { DataTypes } = require('sequelize');
+const { Model, DataTypes } = require('sequelize');
 const sequelize = require('../config/database');
 const User = require('./userModel');
 
-const Friend = sequelize.define('Friend', {
+class Friend extends Model {}
+
+Friend.init({
     senderId: {
         type: DataTypes.INTEGER,
         allowNull: false,
-        references: {
-            model: User,
-            key: 'id',
-        },
     },
     receiverId: {
         type: DataTypes.INTEGER,
         allowNull: false,
-        references: {
-            model: User,
-            key: 'id',
-        },
     },
     status: {
-        type: DataTypes.ENUM('pending', 'accepted', 'declined'),
-        defaultValue: 'pending',
+        type: DataTypes.STRING,
+        allowNull: false,
     },
+    // ... other fields
+}, {
+    sequelize,
+    modelName: 'Friend',
 });
+
+// Define associations
+Friend.belongsTo(User, { as: 'sender', foreignKey: 'senderId' });
+Friend.belongsTo(User, { as: 'receiver', foreignKey: 'receiverId' });
 
 module.exports = Friend;

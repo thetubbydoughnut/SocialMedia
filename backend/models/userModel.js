@@ -1,22 +1,26 @@
-const { DataTypes } = require('sequelize');
-const sequelize = require('../config/database');
+const { Model, DataTypes } = require('sequelize');
+const sequelize = require('../config/database'); // Adjust the path as needed
 
-const User = sequelize.define('User', {
+class User extends Model {}
+
+User.init({
     id: {
         type: DataTypes.INTEGER,
         primaryKey: true,
-        autoIncrement: true,
-        unique: true, // Ensure the id is unique
+        autoIncrement: true
     },
     username: {
         type: DataTypes.STRING,
-        allowNull: false,
-        unique: true, // Ensure the username is unique
+        unique: true,
+        allowNull: false
     },
     email: {
         type: DataTypes.STRING,
+        unique: true,
         allowNull: false,
-        unique: true, // Ensure the email is unique
+        validate: {
+            isEmail: true
+        }
     },
     password: {
         type: DataTypes.STRING,
@@ -24,18 +28,27 @@ const User = sequelize.define('User', {
     },
     bio: {
         type: DataTypes.TEXT,
-        allowNull: true,
+        allowNull: true
     },
     profilePhoto: {
         type: DataTypes.STRING,
-        allowNull: true,
+        allowNull: true
     },
     coverPhoto: {
         type: DataTypes.STRING,
-        allowNull: true,
-    },
+        allowNull: true
+    }
 }, {
-    timestamps: true,
+    sequelize,
+    modelName: 'User',
+    defaultScope: {
+        attributes: { exclude: ['password'] },
+    },
+    scopes: {
+        withPassword: {
+            attributes: {},
+        }
+    }
 });
 
 module.exports = User;

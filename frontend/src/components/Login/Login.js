@@ -4,6 +4,7 @@ import { useDispatch } from 'react-redux';
 import axiosInstance from '../../utils/axiosInstance';
 import { fetchUser } from '../../slices/userSlice';
 import './Login.css'; // Ensure you have styling if needed
+import { saveAuthToken } from '../../utils/authUtils';
 
 const Login = () => {
     const [email, setEmail] = useState('');
@@ -14,13 +15,15 @@ const Login = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        setError(''); // Reset error state before submission
         try {
             const response = await axiosInstance.post('/auth/login', { email, password });
             const token = response.data.token;
-            localStorage.setItem('token', token);
-            const userResponse = await dispatch(fetchUser());
-            localStorage.setItem('user', JSON.stringify(userResponse.payload));
-            navigate('/'); // Redirect to home after login
+            const username = response.data.username;
+            saveAuthToken(token);
+            localStorage.setItem('username', username);
+            await dispatch(fetchUser(username)).unwrap();
+            navigate(`/profile/${username}`);
         } catch (error) {
             if (error.response && error.response.data && error.response.data.message) {
                 setError(error.response.data.message);

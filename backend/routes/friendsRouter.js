@@ -1,5 +1,5 @@
 const express = require('express');
-const router = express.Router();
+const router = express.Router({ mergeParams: true }); // Merge parent params
 const authMiddleware = require('../middleware/authMiddleware');
 const Friend = require('../models/FriendModel')
 const User = require('../models/userModel');
@@ -7,7 +7,7 @@ const { Op } = require('sequelize');
 
 // Fetch Friends
 router.get('/', authMiddleware, async (req, res) => {
-    const { username } = req.params; // Extract username from params
+    const { username } = req.params; // Extract username from merged params
     try {
         const user = await User.findOne({ where: { username } });
         if (!user) {

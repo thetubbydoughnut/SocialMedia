@@ -1,34 +1,21 @@
-import React, { useEffect, useState } from 'react';
-import axiosInstance from '../../utils/axiosInstance';
+import React, { useEffect } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
+import { fetchFriends } from '../../slices/friendsSlice';
+import Friends from './Friends';
 import './FriendsList.css';
-import Friends from './Friends'; // Import the Friends component
 
 const FriendsList = ({ username }) => {
-    const [friends, setFriends] = useState([]);
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState(null);
+    const dispatch = useDispatch();
+    const { friends, status, error } = useSelector((state) => state.friends);
 
     useEffect(() => {
-        const fetchFriends = async () => {
-            try {
-                const response = await axiosInstance.get(`/profile/${username}/friends`);
-                setFriends(response.data);
-                setError(null);
-            } catch (error) {
-                console.error('Error fetching friends:', error);
-                setError('Failed to fetch friends');
-            } finally {
-                setLoading(false);
-            }
-        };
-
         if (username) {
-            fetchFriends();
+            dispatch(fetchFriends(username));
         }
-    }, [username]);
+    }, [dispatch, username]);
 
-    if (loading) return <div>Loading friends...</div>;
-    if (error) return <div>{error}</div>;
+    if (status === 'loading') return <div>Loading friends...</div>;
+    if (status === 'failed') return <div>{error}</div>;
     if (friends.length === 0) return <div>No friends found.</div>;
 
     return (

@@ -6,6 +6,7 @@ import { setLocation } from '../../slices/locationSlice';
 import SearchBar from '../Searchbar/SearchBar';
 import HamburgerMenu from '../HamburgerMenu/HamburgerMenu'; // Ensure this is imported
 import './Navbar.css';
+import { clearAuthToken } from '../../utils/authUtils';
 
 const Header = () => {
     const navigate = useNavigate();
@@ -20,6 +21,8 @@ const Header = () => {
 
     const handleLogout = () => {
         dispatch(logout());
+        clearAuthToken();
+        localStorage.removeItem('username');
         navigate('/login');
     };
 

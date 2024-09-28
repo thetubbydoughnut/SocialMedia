@@ -12,7 +12,7 @@ import Photos from '../Photos/Photos';
 import More from '../More/More';
 
 const Profile = () => {
-    const { username } = useParams();
+    const { username } = useParams(); // Extract username from URL parameters
     const dispatch = useDispatch();
     const currentUser = useSelector((state) => state.user.user);
     const [user, setUser] = useState(null);
@@ -25,10 +25,12 @@ const Profile = () => {
     const [coverPhotoPreview, setCoverPhotoPreview] = useState(null);
 
     useEffect(() => {
+        console.log('Username from params:', username); // Debug log
+
         const fetchProfile = async () => {
             try {
                 setLoading(true);
-                const response = await axiosInstance.get(`/profile/${username}`);
+                const response = await axiosInstance.get(`/profile/${username}`); // Use username from URL parameters
                 setUser(response.data);
                 setError(null);
             } catch (err) {
@@ -39,8 +41,13 @@ const Profile = () => {
             }
         };
 
-        fetchProfile();
-    }, [username]);
+        if (username) {
+            fetchProfile();
+        } else {
+            setError('No username provided');
+            setLoading(false);
+        }
+    }, [username]); // Ensure useEffect runs when username changes
 
     if (loading) return <div>Loading...</div>;
     if (error) return <div>{error}</div>;
@@ -103,18 +110,6 @@ const Profile = () => {
         }
     };
 
-    const handleProfilePhotoChange = (e) => {
-        const file = e.target.files[0];
-        setProfilePhotoFile(file);
-        setProfilePhotoPreview(URL.createObjectURL(file));
-    };
-
-    const handleCoverPhotoChange = (e) => {
-        const file = e.target.files[0];
-        setCoverPhotoFile(file);
-        setCoverPhotoPreview(URL.createObjectURL(file));
-    };
-
     return (
         <div className="profile">
             <div className="profile__header">
@@ -134,59 +129,26 @@ const Profile = () => {
                     </div>
                 </div>
             </div>
-            {isEditing ? (
-                <form onSubmit={handleSaveProfile} className="profile__edit-form">
-                    <label className="profile__edit-label">Username</label>
-                    <input
-                        type="text"
-                        value={user.username}
-                        onChange={(e) => setUser({ ...user, username: e.target.value })}
-                        className="profile__edit-input"
-                        required
-                    />
-                    <label className="profile__edit-label">Bio</label>
-                    <textarea
-                        value={user.bio}
-                        onChange={(e) => setUser({ ...user, bio: e.target.value })}
-                        className="profile__edit-textarea"
-                    ></textarea>
-                    <label className="profile__edit-label">Profile Photo</label>
-                    <input
-                        type="file"
-                        onChange={handleProfilePhotoChange}
-                        className="profile__edit-file-input"
-                    />
-                    <label className="profile__edit-label">Cover Photo</label>
-                    <input
-                        type="file"
-                        onChange={handleCoverPhotoChange}
-                        className="profile__edit-file-input"
-                    />
-                    <button type="submit" className="profile__save-button">Save</button>
-                </form>
-            ) : (
-                <div className="profile__body">
-                    <nav className="profile__nav">
-                        <Link to="timeline">Timeline</Link>
-                        <Link to="about">About</Link>
-                        <Link to="friends">Friends</Link>
-                        <Link to="photos">Photos</Link>
-                        <Link to="more">More</Link>
-                    </nav>
-                    <div className="profile__content">
-                        <Routes>
-                            <Route path="timeline" element={<Timeline />} />
-                            <Route path="about" element={<About />} />
-                            <Route path="friends" element={<FriendsList username={username} />} />
-                            <Route path="photos" element={<Photos />} />
-                            <Route path="more" element={<More />} />
-                        </Routes>
-                    </div>
+            <div className="profile__body">
+                <nav className="profile__nav">
+                    <Link to="timeline">Timeline</Link>
+                    <Link to="about">About</Link>
+                    <Link to="friends">Friends</Link>
+                    <Link to="photos">Photos</Link>
+                    <Link to="more">More</Link>
+                </nav>
+                <div className="profile__content">
+                    <Routes>
+                        <Route path="timeline" element={<Timeline />} />
+                        <Route path="about" element={<About />} />
+                        <Route path="friends" element={<FriendsList username={username} />} />
+                        <Route path="photos" element={<Photos />} />
+                        <Route path="more" element={<More />} />
+                    </Routes>
                 </div>
-            )}
+            </div>
         </div>
     );
 };
-
 
 export default Profile;
