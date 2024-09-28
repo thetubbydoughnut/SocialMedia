@@ -4,7 +4,7 @@
 
 body.dark .App {
   background-color: #333333; /* Dark grey background */
-  color: #ffffff; /* White text */
+  color: #8B0000; /* Dark red text */
 }
 
 .App-logo {
@@ -31,6 +31,7 @@ body.dark .App {
 
 body.dark .App-header {
   background-color: #333333; /* Dark grey background */
+  color: #8B0000; /* Dark red text */
 }
 
 .App-link {
@@ -38,7 +39,7 @@ body.dark .App-header {
 }
 
 body.dark .App-link {
-  color: #80bfff; /* Lighter blue text */
+  color: #8B0000; /* Dark red text */
 }
 
 @keyframes App-logo-spin {

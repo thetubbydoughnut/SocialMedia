@@ -14,11 +14,11 @@ code {
 }
 
 body.light {
-  background-color: #ffffff;
-  color: #000000;
+  background-color: #228B22; /* Forest Green */
+  color: #000000; /* Black text */
 }
 
 body.dark {
   background-color: #333333; /* Dark grey background */
-  color: #ffffff; /* White text */
+  color: #8B0000; /* Dark red text */
 }

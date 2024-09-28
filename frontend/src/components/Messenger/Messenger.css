@@ -7,7 +7,7 @@
 
 body.dark .messenger {
     background-color: #333333; /* Dark grey background */
-    color: #ffffff; /* White text */
+    color: #8B0000; /* Dark red text */
 }
 
 .chat-list-container {
@@ -65,7 +65,7 @@ body.dark .chat-list-item {
 }
 
 body.dark .chat-link {
-    color: #80bfff; /* Lighter blue text */
+    color: #8B0000; /* Dark red text */
 }
 
 .chat-link:hover {

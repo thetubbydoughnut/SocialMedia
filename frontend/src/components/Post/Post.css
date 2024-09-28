@@ -88,5 +88,5 @@
 }
 
 body.dark .post__user-info h3 {
-    color: black; /* Ensure profile names remain black in dark mode */
+    color: #8B0000; /* Dark red text */
 }

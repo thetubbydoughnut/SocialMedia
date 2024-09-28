@@ -3,8 +3,8 @@
     justify-content: space-between;
     align-items: center;
     padding: 10px;
-    background-color: white; /* Inverted color */
-    color: #3b5998; /* Inverted color */
+    background-color: #F5F5DC; /* Cream */
+    color: #8B0000; /* Dark Red */
     height: 60px;
     position: fixed;
     width: 100%;
@@ -14,20 +14,20 @@
 }
 
 body.dark .header {
-    background-color: #333333; /* Dark grey background */
-    color: #ffffff; /* White text */
+    background-color: #F5F5DC; /* Cream */
+    color: #8B0000; /* Dark red text */
 }
 
 .header__logo {
     font-size: 24px;
     font-weight: bold;
     text-decoration: none;
-    color: #3b5998; /* Inverted color */
+    color: #8B0000; /* Dark Red */
     margin-right: 20px;
 }
 
 body.dark .header__logo {
-    color: #ffffff; /* White text */
+    color: #8B0000; /* Dark red text */
 }
 
 .header__search {
@@ -50,14 +50,14 @@ body.dark .header__search {
 }
 
 .header__icon {
-    color: #3b5998; /* Inverted color */
+    color: #8b0000; /* Dark red */
     font-size: 24px;
     margin: 0 15px;
     text-decoration: none;
 }
 
 body.dark .header__icon {
-    color: #ffffff; /* White text */
+    color: #8B0000; /* Dark red text */
 }
 
 .header__icon:hover {
@@ -86,12 +86,12 @@ body.dark .header__icon:hover {
 
 .header__nav a {
     text-decoration: none;
-    color: #3b5998; /* Inverted color */
+    color: #8b0000; /* Dark red */
     font-size: 16px;
 }
 
 body.dark .header__nav a {
-    color: #ffffff; /* White text */
+    color: #8B0000; /* Dark red text */
 }
 
 .header__nav a:hover {
@@ -106,11 +106,11 @@ body.dark .header__nav a:hover {
     display: flex;
     align-items: center;
     text-decoration: none;
-    color: #3b5998; /* Inverted color */
+    color: #8b0000; /* Dark red */
 }
 
 body.dark .header__profile {
-    color: #ffffff; /* White text */
+    color: #8B0000; /* Dark red text */
 }
 
 .header__profileImage {
@@ -128,20 +128,20 @@ body.dark .header__profile {
 
 .auth-button {
     background: none;
-    border: 1px solid #3b5998; /* Inverted color */
-    color: #3b5998; /* Inverted color */
+    border: 1px solid #8b0000; /* Dark red */
+    color: #8b0000; /* Dark red */
     padding: 0.5rem 1rem;
     cursor: pointer;
     border-radius: 5px;
 }
 
 body.dark .auth-button {
-    border: 1px solid #ffffff; /* White border */
-    color: #ffffff; /* White text */
+    border: 1px solid #8B0000; /* Dark red border */
+    color: #8B0000; /* Dark red text */
 }
 
 .auth-button:hover {
-    background-color: #3b5998; /* Inverted color */
+    background-color: #8b0000; /* Dark red */
     color: white;
 }
 
@@ -152,20 +152,20 @@ body.dark .auth-button:hover {
 
 .theme-toggle {
     background: none;
-    border: 1px solid #3b5998; /* Inverted color */
-    color: #3b5998; /* Inverted color */
+    border: 1px solid #8b0000; /* Dark red */
+    color: #8b0000; /* Dark red */
     padding: 0.5rem 1rem;
     cursor: pointer;
     border-radius: 5px;
 }
 
 body.dark .theme-toggle {
-    border: 1px solid #ffffff; /* White border */
-    color: #ffffff; /* White text */
+    border: 1px solid #8B0000; /* Dark red border */
+    color: #8B0000; /* Dark red text */
 }
 
 .theme-toggle:hover {
-    background-color: #3b5998; /* Inverted color */
+    background-color: #8b0000; /* Dark red */
     color: white;
 }
 

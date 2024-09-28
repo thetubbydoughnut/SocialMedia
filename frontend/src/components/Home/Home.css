@@ -5,7 +5,7 @@
 
 body.dark .home {
     background-color: #333333; /* Dark grey background */
-    color: #ffffff; /* White text */
+    color: #8B0000; /* Dark red text */
 }
 
 .home__content {
@@ -24,4 +24,17 @@ body.dark .home {
 
 .widgets {
     flex: 1;
+}
+
+.home__button {
+    padding: 0.5rem 1rem;
+    border: none;
+    background-color: #8b0000; /* Dark red */
+    color: #fff;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.home__button:hover {
+    background-color: #a52a2a; /* Slightly lighter dark red */
 }

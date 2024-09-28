@@ -7,11 +7,12 @@
     background: none;
     border: none;
     cursor: pointer;
-    color: #3b5998; /* Inverted color */
-  }
+    color: #8b0000; /* Dark red */
+}
+
   
   body.dark .hamburger-button {
-    color: #ffffff; /* White text */
+    color: #8B0000; /* Dark red text */
   }
   
   .hamburger-menu {
@@ -41,12 +42,12 @@
     background: none;
     border: none;
     cursor: pointer;
-    color: #3b5998; /* Inverted color */
+    color: #8b0000; /* Dark red */
     float: right;
   }
   
   body.dark .close-button {
-    color: #ffffff; /* White text */
+    color: #8B0000; /* Dark red text */
   }
   
   .hamburger-nav ul {
@@ -60,12 +61,12 @@
   
   .hamburger-nav a {
     text-decoration: none;
-    color: #3b5998; /* Inverted color */
+    color: #8b0000; /* Dark red */
     font-size: 18px;
   }
   
   body.dark .hamburger-nav a {
-    color: #ffffff; /* White text */
+    color: #8B0000; /* Dark red text */
   }
   
   .hamburger-nav a:hover {

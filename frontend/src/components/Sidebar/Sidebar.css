@@ -11,7 +11,7 @@
   
   body.dark .sidebar {
     background-color: #444444; /* Dark grey background */
-    color: #ffffff; /* White text */
+    color: #8B0000; /* Dark red text */
   }
   
   .sidebar__option {
@@ -25,5 +25,5 @@
   }
   
   body.dark .sidebar__option a {
-    color: #ffffff; /* White text */
+    color: #8B0000; /* Dark red text */
   }

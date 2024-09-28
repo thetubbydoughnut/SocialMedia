@@ -1,3 +1,8 @@
+body.dark .chat {
+    background-color: #333333; /* Dark grey background */
+    color: #8B0000; /* Dark red text */
+}
+
 .chat {
     padding: 2rem;
     background-color: #f9f9f9;

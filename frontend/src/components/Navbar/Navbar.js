@@ -10,7 +10,7 @@ const Header = () => {
     const dispatch = useDispatch();
     const user = useSelector((state) => state.user.user);
     const [isMenuOpen, setIsMenuOpen] = useState(false);
-    const [theme, setTheme] = useState('light');
+    const [theme, setTheme] = useState('dark'); // Set initial theme to 'dark'
 
     useEffect(() => {
         document.body.className = theme;
