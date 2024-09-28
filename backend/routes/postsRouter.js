@@ -1,6 +1,7 @@
 const express = require('express');
 const multer = require('multer');
 const router = express.Router();
+const db = require('../config/knexinit'); // Ensure this path is correct
 
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
@@ -89,6 +90,17 @@ router.post('/', upload.single('image'), (req, res) => {
     };
     posts.push(newPost);
     res.status(201).json(newPost);
+});
+
+// Endpoint to get posts
+router.get('/posts', async (req, res) => {
+    try {
+        const posts = await db('posts').select('*');
+        res.json(posts);
+    } catch (error) {
+        console.error('Error fetching posts:', error);
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
 });
 
 module.exports = router;

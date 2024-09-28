@@ -5,45 +5,34 @@ import Post from '../Post/Post';
 
 const NewsFeed = () => {
     const [posts, setPosts] = useState([]);
-    const [page, setPage] = useState(1);
-    const [hasMore, setHasMore] = useState(true);
-    const [loading, setLoading] = useState(false);
-
-    const fetchPosts = async (currentPage) => {
-        setLoading(true);
-        try {
-            const response = await axiosInstance.get('/posts', { params: { page: currentPage } });
-            if (response.data.length === 0) {
-                setHasMore(false);
-            } else {
-                setPosts((prev) => [...prev, ...response.data]);
-            }
-        } catch (error) {
-            console.error('Error fetching posts:', error);
-        }
-        setLoading(false);
-    };
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
 
     useEffect(() => {
-        fetchPosts(page);
-    }, [page]); // Only fetch when page changes
+        const fetchPosts = async () => {
+            try {
+                const response = await axiosInstance.get('/posts');
+                setPosts(response.data);
+                setError(null);
+            } catch (error) {
+                console.error('Error fetching posts:', error);
+                setError('Failed to fetch posts');
+            } finally {
+                setLoading(false);
+            }
+        };
 
-    const loadMore = () => {
-        if (!loading && hasMore) {
-            setPage((prev) => prev + 1);
-        }
-    };
+        fetchPosts();
+    }, []);
+
+    if (loading) return <div>Loading posts...</div>;
+    if (error) return <div>{error}</div>;
 
     return (
         <div>
             {posts.map((post) => (
-                <Post key={post.id} post={post} /> // Ensure each post has a unique key
+                <Post key={post.id} post={post} />
             ))}
-            {loading && <p>Loading...</p>}
-            {!hasMore && <p>No more posts</p>}
-            {hasMore && !loading && (
-                <button onClick={loadMore}>Load More</button>
-            )}
         </div>
     );
 };

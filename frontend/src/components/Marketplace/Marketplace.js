@@ -162,8 +162,12 @@ const Marketplace = () => {
                     {items.map((item) => (
                         <div key={item.id} className="marketplace__item">
                             <div className="marketplace__item-header">
-                                <img src={item.user.profilePicture} alt={item.user.name} className="marketplace__item-profile-picture" />
-                                <h3 className="marketplace__item-user">{item.user.name}</h3>
+                                <img 
+                                    src={item.user?.profilePicture || 'https://via.placeholder.com/50'} 
+                                    alt={item.user?.name || 'Unknown User'} 
+                                    className="marketplace__item-profile-picture" 
+                                />
+                                <h3 className="marketplace__item-user">{item.user?.name || 'Unknown User'}</h3>
                             </div>
                             <img src={item.image} alt={item.name} className="marketplace__item-image" />
                             <h3 className="marketplace__item-name">{item.name}</h3>

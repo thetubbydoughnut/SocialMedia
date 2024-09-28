@@ -44,7 +44,7 @@ const HamburgerMenu = () => {
                         </li>
                         {user && (
                             <li>
-                                <Link to={`/profile/${user.id}`} onClick={toggleMenu}>
+                                <Link to={`/profile/${user.username}`} onClick={toggleMenu}>
                                     Profile
                                 </Link>
                             </li>
