@@ -22,7 +22,9 @@ const FriendsList = ({ username }) => {
             }
         };
 
-        fetchFriends();
+        if (username) {
+            fetchFriends();
+        }
     }, [username]);
 
     if (loading) return <div>Loading friends...</div>;

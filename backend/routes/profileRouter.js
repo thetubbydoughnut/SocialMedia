@@ -1,5 +1,6 @@
 const express = require('express');
 const router = express.Router();
+const friendsRouter = require('./friendsRouter'); // Import the friendsRouter
 const authMiddleware = require('../middleware/authMiddleware');
 const User = require('../models/userModel');
 const multer = require('multer');
@@ -130,6 +131,7 @@ router.get('/search/profiles', async (req, res) => {
     }
 });
 
-// Similarly, add routes for coverPhoto, etc.
+// Mount the friendsRouter under /profile/:username/friends
+router.use('/:username/friends', friendsRouter);
 
 module.exports = router;
