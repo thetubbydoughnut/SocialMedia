@@ -9,8 +9,8 @@ axiosInstance.interceptors.request.use(
     (config) => {
         const token = localStorage.getItem('token');
         if (token) {
-            config.headers.Authorization = `Bearer ${token}`;
-            console.log('Token added to headers:', token);
+            config.headers['Authorization'] = `Bearer ${token}`;
+            // console.log('Token:', token); // Remove or comment out this line
         }
         return config;
     },

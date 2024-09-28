@@ -22,6 +22,7 @@ const authRouter = require('./routes/authRouter');
 const postsRouter = require('./routes/postsRouter');
 const chatsRouter = require('./routes/chatsRouter');
 const friendsRouter = require('./routes/friendsRouter');
+const videoUploadRouter = require('./routes/videoUploadRouter');
 
 const app = express();
 const server = http.createServer(app);
@@ -65,6 +66,7 @@ app.use('/auth', authRouter);
 app.use('/posts', postsRouter);
 app.use('/chats', chatsRouter);
 app.use('/friends', friendsRouter);
+app.use('/api/videos', videoUploadRouter);
 
 // Serve static files from the uploads directory
 app.use('/uploads', express.static(path.join(__dirname, '../uploads')));

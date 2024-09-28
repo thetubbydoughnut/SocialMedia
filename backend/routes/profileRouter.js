@@ -94,6 +94,23 @@ router.post('/me/profilePhoto', upload.single('profilePhoto'), async (req, res) 
     }
 });
 
+// Upload Cover Photo
+router.post('/me/coverPhoto', upload.single('coverPhoto'), async (req, res) => {
+    try {
+        const user = await User.findByPk(req.user.id);
+        if (!user) {
+            return res.status(404).json({ message: 'User not found' });
+        }
+
+        user.coverPhoto = `/uploads/${req.file.filename}`;
+        await user.save();
+
+        res.json({ coverPhoto: user.coverPhoto });
+    } catch (error) {
+        res.status(500).json({ message: 'Server error' });
+    }
+});
+
 // Similarly, add routes for coverPhoto, etc.
 
 module.exports = router;

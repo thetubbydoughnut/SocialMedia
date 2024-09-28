@@ -18,7 +18,6 @@ const Login = () => {
             console.log('Attempting to login with URL:', axiosInstance.defaults.baseURL + '/auth/login');
             const response = await axiosInstance.post('/auth/login', { email, password });
             const token = response.data.token;
-            console.log('Token received:', token); // Debugging: Log the token
             localStorage.setItem('token', token);
             dispatch(fetchUser());
             navigate('/'); // Redirect to home or dashboard after login

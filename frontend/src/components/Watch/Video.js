@@ -3,14 +3,24 @@ import './Video.css';
 
 const Video = ({ src, description }) => {
     const videoRef = useRef(null);
+    const playTimeoutRef = useRef(null);
+    const pauseTimeoutRef = useRef(null);
 
     useEffect(() => {
+        const videoElement = videoRef.current;
+
         const handlePlay = () => {
-            videoRef.current.play();
+            clearTimeout(pauseTimeoutRef.current);
+            playTimeoutRef.current = setTimeout(() => {
+                videoElement.play();
+            }, 100); // Debounce play
         };
 
         const handlePause = () => {
-            videoRef.current.pause();
+            clearTimeout(playTimeoutRef.current);
+            pauseTimeoutRef.current = setTimeout(() => {
+                videoElement.pause();
+            }, 100); // Debounce pause
         };
 
         const observer = new IntersectionObserver(
@@ -24,10 +34,13 @@ const Video = ({ src, description }) => {
             { threshold: 0.5 }
         );
 
-        observer.observe(videoRef.current);
+        observer.observe(videoElement);
 
         return () => {
-            observer.disconnect();
+            observer.unobserve(videoElement);
+            clearTimeout(playTimeoutRef.current);
+            clearTimeout(pauseTimeoutRef.current);
+            videoElement.pause(); // Ensure the video is paused when the component unmounts
         };
     }, []);
 
