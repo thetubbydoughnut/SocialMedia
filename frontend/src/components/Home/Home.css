@@ -11,11 +11,13 @@
     width: 100%;
     display: flex;
     flex-direction: column;
+    flex: 2;
 }
 
 .newsfeed {
     width: 100%;
     margin-top: 20px; /* Add space between widgets and newsfeed */
+    max-width: 1200px; /* Adjust this value based on your desired max width */
 }
 
 .home__button {
@@ -27,15 +29,18 @@
     cursor: pointer;
     transition: background-color 0.3s;
     font-weight: bold;
+    flex: 1;
 }
 
 .home__button:hover {
     background-color: #a52a2a;
+    padding: 0.5rem 1rem;
 }
 
 body.dark .home__button {
     background-color: var(--dark-red);
     color: var(--soft-white);
+    cursor: pointer;
 }
 
 body.dark .home__button:hover {

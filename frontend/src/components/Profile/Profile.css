@@ -31,6 +31,7 @@ body.dark .profile {
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
     margin-top: -75px;
     position: relative;
+    margin-right: 20px;
 }
 
 body.dark .profile__info {
@@ -159,6 +160,7 @@ body.dark .profile__edit-textarea {
     position: fixed;
     top: 125px; /* Adjust based on your header height */
     left: 0;
+    color: #8b0000; /* Dark red */
 }
 
 body.dark .profile__nav {

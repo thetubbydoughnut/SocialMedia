@@ -1,19 +1,23 @@
 .quick-post {
     background-color: var(--form-background-color);
-    border-radius: 15px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    border-radius: 20px;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1);
     margin-bottom: 2rem;
-    padding: 1rem;
-    transition: box-shadow 0.3s ease;
+    padding: 1.5rem;
+    transition: all 0.3s ease;
 }
 
 .quick-post:hover {
-    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
+    transform: translateY(-5px);
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
 }
 
-.quick-post__header {
+.quick-post__input {
     display: flex;
     align-items: center;
+    background-color: rgba(255, 255, 255, 0.1);
+    border-radius: 30px;
+    padding: 0.5rem 1rem;
     margin-bottom: 1rem;
 }
 
@@ -23,9 +27,9 @@
     background-color: transparent;
     resize: none;
     min-height: 40px;
-    font-size: 14px;
+    font-size: 16px;
     color: var(--text-color);
-    padding: 8px 0;
+    padding: 0.5rem;
 }
 
 .quick-post textarea:focus {
@@ -35,8 +39,7 @@
 .quick-post__actions {
     display: flex;
     justify-content: space-between;
-    border-top: 1px solid rgba(0, 0, 0, 0.1);
-    padding-top: 10px;
+    align-items: center;
 }
 
 .quick-post__action-button {
@@ -44,106 +47,48 @@
     align-items: center;
     background: rgba(255, 255, 255, 0.1);
     border: none;
-    color: var(--white);
+    color: var(--text-color);
     cursor: pointer;
     font-size: 14px;
-    padding: 8px 12px;
+    padding: 0.5rem 1rem;
     border-radius: 20px;
-    transition: background-color 0.2s ease;
+    transition: all 0.2s ease;
 }
 
 .quick-post__action-button:hover {
     background-color: rgba(255, 255, 255, 0.2);
+    transform: translateY(-2px);
 }
 
 .quick-post__action-button svg {
-    margin-right: 5px;
+    margin-right: 0.5rem;
 }
 
 .quick-post__submit-button {
-    background-color: var(--cream);
-    color: var(--dark-red);
+    background-color: var(--dark-red);
+    color: var(--white);
     border: none;
     border-radius: 20px;
-    padding: 8px 16px;
+    padding: 0.5rem 1rem;
     font-size: 14px;
     font-weight: bold;
     cursor: pointer;
-    transition: background-color 0.2s ease;
+    transition: all 0.2s ease;
 }
 
 .quick-post__submit-button:hover {
-    background-color: var(--white);
+    background-color: var(--cream);
+    color: var(--dark-red);
+    transform: translateY(-2px);
 }
 
-.image-preview {
-    position: relative;
-    margin-top: 10px;
-}
+/* Add more styles for other elements... */
 
-.image-preview img {
-    max-width: 100%;
-    border-radius: 8px;
-}
-
-.remove-image {
-    position: absolute;
-    top: 8px;
-    right: 8px;
-    background-color: rgba(0, 0, 0, 0.6);
-    color: var(--white);
-    border: none;
-    border-radius: 50%;
-    width: 30px;
-    height: 30px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    cursor: pointer;
-}
-
-.error-message {
-    color: #ff0000;
-    font-size: 14px;
-    margin-top: 10px;
-}
-
-body.dark .quick-post {
-    background-color: var(--dark-grey);
-}
-
-body.dark .quick-post textarea {
-    color: var(--soft-white);
-}
-
-body.dark .quick-post__action-button {
-    color: var(--cream);
-}
-
-body.dark .quick-post__action-button:hover {
-    background-color: rgba(255, 204, 204, 0.1);
-}
-
-body.dark .quick-post__submit-button {
-    background-color: var(--dark-red);
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
 }
 
 .quick-post__preview {
-    margin-top: 20px;
-    border-top: 1px solid rgba(0, 0, 0, 0.1);
-    padding-top: 20px;
-}
-
-.quick-post__preview h3 {
-    margin-bottom: 10px;
-    color: var(--text-color);
-}
-
-.quick-post__preview .post {
-    box-shadow: none;
-    margin-bottom: 0;
-}
-
-body.dark .quick-post__preview h3 {
-    color: var(--soft-white);
+    animation: fadeIn 0.3s ease;
 }
