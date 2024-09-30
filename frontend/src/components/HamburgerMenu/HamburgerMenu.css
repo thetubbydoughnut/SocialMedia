@@ -7,8 +7,8 @@
     background: none;
     border: none;
     cursor: pointer;
-    color: #8b0000; /* Dark red */
-}
+    color: #fff;
+  }
 
   
   body.dark .hamburger-button {

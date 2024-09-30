@@ -56,14 +56,10 @@ const Header = () => {
         <div className={`header ${isNavbarVisible ? 'header--visible' : ''}`}>
             <div className="header__left">
                 <Link to="/" className="header__logo">MyApp</Link>
-                {user && <SearchBar />}
+                <HamburgerMenu />
             </div>
             <div className="header__center">
-                <nav className="header__nav">
-                    <Link to="/">Home</Link>
-                    <Link to="/watch">Watch</Link>
-                    <Link to="/profile">Profile</Link>
-                </nav>
+                {user && <SearchBar />}
             </div>
             <div className="header__right">
                 <select value={location} onChange={handleLocationChange} className="header__location-select">
