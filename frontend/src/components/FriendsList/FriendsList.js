@@ -1,13 +1,13 @@
 import React, { useRef } from 'react';
 import { useSelector } from 'react-redux';
-import { selectAllProfiles } from '../../slices/userSlice';
 import Friends from './Friends';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faChevronLeft, faChevronRight } from '@fortawesome/free-solid-svg-icons';
 import './FriendsList.css';
+import { profileSelectors } from '../../slices/profileSlice';
 
 const FriendsList = () => {
-    const allProfiles = useSelector(selectAllProfiles);
+    const allProfiles = useSelector(profileSelectors.selectSearchResults);
     const friendsContainerRef = useRef(null);
 
     if (!allProfiles || allProfiles.length === 0) {

@@ -1,40 +1,41 @@
 import React, { useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import { useDispatch } from 'react-redux';
-import axiosInstance from '../../utils/axiosInstance';
+import { register } from '../../slices/authSlice';
+import { authSelectors } from '../../slices/authSlice';
 import './Register.css';
 
 const Register = () => {
     const [username, setUsername] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-    const [error, setError] = useState('');
-    const navigate = useNavigate();
     const dispatch = useDispatch();
+    const navigate = useNavigate();
 
-    const handleRegister = async (e) => {
+    const authStatus = useSelector(authSelectors.selectAuthStatus);
+    const authError = useSelector(authSelectors.selectAuthError);
+    const user = useSelector(authSelectors.selectUser);
+
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        setError('');
         try {
-            const response = await axiosInstance.post('/auth/register', { username, email, password });
-            localStorage.setItem('token', response.data.token);
-            // Removed dispatch(fetchUser()) since the user needs to log in
-            navigate('/login'); // Redirect to login after registration
+            await dispatch(register({ username, email, password })).unwrap();
+            navigate('/');
         } catch (error) {
-            if (error.response && error.response.data && error.response.data.message) {
-                setError(error.response.data.message);
-            } else {
-                setError('Registration failed. Please try again.');
-            }
-            console.error('Registration failed:', error);
+            console.error('Registration error:', error);
         }
     };
 
+    // Redirect if already logged in
+    if (user) {
+        navigate('/');
+    }
+
     return (
         <div className="register">
-            <form onSubmit={handleRegister}>
+            <form onSubmit={handleSubmit}>
                 <h2>Register</h2>
-                {error && <p className="error">{error}</p>}
+                {authError && <p className="error">{authError}</p>}
                 <input
                     type="text"
                     placeholder="Username"
@@ -56,7 +57,9 @@ const Register = () => {
                     onChange={(e) => setPassword(e.target.value)}
                     required
                 />
-                <button type="submit">Register</button>
+                <button type="submit" disabled={authStatus === 'loading'}>
+                    {authStatus === 'loading' ? 'Registering...' : 'Register'}
+                </button>
             </form>
         </div>
     );

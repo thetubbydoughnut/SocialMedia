@@ -5,9 +5,10 @@ import FriendsList from '../FriendsList/FriendsList'; // Import the FriendsList 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUser, faEnvelope, faUsers, faCalendarAlt, faStore } from '@fortawesome/free-solid-svg-icons';
 import './Sidebar.css';
+import { profileSelectors } from '../../slices/profileSlice';
 
 const Sidebar = () => {
-    const user = useSelector((state) => state.user.user);
+    const user = useSelector(profileSelectors.selectUser);
     const [isOpen, setIsOpen] = useState(false);
 
     if (!user) {

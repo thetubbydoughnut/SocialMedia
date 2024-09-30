@@ -1,15 +1,15 @@
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { addFriend } from '../../slices/userSlice';
 import './Friends.css';
+import { updateProfile } from '../../slices/profileSlice';
 
 const Friends = ({ friend }) => {
     const dispatch = useDispatch();
-    const currentUser = useSelector(state => state.user.user);
+    const currentUser = useSelector(state => state.profile.user);
     const isFriend = currentUser && currentUser.friends ? currentUser.friends.includes(friend.id) : false;
 
     const handleAddFriend = () => {
-        dispatch(addFriend(friend.id));
+        dispatch(updateProfile({ friends: [...currentUser.friends, friend.id] }));
     };
 
     return (

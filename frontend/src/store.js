@@ -1,14 +1,18 @@
 import { configureStore } from '@reduxjs/toolkit';
+import authReducer from './slices/authSlice';
+import profileReducer from './slices/profileSlice';
+import friendReducer from './slices/friendSlice';
+import searchReducer from './slices/searchSlice';
 import marketplaceReducer from './slices/marketplaceSlice';
-import userReducer from './slices/userSlice';
-import friendsReducer from './slices/friendsSlice';
 
 const store = configureStore({
-    reducer: {
-        marketplace: marketplaceReducer,
-        user: userReducer,
-        friends: friendsReducer,
-    }
+  reducer: {
+    auth: authReducer,
+    profile: profileReducer,
+    friends: friendReducer,
+    search: searchReducer,
+    marketplace: marketplaceReducer,
+  }
 });
 
 export default store;

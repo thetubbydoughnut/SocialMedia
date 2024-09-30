@@ -2,10 +2,11 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import './HamburgerMenu.css';
+import { profileSelectors } from '../../slices/profileSlice';
 
 const HamburgerMenu = () => {
     const [isOpen, setIsOpen] = useState(false);
-    const user = useSelector((state) => state.user.user);
+    const user = useSelector(profileSelectors.selectUser);
 
     const toggleMenu = () => {
         setIsOpen(!isOpen);

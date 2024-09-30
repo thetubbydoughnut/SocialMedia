@@ -5,10 +5,7 @@ import './Marketplace.css';
 
 const Marketplace = () => {
     const dispatch = useDispatch();
-    const items = useSelector((state) => state.marketplace.items);
-    const selectedCategory = useSelector((state) => state.marketplace.selectedCategory);
-    const status = useSelector((state) => state.marketplace.status);
-    const error = useSelector((state) => state.marketplace.error);
+    const { items, selectedCategory, status } = useSelector((state) => state.marketplace);
     const location = useSelector((state) => state.location);
     const [newItem, setNewItem] = useState({
         name: '',

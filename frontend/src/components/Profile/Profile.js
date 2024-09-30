@@ -1,19 +1,18 @@
 import React, { useEffect } from 'react';
-import { useParams, NavLink, Routes, Route } from 'react-router-dom';
+import { useParams, NavLink } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
-import { 
-    fetchProfile, 
+import { profileSelectors, fetchProfile, 
     updateProfile, 
     updateProfilePhoto, 
     updateCoverPhoto,
-    setIsEditing,
-    setEditedUser,
-    setProfilePhotoFile,
-    setCoverPhotoFile,
-    setProfilePhotoPreview,
-    setCoverPhotoPreview
-} from '../../slices/userSlice';
-import axiosInstance from '../../utils/axiosInstance';
+    setEditedUser, 
+    setIsEditing, 
+    setProfilePhotoFile, 
+    setCoverPhotoFile, 
+    setProfilePhotoPreview, 
+    setCoverPhotoPreview } from '../../slices/profileSlice';
+import { authSelectors } from '../../slices/authSlice';
+import { axiosInstance } from '../../utils/axiosInstance';
 import { getImageOrPlaceholder } from '../../utils/imageUtils';
 import './Profile.css';
 import Timeline from '../Timeline/Timeline';
@@ -26,16 +25,17 @@ import ProfileSearch from '../ProfileSearch/ProfileSearch';
 const Profile = () => {
     const { username } = useParams();
     const dispatch = useDispatch();
-    const currentUser = useSelector((state) => state.user.user);
-    const profileUser = useSelector((state) => state.user.profileUser);
-    const status = useSelector((state) => state.user.status);
-    const error = useSelector((state) => state.user.error);
-    const isEditing = useSelector((state) => state.user.isEditing);
-    const editedUser = useSelector((state) => state.user.editedUser);
-    const profilePhotoFile = useSelector((state) => state.user.profilePhotoFile);
-    const coverPhotoFile = useSelector((state) => state.user.coverPhotoFile);
-    const profilePhotoPreview = useSelector((state) => state.user.profilePhotoPreview);
-    const coverPhotoPreview = useSelector((state) => state.user.coverPhotoPreview);
+
+    const currentUser = useSelector(authSelectors.selectUser);
+    const profileUser = useSelector(profileSelectors.selectProfileUser);
+    const status = useSelector(profileSelectors.selectProfileStatus);
+    const error = useSelector(profileSelectors.selectProfileError);
+    const isEditing = useSelector(profileSelectors.selectIsEditing);
+    const editedUser = useSelector(profileSelectors.selectEditedUser);
+    const profilePhotoFile = useSelector(profileSelectors.selectProfilePhotoFile);
+    const coverPhotoFile = useSelector(profileSelectors.selectCoverPhotoFile);
+    const profilePhotoPreview = useSelector(profileSelectors.selectProfilePhotoPreview);
+    const coverPhotoPreview = useSelector(profileSelectors.selectCoverPhotoPreview);
 
     useEffect(() => {
         if (username) {
@@ -84,54 +84,18 @@ const Profile = () => {
         }
     };
 
-    const handleSaveProfile = async (e) => {
-        e.preventDefault();
+    const handleSaveProfile = async () => {
         try {
             await dispatch(updateProfile(editedUser)).unwrap();
-
             if (profilePhotoFile) {
-                await handleProfilePhotoUpload(profilePhotoFile);
+                await dispatch(updateProfilePhoto(profilePhotoFile)).unwrap();
             }
-
             if (coverPhotoFile) {
-                await handleCoverPhotoUpload(coverPhotoFile);
+                await dispatch(updateCoverPhoto(coverPhotoFile)).unwrap();
             }
-
             dispatch(setIsEditing(false));
-        } catch (error) {
-            console.error('Error updating profile:', error);
-        }
-    };
-
-    const handleProfilePhotoUpload = async (file) => {
-        const formData = new FormData();
-        formData.append('profilePhoto', file);
-
-        try {
-            const response = await axiosInstance.post('/profile/me/profilePhoto', formData, {
-                headers: {
-                    'Content-Type': 'multipart/form-data',
-                },
-            });
-            dispatch(updateProfilePhoto(response.data.profilePhoto));
-        } catch (error) {
-            console.error('Error uploading profile photo:', error);
-        }
-    };
-
-    const handleCoverPhotoUpload = async (file) => {
-        const formData = new FormData();
-        formData.append('coverPhoto', file);
-
-        try {
-            const response = await axiosInstance.post('/profile/me/coverPhoto', formData, {
-                headers: {
-                    'Content-Type': 'multipart/form-data',
-                },
-            });
-            dispatch(updateCoverPhoto(response.data.coverPhoto));
-        } catch (error) {
-            console.error('Error uploading cover photo:', error);
+        } catch (err) {
+            console.error('Failed to save profile:', err);
         }
     };
 
@@ -206,44 +170,6 @@ const Profile = () => {
                     <NavLink to="friends" className={({ isActive }) => isActive ? "active" : ""}>Friends</NavLink>
                     <NavLink to="photos" className={({ isActive }) => isActive ? "active" : ""}>Photos</NavLink>
                     <NavLink to="more" className={({ isActive }) => isActive ? "active" : ""}>More</NavLink>
-                </div>
-            </div>
-            <div className="profile__body">
-                <div className="profile__content">
-                    {isEditing ? (
-                        <form onSubmit={handleSaveProfile} className="profile__edit-form">
-                            <label className="profile__edit-label">
-                                Username:
-                                <input
-                                    type="text"
-                                    name="username"
-                                    value={editedUser.username}
-                                    onChange={handleInputChange}
-                                    className="profile__edit-input"
-                                />
-                            </label>
-                            <label className="profile__edit-label">
-                                Bio:
-                                <textarea
-                                    name="bio"
-                                    value={editedUser.bio}
-                                    onChange={handleInputChange}
-                                    className="profile__edit-textarea"
-                                />
-                            </label>
-                        </form>
-                    ) : (
-                        <>
-                            <ProfileSearch />
-                            <Routes>
-                                <Route path="" element={<Timeline />} />
-                                <Route path="about" element={<About />} />
-                                <Route path="friends" element={<FriendsList username={username} />} />
-                                <Route path="photos" element={<Photos />} />
-                                <Route path="more" element={<More />} />
-                            </Routes>
-                        </>
-                    )}
                 </div>
             </div>
         </div>

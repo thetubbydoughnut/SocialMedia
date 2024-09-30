@@ -1,9 +1,12 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
+import { profileSelectors } from '../../slices/profileSlice';
 
 const SearchResults = () => {
-    const { searchResults, searchStatus, error } = useSelector(state => state.user);
+    const searchResults = useSelector(profileSelectors.selectSearchResults);
+    const searchStatus = useSelector(profileSelectors.selectSearchStatus);
+    const error = useSelector(profileSelectors.selectProfileError);
 
     if (searchStatus === 'loading') return <div>Searching...</div>;
     if (searchStatus === 'failed') return <div>Error: {error}</div>;

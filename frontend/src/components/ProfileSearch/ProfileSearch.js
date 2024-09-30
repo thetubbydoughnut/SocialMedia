@@ -1,14 +1,14 @@
 import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { searchProfiles } from '../../slices/userSlice';
+import { searchProfiles, profileSelectors } from '../../slices/profileSlice';
 import Friends from '../FriendsList/Friends';
 import './ProfileSearch.css';
 
 const ProfileSearch = () => {
     const [searchQuery, setSearchQuery] = useState('');
     const dispatch = useDispatch();
-    const searchResults = useSelector(state => state.user.searchResults);
-    const searchStatus = useSelector(state => state.user.searchStatus);
+    const searchResults = useSelector(profileSelectors.selectSearchResults);
+    const searchStatus = useSelector(profileSelectors.selectSearchStatus);
 
     const handleSearch = (e) => {
         e.preventDefault();

@@ -1,62 +1,60 @@
 import React, { useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import { useDispatch } from 'react-redux';
-import axiosInstance from '../../utils/axiosInstance';
-import { fetchUser } from '../../slices/userSlice';
-import './Login.css'; // Ensure you have styling if needed
-import { saveAuthToken } from '../../utils/authUtils';
+import { login } from '../../slices/authSlice';
+import { authSelectors } from '../../slices/authSlice';
+import './Login.css';
 
 const Login = () => {
-    const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
-    const [error, setError] = useState('');
-    const navigate = useNavigate();
-    const dispatch = useDispatch();
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
 
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-        setError(''); // Reset error state before submission
-        try {
-            const response = await axiosInstance.post('/auth/login', { email, password });
-            const token = response.data.token;
-            const username = response.data.username;
-            saveAuthToken(token);
-            localStorage.setItem('username', username);
-            await dispatch(fetchUser(username)).unwrap();
-            navigate(`/profile/${username}`);
-        } catch (error) {
-            if (error.response && error.response.data && error.response.data.message) {
-                setError(error.response.data.message);
-            } else {
-                setError('Invalid email or password');
-            }
-            console.error('Login failed:', error);
-        }
-    };
+  const authStatus = useSelector(authSelectors.selectAuthStatus);
+  const authError = useSelector(authSelectors.selectAuthError);
+  const user = useSelector(authSelectors.selectUser);
 
-    return (
-        <div className="login">
-            <form onSubmit={handleSubmit}>
-                <h2>Login</h2>
-                {error && <p className="error">{error}</p>}
-                <input
-                    type="email"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    placeholder="Email"
-                    required
-                />
-                <input
-                    type="password"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    placeholder="Password"
-                    required
-                />
-                <button type="submit">Login</button>
-            </form>
-        </div>
-    );
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      await dispatch(login({ email, password })).unwrap();
+      navigate('/');
+    } catch (error) {
+      console.error('Login error:', error);
+    }
+  };
+
+  // Redirect if already logged in
+  if (user) {
+    navigate('/');
+  }
+
+  return (
+    <div className="login">
+      <form onSubmit={handleSubmit}>
+        <h2>Login</h2>
+        {authError && <p className="error">{authError}</p>}
+        <input
+          type="email"
+          placeholder="Email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          required
+        />
+        <input
+          type="password"
+          placeholder="Password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          required
+        />
+        <button type="submit" disabled={authStatus === 'loading'}>
+          {authStatus === 'loading' ? 'Logging in...' : 'Login'}
+        </button>
+      </form>
+    </div>
+  );
 };
 
 export default Login;

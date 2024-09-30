@@ -36,7 +36,17 @@ router.post('/register', async (req, res) => {
         // Generate JWT token
         const token = jwt.sign({ userId: user.id }, process.env.JWT_SECRET, { expiresIn: '1h' });
 
-        res.status(201).json({ token, username: user.username });
+        // Exclude password from user data
+        const userData = {
+            id: user.id,
+            username: user.username,
+            email: user.email,
+            bio: user.bio,
+            profilePhoto: user.profilePhoto,
+            coverPhoto: user.coverPhoto
+        };
+
+        res.status(201).json({ token, user: userData });
     } catch (err) {
         console.error(err.message);
         res.status(500).send('Server error');
@@ -61,7 +71,18 @@ router.post('/login', async (req, res, next) => {
         }
 
         const token = jwt.sign({ userId: user.id }, process.env.JWT_SECRET, { expiresIn: '1h' });
-        res.json({ token, username: user.username });
+
+        // Exclude password from user data
+        const userData = {
+            id: user.id,
+            username: user.username,
+            email: user.email,
+            bio: user.bio,
+            profilePhoto: user.profilePhoto,
+            coverPhoto: user.coverPhoto
+        };
+
+        res.json({ token, user: userData });
     } catch (error) {
         console.error('Login error:', error);
         next(error);

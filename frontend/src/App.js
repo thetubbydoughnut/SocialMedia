@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Routes, useNavigate } from 'react-router-dom';
 import { Provider, useDispatch } from 'react-redux';
 import store from './store';
 import Home from './components/Home/Home';
@@ -14,23 +14,28 @@ import Messenger from './components/Messenger/Messenger';
 import Login from './components/Login/Login';
 import PrivateRoute from './components/PrivateRoutes/PrivateRoute';
 import Register from './components/Register/Register';
-import { fetchUser } from './actions/userActions';
+import SearchResults from './components/SearchResults/SearchResults';
+import { fetchProfile as fetchCurrentUserProfile } from './slices/profileSlice';
 import { loadAuthToken } from './utils/authUtils';
-import SearchResults from '../src/components/SearchResults/SearchResults';
+import { setupInterceptors } from './utils/axiosInstance';
 
 const AppContent = () => {
     const dispatch = useDispatch();
+    const navigate = useNavigate();
 
     useEffect(() => {
-        loadAuthToken();
-        const username = localStorage.getItem('username');
-        if (username) {
-            dispatch(fetchUser(username));
+        const tokenLoaded = loadAuthToken();
+        if (tokenLoaded) {
+            dispatch(fetchCurrentUserProfile());
         }
     }, [dispatch]);
 
+    useEffect(() => {
+        setupInterceptors(navigate);
+    }, [navigate]);
+
     return (
-        <Router>
+        <>
             <Header />
             <Routes>
                 <Route path="/login" element={<Login />} />
@@ -92,16 +97,22 @@ const AppContent = () => {
                         </PrivateRoute>
                     } 
                 />
-                <Route path="/search-results" element={<SearchResults />} />
+                <Route path="/search-results" element={
+                    <PrivateRoute>
+                        <SearchResults />
+                    </PrivateRoute>
+                } />
             </Routes>
-        </Router>
+        </>
     );
 };
 
 const App = () => (
     <Provider store={store}>
         <ThemeProvider>
-            <AppContent />
+            <Router>
+                <AppContent />
+            </Router>
         </ThemeProvider>
     </Provider>
 );

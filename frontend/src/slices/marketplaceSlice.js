@@ -1,5 +1,5 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import axiosInstance from '../utils/axiosInstance';
+import { axiosInstance } from '../utils/axiosInstance';
 
 export const fetchItems = createAsyncThunk('marketplace/fetchItems', async (category) => {
     const response = await axiosInstance.get('/marketplace/posts', {
