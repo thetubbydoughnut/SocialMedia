@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import Sidebar from '../Sidebar/Sidebar';
 import NewsFeed from '../NewsFeed/NewsFeed';
 import Widgets from '../Widgets/Widgets';
+import QuickPost from '../QuickPost/QuickPost';
 import './Home.css';
 
 const Home = () => {
@@ -15,7 +16,8 @@ const Home = () => {
         <div className="home">
             <Sidebar />
             <div className="home__content">
-                <Widgets onPostCreated={handlePostCreated} />
+                <Widgets />
+                <QuickPost onPostCreated={handlePostCreated} />
                 <NewsFeed posts={posts} />
             </div>
         </div>

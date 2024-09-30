@@ -42,3 +42,9 @@ body.dark .home__button:hover {
     background-color: #A52A2A;
     color: var(--white);
 }
+
+.quick-post-container {
+    width: 100%;
+    max-width: 600px;
+    margin: 0 auto 20px;
+}
