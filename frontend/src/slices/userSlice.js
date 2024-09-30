@@ -1,5 +1,6 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axiosInstance from '../utils/axiosInstance';
+import fakeProfiles from '../data/fakeProfile';
 
 export const fetchUser = createAsyncThunk('user/fetchUser', async (username, { rejectWithValue }) => {
     try {
@@ -10,6 +11,17 @@ export const fetchUser = createAsyncThunk('user/fetchUser', async (username, { r
     }
 });
 
+export const addFriend = createAsyncThunk(
+  'user/addFriend',
+  async (friendId, { getState }) => {
+    const { user } = getState().user;
+    const updatedFriends = [...user.friends, friendId];
+    // In a real app, you'd make an API call here
+    // For now, we'll just return the updated friends list
+    return updatedFriends;
+  }
+);
+
 const userSlice = createSlice({
     name: 'user',
     initialState: {
@@ -19,6 +31,7 @@ const userSlice = createSlice({
         error: null,
         location: 'US',
         isNavbarVisible: true,
+        allProfiles: fakeProfiles,
     },
     reducers: {
         setUser: (state, action) => {
@@ -55,9 +68,15 @@ const userSlice = createSlice({
             .addCase(fetchUser.rejected, (state, action) => {
                 state.status = 'failed';
                 state.error = action.payload;
+            })
+            .addCase(addFriend.fulfilled, (state, action) => {
+                if (state.user) {
+                    state.user.friends = action.payload;
+                }
             });
     },
 });
 
 export const { setUser, setToken, logout, setLocation, setNavbarVisibility } = userSlice.actions;
+export const selectAllProfiles = (state) => state.user.allProfiles;
 export default userSlice.reducer;

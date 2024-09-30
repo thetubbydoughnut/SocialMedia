@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faThumbsUp, faHeart, faLaugh, faSurprise, faSadTear, faAngry } from '@fortawesome/free-solid-svg-icons';
 import './Post.css';
+import { Link } from 'react-router-dom';
 
 const Post = ({ post }) => {
     const [reactions, setReactions] = useState(post.reactions || {});
@@ -45,10 +46,12 @@ const Post = ({ post }) => {
     return (
         <div className="post">
             <div className="post__header">
-                <img src={post.user.profilePicture} alt={post.user.name} className="post__profile-picture" />
-                <div className="post__user-info">
-                    <h3>{post.user.name}</h3>
-                </div>
+                <Link to={`/profile/${post.user.username}`} className="post__user-link">
+                    <img src={post.user.profilePicture} alt={post.user.name} className="post__profile-picture" />
+                    <div className="post__user-info">
+                        <h3>{post.user.name}</h3>
+                    </div>
+                </Link>
             </div>
             <div className="post__content">
                 <p>{post.content}</p>

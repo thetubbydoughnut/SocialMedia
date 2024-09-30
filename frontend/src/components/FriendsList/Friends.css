@@ -1,25 +1,60 @@
 .friend {
     display: flex;
+    flex-direction: column;
     align-items: center;
-    margin-bottom: 1rem;
-    padding: 1rem;
-    background-color: #fff;
+    padding: 10px;
+    background-color: rgba(255, 255, 255, 0.1);
     border-radius: 10px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    min-width: 100px;
+    max-width: 120px;
 }
 
 .friend-picture {
-    width: 50px;
-    height: 50px;
+    width: 60px;
+    height: 60px;
     border-radius: 50%;
-    margin-right: 1rem;
+    object-fit: cover;
+    margin-bottom: 5px;
 }
 
 .friend-info {
-    display: flex;
-    flex-direction: column;
+    text-align: center;
 }
 
-body.dark .friend-info {
-    color: #8B0000; /* Dark red text */
+.friend-info h3 {
+    font-size: 14px;
+    margin: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    color: var(--white);
+}
+
+.add-friend-button {
+    font-size: 12px;
+    padding: 5px 10px;
+    margin-top: 5px;
+    background-color: var(--cream);
+    color: var(--dark-red);
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.add-friend-button:hover {
+    background-color: var(--white);
+}
+
+body.dark .friend-info h3 {
+    color: var(--soft-white);
+}
+
+body.dark .add-friend-button {
+    background-color: var(--dark-red);
+    color: var(--soft-white);
+}
+
+body.dark .add-friend-button:hover {
+    background-color: #A52A2A;
+    color: var(--white);
 }

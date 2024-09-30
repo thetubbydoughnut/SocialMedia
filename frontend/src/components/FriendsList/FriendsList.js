@@ -1,33 +1,47 @@
-import React, { useEffect } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
-import { fetchFriends } from '../../slices/friendsSlice';
+import React, { useRef } from 'react';
+import { useSelector } from 'react-redux';
+import { selectAllProfiles } from '../../slices/userSlice';
 import Friends from './Friends';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faChevronLeft, faChevronRight } from '@fortawesome/free-solid-svg-icons';
 import './FriendsList.css';
 
-const FriendsList = ({ username }) => {
-    const dispatch = useDispatch();
-    const { friends, status, error } = useSelector((state) => state.friends);
+const FriendsList = () => {
+    const allProfiles = useSelector(selectAllProfiles);
+    const friendsContainerRef = useRef(null);
 
-    useEffect(() => {
-        if (username) {
-            dispatch(fetchFriends(username));
+    if (!allProfiles || allProfiles.length === 0) {
+        return <div>No profiles available</div>;
+    }
+
+    const handleScroll = (direction) => {
+        const container = friendsContainerRef.current;
+        const scrollAmount = 200;
+        if (container) {
+            if (direction === 'left') {
+                container.scrollLeft -= scrollAmount;
+            } else {
+                container.scrollLeft += scrollAmount;
+            }
         }
-    }, [dispatch, username]);
-
-    if (status === 'loading') return <div>Loading friends...</div>;
-    if (status === 'failed') return <div>{error}</div>;
-    if (friends.length === 0) return <div>No friends found.</div>;
+    };
 
     return (
-        <div className="friendsList">
-            <h2>Friends</h2>
-            <ul>
-                {friends.map((friend) => (
-                    <li key={friend.id}>
-                        <Friends friend={friend} />
-                    </li>
-                ))}
-            </ul>
+        <div className="friends-list">
+            <h2>People You May Know</h2>
+            <div className="friends-scroll-container">
+                <button className="scroll-button left" onClick={() => handleScroll('left')}>
+                    <FontAwesomeIcon icon={faChevronLeft} />
+                </button>
+                <div className="friends-container" ref={friendsContainerRef}>
+                    {allProfiles.map(profile => (
+                        <Friends key={profile.id} friend={profile} />
+                    ))}
+                </div>
+                <button className="scroll-button right" onClick={() => handleScroll('right')}>
+                    <FontAwesomeIcon icon={faChevronRight} />
+                </button>
+            </div>
         </div>
     );
 };

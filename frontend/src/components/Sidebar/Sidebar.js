@@ -1,11 +1,14 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import FriendsList from '../FriendsList/FriendsList'; // Import the FriendsList component
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faUser, faEnvelope, faUsers, faCalendarAlt, faStore } from '@fortawesome/free-solid-svg-icons';
 import './Sidebar.css';
 
 const Sidebar = () => {
     const user = useSelector((state) => state.user.user);
+    const [isOpen, setIsOpen] = useState(false);
 
     if (!user) {
         return <div>Loading...</div>;
@@ -14,15 +17,21 @@ const Sidebar = () => {
     const { username } = user;
 
     return (
-        <div className="sidebar">
-            <h2>{username}'s Drawer</h2>
-            <div className="sidebar__option"><Link to={`/profile/${username}`}>Profile</Link></div>
-            <div className="sidebar__option"><Link to="/messenger">Messages</Link></div>
-            <div className="sidebar__option"><Link to="/groups">Groups</Link></div>
-            <div className="sidebar__option"><Link to="/events">Events</Link></div>
-            <div className="sidebar__option"><Link to="/marketplace">Marketplace</Link></div>
-            <div className="sidebar__friends">
-                <FriendsList username={username} /> {/* Pass the current user's username to the FriendsList component */}
+        <div className={`sidebar ${isOpen ? 'open' : ''}`}>
+            <div className="sidebar__handle" onClick={() => setIsOpen(!isOpen)}>
+                <span className="sidebar__handle-icon">{isOpen ? '▼' : '▲'}</span>
+            </div>
+            <div className="sidebar__content">
+                <nav className="sidebar__nav">
+                    <Link to={`/profile/${username}`}><FontAwesomeIcon icon={faUser} /> Profile</Link>
+                    <Link to="/messenger"><FontAwesomeIcon icon={faEnvelope} /> Messages</Link>
+                    <Link to="/groups"><FontAwesomeIcon icon={faUsers} /> Groups</Link>
+                    <Link to="/events"><FontAwesomeIcon icon={faCalendarAlt} /> Events</Link>
+                    <Link to="/marketplace"><FontAwesomeIcon icon={faStore} /> Marketplace</Link>
+                </nav>
+                <div className="sidebar__friends">
+                    <FriendsList />
+                </div>
             </div>
         </div>
     );
