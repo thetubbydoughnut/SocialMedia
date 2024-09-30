@@ -69,6 +69,18 @@ export const updateCoverPhoto = createAsyncThunk(
   }
 );
 
+export const searchProfiles = createAsyncThunk(
+  'user/searchProfiles',
+  async (query, { rejectWithValue }) => {
+    try {
+      const response = await axiosInstance.get(`/profile/search/profiles?query=${query}`);
+      return response.data;
+    } catch (error) {
+      return rejectWithValue(error.response.data);
+    }
+  }
+);
+
 const userSlice = createSlice({
     name: 'user',
     initialState: {
@@ -86,6 +98,8 @@ const userSlice = createSlice({
         coverPhotoFile: null,
         profilePhotoPreview: null,
         coverPhotoPreview: null,
+        searchResults: [],
+        searchStatus: 'idle',
     },
     reducers: {
         setUser: (state, action) => {
@@ -172,6 +186,17 @@ const userSlice = createSlice({
                 if (state.profileUser) {
                     state.profileUser.coverPhoto = action.payload.coverPhoto;
                 }
+            })
+            .addCase(searchProfiles.pending, (state) => {
+                state.searchStatus = 'loading';
+            })
+            .addCase(searchProfiles.fulfilled, (state, action) => {
+                state.searchStatus = 'succeeded';
+                state.searchResults = action.payload;
+            })
+            .addCase(searchProfiles.rejected, (state, action) => {
+                state.searchStatus = 'failed';
+                state.error = action.payload;
             });
     },
 });

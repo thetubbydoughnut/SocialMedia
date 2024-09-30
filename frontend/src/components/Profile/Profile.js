@@ -21,6 +21,7 @@ import About from '../About/About';
 import FriendsList from '../FriendsList/FriendsList';
 import Photos from '../Photos/Photos';
 import More from '../More/More';
+import ProfileSearch from '../ProfileSearch/ProfileSearch';
 
 const Profile = () => {
     const { username } = useParams();
@@ -232,13 +233,16 @@ const Profile = () => {
                             </label>
                         </form>
                     ) : (
-                        <Routes>
-                            <Route path="" element={<Timeline />} />
-                            <Route path="about" element={<About />} />
-                            <Route path="friends" element={<FriendsList username={username} />} />
-                            <Route path="photos" element={<Photos />} />
-                            <Route path="more" element={<More />} />
-                        </Routes>
+                        <>
+                            <ProfileSearch />
+                            <Routes>
+                                <Route path="" element={<Timeline />} />
+                                <Route path="about" element={<About />} />
+                                <Route path="friends" element={<FriendsList username={username} />} />
+                                <Route path="photos" element={<Photos />} />
+                                <Route path="more" element={<More />} />
+                            </Routes>
+                        </>
                     )}
                 </div>
             </div>

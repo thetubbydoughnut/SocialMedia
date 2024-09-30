@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { logout, setLocation, setNavbarVisibility } from '../../slices/userSlice'; // Ensure setLocation is imported
+import { logout, setLocation, setNavbarVisibility, searchProfiles } from '../../slices/userSlice'; // Ensure setLocation is imported
 import { clearAuthToken } from '../../utils/authUtils';
 import './Navbar.css';
 import SearchBar from '../Searchbar/SearchBar';
 import HamburgerMenu from '../HamburgerMenu/HamburgerMenu';
-
+import axiosInstance from '../../utils/axiosInstance';
 
 const Header = () => {
     const navigate = useNavigate();

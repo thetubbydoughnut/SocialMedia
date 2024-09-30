@@ -16,6 +16,7 @@ import PrivateRoute from './components/PrivateRoutes/PrivateRoute';
 import Register from './components/Register/Register';
 import { fetchUser } from './actions/userActions';
 import { loadAuthToken } from './utils/authUtils';
+import SearchResults from '../src/components/SearchResults/SearchResults';
 
 const AppContent = () => {
     const dispatch = useDispatch();
@@ -91,6 +92,7 @@ const AppContent = () => {
                         </PrivateRoute>
                     } 
                 />
+                <Route path="/search-results" element={<SearchResults />} />
             </Routes>
         </Router>
     );
