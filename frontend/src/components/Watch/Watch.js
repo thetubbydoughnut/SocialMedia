@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Video from './Video';
 import VideoUpload from './VideoUpload';
 import Navbar from '../Navbar/Navbar';
@@ -6,11 +6,11 @@ import './Watch.css';
 
 const initialVideos = [
     {
-        src: 'https://path/to/video1.mp4',
+        src: 'https://www.w3schools.com/html/mov_bbb.mp4',
         description: 'Video 1 description',
     },
     {
-        src: 'https://path/to/video2.mp4',
+        src: 'https://www.w3schools.com/html/movie.mp4',
         description: 'Video 2 description',
     },
 ];
@@ -21,7 +21,7 @@ const Watch = () => {
 
     const handleUpload = (videoUrl, description) => {
         setVideos([{ src: videoUrl, description }, ...videos]);
-        setShowUpload(false); // Hide upload component after upload
+        setShowUpload(false);
     };
 
     const toggleUpload = () => {
@@ -32,9 +32,11 @@ const Watch = () => {
         <div className="watch">
             <Navbar onUploadClick={toggleUpload} />
             {showUpload && <VideoUpload onUpload={handleUpload} />}
-            {videos.map((video, index) => (
-                <Video key={index} src={video.src} description={video.description} />
-            ))}
+            <div className="watch__videos">
+                {videos.map((video, index) => (
+                    <Video key={index} src={video.src} description={video.description} />
+                ))}
+            </div>
         </div>
     );
 };

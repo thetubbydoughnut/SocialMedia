@@ -1,3 +1,39 @@
+:root {
+    --background-color: #f5f5f5;
+    --text-color: #000000;
+    --form-background-color: #ffffff;
+    --input-background-color: #ffffff;
+    --input-text-color: #000000;
+}
+
+body.dark {
+    --background-color: #333333;
+    --text-color: #ffffff;
+    --form-background-color: #555555;
+    --input-background-color: #444444;
+    --input-text-color: #ffffff;
+}
+
+body.light {
+    --background-color: #f5f5f5;
+    --text-color: #000000;
+    --form-background-color: #ffffff;
+    --input-background-color: #ffffff;
+    --input-text-color: #000000;
+}
+
+/* Navbar Styles */
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem;
+    background-color: #8b0000; /* Dark red */
+    color: #fff;
+}
+
+/* Add any additional global styles here */
+
 .App {
   text-align: center;
 }

@@ -5,12 +5,12 @@
 
 body.dark .home {
     background-color: #333333; /* Dark grey background */
-    color: #8B0000; /* Dark red text */
+    color: #F5F5DC; /* Cream text */
 }
 
 body.light .home {
-    background-color: #CEC363; /* Slightly darker cream */
-    color: #000000; /* Black text */
+    background-color: #F5F5DC; /* Cream background */
+    color: #8B0000; /* Dark red text */
 }
 
 .home__content {

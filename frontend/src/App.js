@@ -63,12 +63,12 @@ const AppContent = () => {
                     path="/watch" 
                     element={
                         <PrivateRoute>
-                            <Watch component={Watch}/>
+                            <Watch />
                         </PrivateRoute>
                     } 
                 />
                 <Route 
-                    path="/profile/:username/*" 
+                    path="/profile/:username" 
                     element={
                         <PrivateRoute>
                             <Profile />

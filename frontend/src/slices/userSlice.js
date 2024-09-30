@@ -17,6 +17,8 @@ const userSlice = createSlice({
         token: localStorage.getItem('token') || null,
         status: 'idle',
         error: null,
+        location: 'US',
+        isNavbarVisible: true,
     },
     reducers: {
         setUser: (state, action) => {
@@ -32,6 +34,12 @@ const userSlice = createSlice({
             state.token = null;
             localStorage.removeItem('user');
             localStorage.removeItem('token');
+        },
+        setLocation: (state, action) => {
+            state.location = action.payload;
+        },
+        setNavbarVisibility: (state, action) => {
+            state.isNavbarVisible = action.payload;
         },
     },
     extraReducers: (builder) => {
@@ -51,5 +59,5 @@ const userSlice = createSlice({
     },
 });
 
-export const { setUser, setToken, logout } = userSlice.actions;
+export const { setUser, setToken, logout, setLocation, setNavbarVisibility } = userSlice.actions;
 export default userSlice.reducer;

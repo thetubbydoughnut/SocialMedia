@@ -1,23 +1,40 @@
-import React, { useState, useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import { useSelector, useDispatch } from 'react-redux';
-import { logout } from '../../slices/userSlice'; 
-import { setLocation } from '../../slices/locationSlice';
-import SearchBar from '../Searchbar/SearchBar';
-import HamburgerMenu from '../HamburgerMenu/HamburgerMenu'; // Ensure this is imported
-import './Navbar.css';
+import React, { useEffect, useState } from 'react';
+import { useNavigate, Link } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+import { logout, setLocation, setNavbarVisibility } from '../../slices/userSlice'; // Ensure setLocation is imported
 import { clearAuthToken } from '../../utils/authUtils';
+import './Navbar.css';
+import SearchBar from '../Searchbar/SearchBar';
+import HamburgerMenu from '../HamburgerMenu/HamburgerMenu';
+
 
 const Header = () => {
     const navigate = useNavigate();
     const dispatch = useDispatch();
     const user = useSelector((state) => state.user.user);
-    const [theme, setTheme] = useState('light'); // Add theme state
-    const [location, setLocationState] = useState('US'); // Correctly declare setLocationState
+    const [theme, setTheme] = useState('light');
+    const location = useSelector((state) => state.user.location);
+    const isNavbarVisible = useSelector((state) => state.user.isNavbarVisible);
+    let lastScrollY = window.scrollY;
 
     useEffect(() => {
         document.body.className = theme;
-    }, [theme]);
+
+        const handleScroll = () => {
+            if (lastScrollY < window.scrollY) {
+                dispatch(setNavbarVisibility(false));
+            } else {
+                dispatch(setNavbarVisibility(true));
+            }
+            lastScrollY = window.scrollY;
+        };
+
+        window.addEventListener('scroll', handleScroll);
+
+        return () => {
+            window.removeEventListener('scroll', handleScroll);
+        };
+    }, [theme, dispatch]);
 
     const handleLogout = () => {
         dispatch(logout());
@@ -28,7 +45,6 @@ const Header = () => {
 
     const handleLocationChange = (e) => {
         const newLocation = e.target.value;
-        setLocationState(newLocation);
         dispatch(setLocation(newLocation));
     };
 
@@ -37,53 +53,38 @@ const Header = () => {
     };
 
     return (
-        <div className="header">
+        <div className={`header ${isNavbarVisible ? 'header--visible' : ''}`}>
             <div className="header__left">
-                <Link to="/" className="header__logo">MyApp</Link> {/* Ensure the logo is here */}
+                <Link to="/" className="header__logo">MyApp</Link>
+                {user && <SearchBar />}
             </div>
             <div className="header__center">
-                {user && <SearchBar />} {/* Conditionally render SearchBar */}
+                <nav className="header__nav">
+                    <Link to="/">Home</Link>
+                    <Link to="/watch">Watch</Link>
+                    <Link to="/profile">Profile</Link>
+                </nav>
             </div>
             <div className="header__right">
-                {user && <HamburgerMenu />} {/* Conditionally render HamburgerMenu */}
+                <select value={location} onChange={handleLocationChange} className="header__location-select">
+                    <option value="US">US</option>
+                    <option value="UK">UK</option>
+                    <option value="CA">CA</option>
+                </select>
+                <button onClick={toggleTheme} className="header__theme-button">
+                    Toggle Theme
+                </button>
                 {user ? (
                     <>
-                        <ul className="header__nav">
-                            <li>
-                                <Link to={`/profile/${user.username}`} className="header__profile">
-                                    <img src={user.profilePhoto || '/default-profile-photo.jpg'} alt="Profile" className="header__profileImage" />
-                                    <span>{user.username}</span>
-                                </Link>
-                            </li>
-                            <li>
-                                <Link to="/messenger" className="header__icon">
-                                    <i className="fas fa-comments"></i>
-                                </Link>
-                            </li>
-                            <li>
-                                <Link to="/notifications" className="header__icon">
-                                    <i className="fas fa-bell"></i>
-                                </Link>
-                            </li>
-                        </ul>
-                        <div className="header__actions">
-                            <button onClick={handleLogout} className="auth-button">
-                                Logout
-                            </button>
-                            <button onClick={toggleTheme} className="theme-toggle">
-                                {theme === 'light' ? 'Dark Mode' : 'Light Mode'}
-                            </button>
-                        </div>
+                        <button onClick={handleLogout} className="header__logout-button">
+                            Logout
+                        </button>
+                        {user.profilePicture && (
+                            <img src={user.profilePicture} alt="Profile" className="header__profileImage" />
+                        )}
                     </>
                 ) : (
-                    <>
-                        <Link to="/login" className="auth-button">
-                            Login
-                        </Link>
-                        <Link to="/register" className="auth-button">
-                            Register
-                        </Link>
-                    </>
+                    <Link to="/login" className="header__login-button">Login</Link>
                 )}
             </div>
         </div>
