@@ -29,7 +29,7 @@ const NewsFeed = () => {
     if (error) return <div>{error}</div>;
 
     return (
-        <div>
+        <div className="newsfeed">
             {posts.map((post) => (
                 <Post key={post.id} post={post} />
             ))}

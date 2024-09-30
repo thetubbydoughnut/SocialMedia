@@ -5,13 +5,13 @@ import Weather from '../Weather/Weather';
 import QuickPost from '../QuickPost/QuickPost';
 import './Widgets.css';
 
-const Widgets = () => {
+const Widgets = ({ onPostCreated }) => {
     return (
         <div className="widgets">
+            <QuickPost onPostCreated={onPostCreated} />
             <TrendingTopics />
             <Birthdays />
             <Weather />
-            <QuickPost />
         </div>
     );
 };
