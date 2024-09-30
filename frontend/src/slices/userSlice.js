@@ -1,58 +1,56 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axiosInstance from '../utils/axiosInstance';
-import fakeProfiles from '../data/fakeProfile';
 
-export const fetchUser = createAsyncThunk('user/fetchUser', async (username, { rejectWithValue }) => {
+export const fetchUser = createAsyncThunk('user/fetchUser', async (_, { rejectWithValue }) => {
     try {
-        const response = await axiosInstance.get(`/profile/${username}`);
+        const response = await axiosInstance.get('/profile/me');
         return response.data;
     } catch (error) {
-        return rejectWithValue(error.response?.data?.message || 'Failed to fetch user');
+        return rejectWithValue(error.response.data);
     }
 });
 
-export const addFriend = createAsyncThunk(
-  'user/addFriend',
-  async (friendId, { getState }) => {
-    const { user } = getState().user;
-    const updatedFriends = [...user.friends, friendId];
-    // In a real app, you'd make an API call here
-    // For now, we'll just return the updated friends list
-    return updatedFriends;
-  }
-);
+export const addFriend = createAsyncThunk('user/addFriend', async (friendId, { rejectWithValue }) => {
+    try {
+        const response = await axiosInstance.post(`/friends/${friendId}`);
+        return response.data;
+    } catch (error) {
+        return rejectWithValue(error.response.data);
+    }
+});
 
 const userSlice = createSlice({
     name: 'user',
     initialState: {
-        user: JSON.parse(localStorage.getItem('user')) || null,
-        token: localStorage.getItem('token') || null,
+        user: null,
+        token: null,
         status: 'idle',
         error: null,
         location: 'US',
         isNavbarVisible: true,
-        allProfiles: fakeProfiles,
+        allProfiles: [],
     },
     reducers: {
         setUser: (state, action) => {
             state.user = action.payload;
-            localStorage.setItem('user', JSON.stringify(action.payload));
         },
         setToken: (state, action) => {
             state.token = action.payload;
-            localStorage.setItem('token', action.payload);
         },
         logout: (state) => {
             state.user = null;
             state.token = null;
-            localStorage.removeItem('user');
-            localStorage.removeItem('token');
         },
         setLocation: (state, action) => {
             state.location = action.payload;
         },
         setNavbarVisibility: (state, action) => {
             state.isNavbarVisible = action.payload;
+        },
+        updateProfilePhoto: (state, action) => {
+            if (state.user) {
+                state.user.profilePhoto = action.payload;
+            }
         },
     },
     extraReducers: (builder) => {
@@ -77,6 +75,6 @@ const userSlice = createSlice({
     },
 });
 
-export const { setUser, setToken, logout, setLocation, setNavbarVisibility } = userSlice.actions;
+export const { setUser, setToken, logout, setLocation, setNavbarVisibility, updateProfilePhoto } = userSlice.actions;
 export const selectAllProfiles = (state) => state.user.allProfiles;
 export default userSlice.reducer;

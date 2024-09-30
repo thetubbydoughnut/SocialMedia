@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, NavLink, Routes, Route } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
-import { fetchUser as fetchCurrentUser } from '../../slices/userSlice';
+import { fetchUser as fetchCurrentUser, updateProfilePhoto } from '../../slices/userSlice';
 import axiosInstance from '../../utils/axiosInstance';
 import { getImageOrPlaceholder } from '../../utils/imageUtils';
 import './Profile.css';
@@ -19,6 +19,7 @@ const Profile = () => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [isEditing, setIsEditing] = useState(false);
+    const [editedUser, setEditedUser] = useState(null);
     const [profilePhotoFile, setProfilePhotoFile] = useState(null);
     const [coverPhotoFile, setCoverPhotoFile] = useState(null);
     const [profilePhotoPreview, setProfilePhotoPreview] = useState(null);
@@ -32,6 +33,7 @@ const Profile = () => {
                 setLoading(true);
                 const response = await axiosInstance.get(`/profile/${username}`); // Use username from URL parameters
                 setUser(response.data);
+                setEditedUser(response.data);
                 setError(null);
             } catch (err) {
                 console.error('Error fetching user:', err);
@@ -48,6 +50,68 @@ const Profile = () => {
             setLoading(false);
         }
     }, [username]); // Ensure useEffect runs when username changes
+
+    const handleEditClick = () => {
+        setIsEditing(true);
+    };
+
+    const handleCancelEdit = () => {
+        setIsEditing(false);
+        setEditedUser(user);
+        setProfilePhotoFile(null);
+        setCoverPhotoFile(null);
+        setProfilePhotoPreview(null);
+        setCoverPhotoPreview(null);
+    };
+
+    const handleInputChange = (e) => {
+        const { name, value } = e.target;
+        setEditedUser({ ...editedUser, [name]: value });
+    };
+
+    const handleFileChange = (e, type) => {
+        const file = e.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onloadend = () => {
+                if (type === 'profile') {
+                    setProfilePhotoFile(file);
+                    setProfilePhotoPreview(reader.result);
+                } else if (type === 'cover') {
+                    setCoverPhotoFile(file);
+                    setCoverPhotoPreview(reader.result);
+                }
+            };
+            reader.readAsDataURL(file);
+        }
+    };
+
+    const handleSaveProfile = async (e) => {
+        e.preventDefault();
+        try {
+            const updatedData = {
+                username: editedUser.username,
+                bio: editedUser.bio,
+            };
+
+            await axiosInstance.put('/profile/me', updatedData);
+
+            if (profilePhotoFile) {
+                const response = await handleProfilePhotoUpload(profilePhotoFile);
+                dispatch(updateProfilePhoto(response.data.profilePhoto));
+            }
+
+            if (coverPhotoFile) {
+                await handleCoverPhotoUpload(coverPhotoFile);
+            }
+
+            setUser(editedUser);
+            setIsEditing(false);
+            dispatch(fetchCurrentUser());
+        } catch (error) {
+            console.error('Error updating profile:', error);
+        }
+    };
 
     if (loading) return <div>Loading...</div>;
     if (error) return <div>{error}</div>;
@@ -85,52 +149,64 @@ const Profile = () => {
         }
     };
 
-    const handleSaveProfile = async (e) => {
-        e.preventDefault();
-        try {
-            const updatedData = {
-                username: user.username,
-                bio: user.bio,
-            };
-
-            await axiosInstance.put('/profile/me', updatedData);
-
-            if (profilePhotoFile) {
-                await handleProfilePhotoUpload(profilePhotoFile);
-            }
-
-            if (coverPhotoFile) {
-                await handleCoverPhotoUpload(coverPhotoFile);
-            }
-
-            setIsEditing(false);
-            dispatch(fetchCurrentUser());
-        } catch (error) {
-            console.error('Error updating profile:', error);
-        }
-    };
-
     return (
         <div className="profile">
             <div className="profile__header">
                 <div className="profile__cover">
-                    <img src={coverPhotoPreview || getImageOrPlaceholder(user.coverPhoto)} alt="Cover" />
+                    <img src={coverPhotoPreview || getImageOrPlaceholder(user.coverPhoto, '/default-cover.png')} alt="Cover" />
+                    {isEditing && (
+                        <label htmlFor="cover-photo-upload" className="profile__cover-edit-button">
+                            <i className="fas fa-camera"></i> Edit Cover Photo
+                            <input
+                                id="cover-photo-upload"
+                                type="file"
+                                accept="image/*"
+                                onChange={(e) => handleFileChange(e, 'cover')}
+                                className="profile__cover-upload"
+                            />
+                        </label>
+                    )}
                 </div>
             </div>
             <div className="profile__info">
                 <div className="profile__info-left">
-                    <img 
-                        src={profilePhotoPreview || getImageOrPlaceholder(user.profilePhoto, '/default-profile.png')} 
-                        alt={`${user.username}'s profile`} 
-                        className="profile__photo" 
-                    />
+                    <div className="profile__photo-container">
+                        <img 
+                            src={profilePhotoPreview || getImageOrPlaceholder(user.profilePhoto, '/default-profile.png')} 
+                            alt={`${user.username}'s profile`} 
+                            className="profile__photo" 
+                        />
+                        {isEditing && (
+                            <label htmlFor="profile-photo-upload" className="profile__photo-edit-button">
+                                Edit Photo
+                                <input
+                                    id="profile-photo-upload"
+                                    type="file"
+                                    accept="image/*"
+                                    onChange={(e) => handleFileChange(e, 'profile')}
+                                    className="profile__photo-upload"
+                                />
+                            </label>
+                        )}
+                    </div>
                     <div className="profile__details">
                         <h1 className="profile__name">{user.username}</h1>
                         <p className="profile__bio">{user.bio}</p>
                         {currentUser && currentUser.username === user.username && (
-                            <button onClick={() => setIsEditing(true)} className="profile__edit-button">
-                                Edit Profile
-                            </button>
+                            isEditing ? (
+                                <div className="profile__edit-buttons">
+                                    <button onClick={handleSaveProfile} className="profile__save-button">
+                                        Save Profile
+                                    </button>
+                                    <button onClick={handleCancelEdit} className="profile__cancel-button">
+                                        Cancel
+                                    </button>
+                                </div>
+                            ) : (
+                                <button onClick={handleEditClick} className="profile__edit-button">
+                                    Edit Profile
+                                </button>
+                            )
                         )}
                     </div>
                 </div>
@@ -144,23 +220,41 @@ const Profile = () => {
             </div>
             <div className="profile__body">
                 <div className="profile__content">
-                    <Routes>
-                        <Route path="" element={<Timeline />} />
-                        <Route path="about" element={<About />} />
-                        <Route path="friends" element={<FriendsList username={username} />} />
-                        <Route path="photos" element={<Photos />} />
-                        <Route path="more" element={<More />} />
-                    </Routes>
+                    {isEditing ? (
+                        <form onSubmit={handleSaveProfile} className="profile__edit-form">
+                            <label className="profile__edit-label">
+                                Username:
+                                <input
+                                    type="text"
+                                    name="username"
+                                    value={editedUser.username}
+                                    onChange={handleInputChange}
+                                    className="profile__edit-input"
+                                />
+                            </label>
+                            <label className="profile__edit-label">
+                                Bio:
+                                <textarea
+                                    name="bio"
+                                    value={editedUser.bio}
+                                    onChange={handleInputChange}
+                                    className="profile__edit-textarea"
+                                />
+                            </label>
+                        </form>
+                    ) : (
+                        <Routes>
+                            <Route path="" element={<Timeline />} />
+                            <Route path="about" element={<About />} />
+                            <Route path="friends" element={<FriendsList username={username} />} />
+                            <Route path="photos" element={<Photos />} />
+                            <Route path="more" element={<More />} />
+                        </Routes>
+                    )}
                 </div>
             </div>
-            {isEditing && (
-                <div className="profile__edit-form">
-                    {/* Your existing edit form content */}
-                </div>
-            )}
         </div>
     );
 };
-
 
 export default Profile;

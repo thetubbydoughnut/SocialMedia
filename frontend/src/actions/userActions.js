@@ -9,3 +9,8 @@ export const fetchUser = (username) => async (dispatch) => {
         console.error('Error fetching user:', error);
     }
 };
+
+export const updateProfilePhoto = (photoUrl) => ({
+    type: 'UPDATE_PROFILE_PHOTO',
+    payload: photoUrl,
+});
