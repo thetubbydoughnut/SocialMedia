@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useParams, Link, Routes, Route } from 'react-router-dom';
+import { useParams, NavLink, Routes, Route } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { fetchUser as fetchCurrentUser } from '../../slices/userSlice';
 import axiosInstance from '../../utils/axiosInstance';
@@ -116,9 +116,11 @@ const Profile = () => {
                 <div className="profile__cover">
                     <img src={coverPhotoPreview || getImageOrPlaceholder(user.coverPhoto)} alt="Cover" />
                 </div>
-                <div className="profile__info">
+            </div>
+            <div className="profile__info">
+                <div className="profile__info-left">
                     <img 
-                        src={getImageOrPlaceholder(user.profilePhoto, '/default-profile.png')} 
+                        src={profilePhotoPreview || getImageOrPlaceholder(user.profilePhoto, '/default-profile.png')} 
                         alt={`${user.username}'s profile`} 
                         className="profile__photo" 
                     />
@@ -132,18 +134,18 @@ const Profile = () => {
                         )}
                     </div>
                 </div>
+                <div className="profile__info-nav-links">
+                    <NavLink to="" end className={({ isActive }) => isActive ? "active" : ""}>Timeline</NavLink>
+                    <NavLink to="about" className={({ isActive }) => isActive ? "active" : ""}>About</NavLink>
+                    <NavLink to="friends" className={({ isActive }) => isActive ? "active" : ""}>Friends</NavLink>
+                    <NavLink to="photos" className={({ isActive }) => isActive ? "active" : ""}>Photos</NavLink>
+                    <NavLink to="more" className={({ isActive }) => isActive ? "active" : ""}>More</NavLink>
+                </div>
             </div>
             <div className="profile__body">
-                <nav className="profile__nav">
-                    <Link to="timeline">Timeline</Link>
-                    <Link to="about">About</Link>
-                    <Link to="friends">Friends</Link>
-                    <Link to="photos">Photos</Link>
-                    <Link to="more">More</Link>
-                </nav>
                 <div className="profile__content">
                     <Routes>
-                        <Route path="timeline" element={<Timeline />} />
+                        <Route path="" element={<Timeline />} />
                         <Route path="about" element={<About />} />
                         <Route path="friends" element={<FriendsList username={username} />} />
                         <Route path="photos" element={<Photos />} />
@@ -151,8 +153,14 @@ const Profile = () => {
                     </Routes>
                 </div>
             </div>
+            {isEditing && (
+                <div className="profile__edit-form">
+                    {/* Your existing edit form content */}
+                </div>
+            )}
         </div>
     );
 };
+
 
 export default Profile;
