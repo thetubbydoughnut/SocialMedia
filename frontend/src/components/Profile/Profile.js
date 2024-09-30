@@ -117,7 +117,11 @@ const Profile = () => {
                     <img src={coverPhotoPreview || getImageOrPlaceholder(user.coverPhoto)} alt="Cover" />
                 </div>
                 <div className="profile__info">
-                    <img src={profilePhotoPreview || getImageOrPlaceholder(user.profilePhoto)} alt="Profile" className="profile__photo" />
+                    <img 
+                        src={getImageOrPlaceholder(user.profilePhoto, '/default-profile.png')} 
+                        alt={`${user.username}'s profile`} 
+                        className="profile__photo" 
+                    />
                     <div className="profile__details">
                         <h1 className="profile__name">{user.username}</h1>
                         <p className="profile__bio">{user.bio}</p>
