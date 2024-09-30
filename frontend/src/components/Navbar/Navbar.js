@@ -75,9 +75,9 @@ const Header = () => {
                         <button onClick={handleLogout} className="header__logout-button">
                             Logout
                         </button>
-                        {user.profilePicture && (
-                            <img src={user.profilePicture} alt="Profile" className="header__profileImage" />
-                        )}
+                        <Link to={`/profile/${user.username}`} className="header__profile-link">
+                            <img src={user.profilePicture || '/default-profile.png'} alt="Profile" className="header__profileImage" />
+                        </Link>
                     </>
                 ) : (
                     <Link to="/login" className="header__login-button">Login</Link>
