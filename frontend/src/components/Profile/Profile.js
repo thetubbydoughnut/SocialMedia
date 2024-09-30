@@ -128,6 +128,7 @@ const Profile = () => {
                 },
             });
             setUser({ ...user, profilePhoto: response.data.profilePhoto });
+            dispatch(updateProfilePhoto(response.data.profilePhoto));
         } catch (error) {
             console.error('Error uploading profile photo:', error);
         }

@@ -79,7 +79,11 @@ const Header = () => {
                             Logout
                         </button>
                         <Link to={`/profile/${user.username}`} className="header__profile-link">
-                            <img src={user.profilePicture || '/default-profile.png'} alt="Profile" className="header__profileImage" />
+                            <img 
+                                src={user.profilePhoto || '/default-profile.png'} 
+                                alt="Profile" 
+                                className="header__profileImage" 
+                            />
                         </Link>
                     </>
                 ) : (
