@@ -1,7 +1,18 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { useParams, NavLink, Routes, Route } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
-import { fetchUser as fetchCurrentUser, updateProfilePhoto } from '../../slices/userSlice';
+import { 
+    fetchProfile, 
+    updateProfile, 
+    updateProfilePhoto, 
+    updateCoverPhoto,
+    setIsEditing,
+    setEditedUser,
+    setProfilePhotoFile,
+    setCoverPhotoFile,
+    setProfilePhotoPreview,
+    setCoverPhotoPreview
+} from '../../slices/userSlice';
 import axiosInstance from '../../utils/axiosInstance';
 import { getImageOrPlaceholder } from '../../utils/imageUtils';
 import './Profile.css';
@@ -12,61 +23,47 @@ import Photos from '../Photos/Photos';
 import More from '../More/More';
 
 const Profile = () => {
-    const { username } = useParams(); // Extract username from URL parameters
+    const { username } = useParams();
     const dispatch = useDispatch();
     const currentUser = useSelector((state) => state.user.user);
-    const [user, setUser] = useState(null);
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState(null);
-    const [isEditing, setIsEditing] = useState(false);
-    const [editedUser, setEditedUser] = useState(null);
-    const [profilePhotoFile, setProfilePhotoFile] = useState(null);
-    const [coverPhotoFile, setCoverPhotoFile] = useState(null);
-    const [profilePhotoPreview, setProfilePhotoPreview] = useState(null);
-    const [coverPhotoPreview, setCoverPhotoPreview] = useState(null);
+    const profileUser = useSelector((state) => state.user.profileUser);
+    const status = useSelector((state) => state.user.status);
+    const error = useSelector((state) => state.user.error);
+    const isEditing = useSelector((state) => state.user.isEditing);
+    const editedUser = useSelector((state) => state.user.editedUser);
+    const profilePhotoFile = useSelector((state) => state.user.profilePhotoFile);
+    const coverPhotoFile = useSelector((state) => state.user.coverPhotoFile);
+    const profilePhotoPreview = useSelector((state) => state.user.profilePhotoPreview);
+    const coverPhotoPreview = useSelector((state) => state.user.coverPhotoPreview);
 
     useEffect(() => {
-        console.log('Username from params:', username); // Debug log
-
-        const fetchProfile = async () => {
-            try {
-                setLoading(true);
-                const response = await axiosInstance.get(`/profile/${username}`); // Use username from URL parameters
-                setUser(response.data);
-                setEditedUser(response.data);
-                setError(null);
-            } catch (err) {
-                console.error('Error fetching user:', err);
-                setError('Failed to fetch user data');
-            } finally {
-                setLoading(false);
-            }
-        };
-
         if (username) {
-            fetchProfile();
-        } else {
-            setError('No username provided');
-            setLoading(false);
+            dispatch(fetchProfile(username));
         }
-    }, [username]); // Ensure useEffect runs when username changes
+    }, [username, dispatch]);
+
+    useEffect(() => {
+        if (profileUser) {
+            dispatch(setEditedUser(profileUser));
+        }
+    }, [profileUser, dispatch]);
 
     const handleEditClick = () => {
-        setIsEditing(true);
+        dispatch(setIsEditing(true));
     };
 
     const handleCancelEdit = () => {
-        setIsEditing(false);
-        setEditedUser(user);
-        setProfilePhotoFile(null);
-        setCoverPhotoFile(null);
-        setProfilePhotoPreview(null);
-        setCoverPhotoPreview(null);
+        dispatch(setIsEditing(false));
+        dispatch(setEditedUser(profileUser));
+        dispatch(setProfilePhotoFile(null));
+        dispatch(setCoverPhotoFile(null));
+        dispatch(setProfilePhotoPreview(null));
+        dispatch(setCoverPhotoPreview(null));
     };
 
     const handleInputChange = (e) => {
         const { name, value } = e.target;
-        setEditedUser({ ...editedUser, [name]: value });
+        dispatch(setEditedUser({ ...editedUser, [name]: value }));
     };
 
     const handleFileChange = (e, type) => {
@@ -75,11 +72,11 @@ const Profile = () => {
             const reader = new FileReader();
             reader.onloadend = () => {
                 if (type === 'profile') {
-                    setProfilePhotoFile(file);
-                    setProfilePhotoPreview(reader.result);
+                    dispatch(setProfilePhotoFile(file));
+                    dispatch(setProfilePhotoPreview(reader.result));
                 } else if (type === 'cover') {
-                    setCoverPhotoFile(file);
-                    setCoverPhotoPreview(reader.result);
+                    dispatch(setCoverPhotoFile(file));
+                    dispatch(setCoverPhotoPreview(reader.result));
                 }
             };
             reader.readAsDataURL(file);
@@ -89,33 +86,21 @@ const Profile = () => {
     const handleSaveProfile = async (e) => {
         e.preventDefault();
         try {
-            const updatedData = {
-                username: editedUser.username,
-                bio: editedUser.bio,
-            };
-
-            await axiosInstance.put('/profile/me', updatedData);
+            await dispatch(updateProfile(editedUser)).unwrap();
 
             if (profilePhotoFile) {
-                const response = await handleProfilePhotoUpload(profilePhotoFile);
-                dispatch(updateProfilePhoto(response.data.profilePhoto));
+                await handleProfilePhotoUpload(profilePhotoFile);
             }
 
             if (coverPhotoFile) {
                 await handleCoverPhotoUpload(coverPhotoFile);
             }
 
-            setUser(editedUser);
-            setIsEditing(false);
-            dispatch(fetchCurrentUser());
+            dispatch(setIsEditing(false));
         } catch (error) {
             console.error('Error updating profile:', error);
         }
     };
-
-    if (loading) return <div>Loading...</div>;
-    if (error) return <div>{error}</div>;
-    if (!user) return <div>User not found</div>;
 
     const handleProfilePhotoUpload = async (file) => {
         const formData = new FormData();
@@ -127,7 +112,6 @@ const Profile = () => {
                     'Content-Type': 'multipart/form-data',
                 },
             });
-            setUser({ ...user, profilePhoto: response.data.profilePhoto });
             dispatch(updateProfilePhoto(response.data.profilePhoto));
         } catch (error) {
             console.error('Error uploading profile photo:', error);
@@ -144,17 +128,21 @@ const Profile = () => {
                     'Content-Type': 'multipart/form-data',
                 },
             });
-            setUser({ ...user, coverPhoto: response.data.coverPhoto });
+            dispatch(updateCoverPhoto(response.data.coverPhoto));
         } catch (error) {
             console.error('Error uploading cover photo:', error);
         }
     };
 
+    if (status === 'loading') return <div>Loading...</div>;
+    if (status === 'failed') return <div>{error}</div>;
+    if (!profileUser) return <div>User not found</div>;
+
     return (
         <div className="profile">
             <div className="profile__header">
                 <div className="profile__cover">
-                    <img src={coverPhotoPreview || getImageOrPlaceholder(user.coverPhoto, '/default-cover.png')} alt="Cover" />
+                    <img src={coverPhotoPreview || getImageOrPlaceholder(profileUser.coverPhoto, '/default-cover.png')} alt="Cover" />
                     {isEditing && (
                         <label htmlFor="cover-photo-upload" className="profile__cover-edit-button">
                             <i className="fas fa-camera"></i> Edit Cover Photo
@@ -173,8 +161,8 @@ const Profile = () => {
                 <div className="profile__info-left">
                     <div className="profile__photo-container">
                         <img 
-                            src={profilePhotoPreview || getImageOrPlaceholder(user.profilePhoto, '/default-profile.png')} 
-                            alt={`${user.username}'s profile`} 
+                            src={profilePhotoPreview || getImageOrPlaceholder(profileUser.profilePhoto, '/default-profile.png')} 
+                            alt={`${profileUser.username}'s profile`} 
                             className="profile__photo" 
                         />
                         {isEditing && (
@@ -191,9 +179,9 @@ const Profile = () => {
                         )}
                     </div>
                     <div className="profile__details">
-                        <h1 className="profile__name">{user.username}</h1>
-                        <p className="profile__bio">{user.bio}</p>
-                        {currentUser && currentUser.username === user.username && (
+                        <h1 className="profile__name">{profileUser.username}</h1>
+                        <p className="profile__bio">{profileUser.bio}</p>
+                        {currentUser && currentUser.username === profileUser.username && (
                             isEditing ? (
                                 <div className="profile__edit-buttons">
                                     <button onClick={handleSaveProfile} className="profile__save-button">
