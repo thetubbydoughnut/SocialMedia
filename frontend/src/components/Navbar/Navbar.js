@@ -62,11 +62,14 @@ const Header = () => {
                 {user && <SearchBar />}
             </div>
             <div className="header__right">
-                <select value={location} onChange={handleLocationChange} className="header__location-select">
-                    <option value="US">US</option>
-                    <option value="UK">UK</option>
-                    <option value="CA">CA</option>
-                </select>
+                <div className="header__location-wrapper">
+                    <span className="header__location-label">Location:</span>
+                    <select value={location} onChange={handleLocationChange} className="header__location-select">
+                        <option value="US">US</option>
+                        <option value="UK">UK</option>
+                        <option value="CA">CA</option>
+                    </select>
+                </div>
                 <button onClick={toggleTheme} className="header__theme-button">
                     Toggle Theme
                 </button>

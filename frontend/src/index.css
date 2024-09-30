@@ -12,13 +12,3 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
-
-body.light {
-  background-color: #cec363; /* Slightly darker cream */
-  color: #000000; /* Black text */
-}
-
-body.dark {
-  background-color: #333333; /* Dark grey background */
-  color: #8B0000; /* Dark red text */
-}

@@ -15,7 +15,7 @@ const Sidebar = () => {
 
     return (
         <div className="sidebar">
-            <h2>{username}'s Sidebar</h2>
+            <h2>{username}'s Drawer</h2>
             <div className="sidebar__option"><Link to={`/profile/${username}`}>Profile</Link></div>
             <div className="sidebar__option"><Link to="/messenger">Messages</Link></div>
             <div className="sidebar__option"><Link to="/groups">Groups</Link></div>

@@ -1,45 +1,40 @@
 .home {
     display: flex;
-    padding-top: 60px; /* Adjust this value based on the height of your navigation bar */
-}
-
-body.dark .home {
-    background-color: #333333; /* Dark grey background */
-    color: #F5F5DC; /* Cream text */
-}
-
-body.light .home {
-    background-color: #F5F5DC; /* Cream background */
-    color: #8B0000; /* Dark red text */
+    padding-top: 90px;
+    padding-bottom: 60px; /* Add padding to account for the drawer at the bottom */
+    max-width: 900px;
+    margin: 0 auto;
 }
 
 .home__content {
-    display: flex;
-    justify-content: center;
     width: 100%;
-    max-width: 1200px; /* Adjust this value based on your desired max width */
-    margin-left: auto; /* Ensure content is not overlapped by the sidebar */
-    padding: 20px; /* Add padding to ensure content is not touching the edges */
 }
 
 .newsfeed {
-    flex: 2;
-    margin-right: 20px;
-}
-
-.widgets {
-    flex: 1;
+    width: 100%;
 }
 
 .home__button {
-    padding: 0.5rem 1rem;
+    background-color: var(--dark-red);
+    color: var(--white);
     border: none;
-    background-color: #8b0000; /* Dark red */
-    color: #fff;
-    border-radius: 5px;
+    padding: 0.75rem 1.5rem;
+    border-radius: 25px;
     cursor: pointer;
+    transition: background-color 0.3s;
+    font-weight: bold;
 }
 
 .home__button:hover {
-    background-color: #a52a2a; /* Slightly lighter dark red */
+    background-color: #a52a2a;
+}
+
+body.dark .home__button {
+    background-color: var(--dark-red);
+    color: var(--soft-white);
+}
+
+body.dark .home__button:hover {
+    background-color: #A52A2A;
+    color: var(--white);
 }
