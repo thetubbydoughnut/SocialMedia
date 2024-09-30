@@ -9,6 +9,7 @@ import { clearAuthToken } from '../../utils/authUtils';
 import './Navbar.css';
 import SearchBar from '../Searchbar/SearchBar';
 import HamburgerMenu from '../HamburgerMenu/HamburgerMenu';
+import { useTheme } from '../../ThemeContext'; // Import ThemeContext
 
 const Header = () => {
   const navigate = useNavigate();
@@ -18,11 +19,11 @@ const Header = () => {
   const location = useSelector(profileSelectors.selectLocation);
   const isNavbarVisible = useSelector(profileSelectors.selectIsNavbarVisible);
   
-  const [theme, setTheme] = useState('light');
+  const { theme, toggleTheme } = useTheme(); // Destructure theme and toggleTheme from context
   const lastScrollY = useRef(0);
 
   useEffect(() => {
-    document.body.className = theme;
+    document.body.className = theme; // Apply theme class to body
 
     const handleScroll = () => {
       if (lastScrollY.current < window.scrollY) {
@@ -50,10 +51,6 @@ const Header = () => {
     dispatch(setLocation(newLocation));
   };
 
-  const toggleTheme = () => {
-    setTheme((prevTheme) => (prevTheme === 'light' ? 'dark' : 'light'));
-  };
-
   return (
     <div className={`header ${isNavbarVisible ? 'header--visible' : ''}`}>
       <div className="header__left">
@@ -77,7 +74,7 @@ const Header = () => {
         </button>
         {user ? (
           <>
-            <button onClick={handleLogout} className="header__logout-button">
+            <button onClick={handleLogout} className="header__logout-button auth-button">
               Logout
             </button>
             <Link to={`/profile/${user.username}`} className="header__profile-link">
@@ -90,8 +87,8 @@ const Header = () => {
           </>
         ) : (
           <>
-            <Link to="/login" className="header__login-button">Login</Link>
-            <Link to="/register" className="header__register-button">Register</Link>
+            <Link to="/login" className="auth-button header__login-button">Login</Link>
+            <Link to="/register" className="auth-button header__register-button">Register</Link>
           </>
         )}
       </div>
