@@ -1,40 +1,103 @@
 .widgets {
     width: 100%;
-    padding: 10px 20px;
-    background-color: rgba(139, 0, 0, 0.1); /* Lighter version of dark red */
+    padding: 10px 0;
+    background-color: rgba(139, 0, 0, 0.1);
     display: flex;
-    justify-content: space-around;
+    justify-content: space-between;
     align-items: center;
-    position: fixed;
-    top: 70px; /* Position it right below the navbar */
-    left: 0;
-    right: 0;
-    z-index: 999;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    margin-bottom: 20px;
+    border-radius: 0;
 }
 
 body.dark .widgets {
-    background-color: rgba(245, 245, 220, 0.1); /* Lighter version of cream for dark mode */
+    background-color: rgba(245, 245, 220, 0.1);
 }
 
 .widget {
     text-align: center;
+    background-color: rgba(255, 255, 255, 0.1);
+    border-radius: 10px;
+    padding: 10px;
+    margin: 0 5px;
+    flex: 0 0 auto;
+    min-width: 150px;
+    max-width: 200px;
 }
 
 .widget h2 {
     font-size: 1rem;
     margin-bottom: 5px;
     color: var(--dark-red);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 body.dark .widget h2 {
     color: var(--cream);
 }
 
-.widget p {
-    font-size: 0.9rem;
+.widget p, .widget li {
+    font-size: 0.8rem;
     color: var(--dark-red);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
-body.dark .widget p {
+body.dark .widget p, body.dark .widget li {
     color: var(--cream);
+}
+
+.widget ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+}
+
+.widget li {
+    margin-bottom: 3px;
+}
+
+.quick-post textarea {
+    width: 100%;
+    height: 40px;
+    margin-bottom: 5px;
+    padding: 3px;
+    border-radius: 5px;
+    border: 1px solid var(--cream);
+    background-color: rgba(255, 255, 255, 0.1);
+    color: var(--dark-red);
+    font-size: 0.8rem;
+}
+
+body.dark .quick-post textarea {
+    color: var(--cream);
+}
+
+.quick-post button {
+    background-color: var(--dark-red);
+    color: var(--white);
+    border: none;
+    padding: 3px 8px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 0.8rem;
+}
+
+.quick-post button:hover {
+    background-color: #a52a2a;
+}
+
+/* Hide scrollbar for Chrome, Safari and Opera */
+.widgets::-webkit-scrollbar {
+    display: none;
+}
+
+/* Hide scrollbar for IE, Edge and Firefox */
+.widgets {
+    -ms-overflow-style: none;  /* IE and Edge */
+    scrollbar-width: none;  /* Firefox */
 }
