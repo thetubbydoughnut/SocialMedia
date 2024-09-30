@@ -23,6 +23,7 @@ const postsRouter = require('./routes/postsRouter');
 const chatsRouter = require('./routes/chatsRouter');
 const friendsRouter = require('./routes/friendsRouter');
 const videoUploadRouter = require('./routes/videoUploadRouter');
+const hashtagsRouter = require('./routes/hashtagsRouter'); // Ensure this path is correct
 
 const app = express();
 const server = http.createServer(app);
@@ -71,6 +72,7 @@ app.use('/posts', postsRouter);
 app.use('/chats', chatsRouter);
 app.use('/friends', friendsRouter);
 app.use('/api/videos', videoUploadRouter);
+app.use('/api/hashtags', hashtagsRouter);
 
 // Serve static files from the uploads directory
 app.use('/uploads', express.static(path.join(__dirname, '../uploads')));
