@@ -97,8 +97,8 @@ body.dark .App-link {
 .sidebar-trigger {
     position: fixed;
     right: 0;
-    top: 70px;
+    top: 110px; /* Adjusted to account for navbar and widget bar */
     width: 20px;
-    height: calc(100vh - 70px);
+    height: calc(100vh - 110px);
     z-index: 999;
 }

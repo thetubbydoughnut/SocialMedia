@@ -1,6 +1,40 @@
 .widgets {
-    flex: 0.2;
-    padding: 20px;
-    background-color: #f5f5f52a;
-    height: 100vh;
+    width: 100%;
+    padding: 10px 20px;
+    background-color: rgba(139, 0, 0, 0.1); /* Lighter version of dark red */
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    position: fixed;
+    top: 70px; /* Position it right below the navbar */
+    left: 0;
+    right: 0;
+    z-index: 999;
+}
+
+body.dark .widgets {
+    background-color: rgba(245, 245, 220, 0.1); /* Lighter version of cream for dark mode */
+}
+
+.widget {
+    text-align: center;
+}
+
+.widget h2 {
+    font-size: 1rem;
+    margin-bottom: 5px;
+    color: var(--dark-red);
+}
+
+body.dark .widget h2 {
+    color: var(--cream);
+}
+
+.widget p {
+    font-size: 0.9rem;
+    color: var(--dark-red);
+}
+
+body.dark .widget p {
+    color: var(--cream);
 }

@@ -1,7 +1,8 @@
 .home {
     display: flex;
-    padding-top: 90px;
-    padding-bottom: 100px; /* Increased padding to account for the bottom drawer */
+    flex-direction: column;
+    padding-top: 130px; /* Increased to account for navbar and widget bar */
+    padding-bottom: 100px;
     max-width: 900px;
     margin: 0 auto;
 }
