@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { login } from '../../slices/authSlice';
@@ -25,10 +25,11 @@ const Login = () => {
     }
   };
 
-  // Redirect if already logged in
-  if (user) {
-    navigate('/');
-  }
+  useEffect(() => {
+    if (user) {
+      navigate('/');
+    }
+  }, [user, navigate]);
 
   return (
     <div className="login">

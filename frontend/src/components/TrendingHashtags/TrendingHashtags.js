@@ -14,7 +14,7 @@ const TrendingHashtags = () => {
                 setHashtags(response.data);
                 setLoading(false);
             } catch (err) {
-                setError('Failed to fetch trending hashtags');
+                setError(err.message || 'Failed to fetch trending hashtags');
                 setLoading(false);
             }
         };

@@ -35,11 +35,20 @@ export const logout = createAsyncThunk('auth/logout', async () => {
 const authSlice = createSlice({
   name: 'auth',
   initialState: {
-    user: null,
+    user: JSON.parse(localStorage.getItem('user')) || null,
     status: 'idle',
     error: null,
   },
-  reducers: {},
+  reducers: {
+    setUser: (state, action) => {
+      state.user = action.payload;
+      localStorage.setItem('user', JSON.stringify(action.payload));
+    },
+    clearUser: (state) => {
+      state.user = null;
+      localStorage.removeItem('user');
+    },
+  },
   extraReducers: (builder) => {
     // Login
     builder
@@ -51,6 +60,7 @@ const authSlice = createSlice({
         state.status = 'succeeded';
         state.user = action.payload.user;
         saveAuthToken(action.payload.token);
+        localStorage.setItem('user', JSON.stringify(action.payload.user));
         localStorage.setItem('username', action.payload.user.username);
       })
       .addCase(login.rejected, (state, action) => {
@@ -68,6 +78,7 @@ const authSlice = createSlice({
         state.status = 'succeeded';
         state.user = action.payload.user;
         saveAuthToken(action.payload.token);
+        localStorage.setItem('user', JSON.stringify(action.payload.user));
         localStorage.setItem('username', action.payload.user.username);
       })
       .addCase(register.rejected, (state, action) => {
@@ -81,10 +92,13 @@ const authSlice = createSlice({
       state.status = 'idle';
       state.error = null;
       clearAuthToken();
+      localStorage.removeItem('user');
       localStorage.removeItem('username');
     });
   },
 });
+
+export const { setUser, clearUser } = authSlice.actions;
 
 export const authSelectors = {
   selectUser: (state) => state.auth.user,

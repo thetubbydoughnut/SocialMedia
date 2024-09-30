@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { BrowserRouter as Router, Route, Routes, useNavigate } from 'react-router-dom';
-import { Provider, useDispatch } from 'react-redux';
+import { Provider, useDispatch, useSelector } from 'react-redux';
 import store from './store';
 import Home from './components/Home/Home';
 import NewsFeed from './components/NewsFeed/NewsFeed';
@@ -18,10 +18,12 @@ import SearchResults from './components/SearchResults/SearchResults';
 import { fetchProfile as fetchCurrentUserProfile } from './slices/profileSlice';
 import { loadAuthToken } from './utils/authUtils';
 import { setupInterceptors } from './utils/axiosInstance';
+import { authSelectors } from './slices/authSlice';
 
 const AppContent = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
+    const user = useSelector(authSelectors.selectUser);
 
     useEffect(() => {
         const tokenLoaded = loadAuthToken();
@@ -33,6 +35,12 @@ const AppContent = () => {
     useEffect(() => {
         setupInterceptors(navigate);
     }, [navigate]);
+
+    useEffect(() => {
+        if (user && user.username) {
+            dispatch(fetchCurrentUserProfile(user.username));
+        }
+    }, [user, dispatch]);
 
     return (
         <>
@@ -74,10 +82,18 @@ const AppContent = () => {
                     } 
                 />
                 <Route 
-                    path="/profile/:username/*" 
+                    path="/profile/:username" 
                     element={
                         <PrivateRoute>
                             <Profile />
+                        </PrivateRoute>
+                    } 
+                />
+                <Route 
+                    path="/search" 
+                    element={
+                        <PrivateRoute>
+                            <SearchResults />
                         </PrivateRoute>
                     } 
                 />
@@ -89,19 +105,6 @@ const AppContent = () => {
                         </PrivateRoute>
                     } 
                 />
-                <Route 
-                    path="/messenger/:id" 
-                    element={
-                        <PrivateRoute>
-                            <Messenger />
-                        </PrivateRoute>
-                    } 
-                />
-                <Route path="/search-results" element={
-                    <PrivateRoute>
-                        <SearchResults />
-                    </PrivateRoute>
-                } />
             </Routes>
         </>
     );
