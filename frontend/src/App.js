@@ -24,6 +24,7 @@ import ChatList from './components/Chat/ChatList';
 import ChatWindow from './components/Chat/ChatWindow';
 import StoriesList from './components/Stories/StoriesList';
 import UploadStory from './components/Stories/UploadStory';
+import ErrorBoundary from './components/ErrorBoundary/ErrorBoundary';
 
 const AppContent = () => {
     const dispatch = useDispatch();
@@ -129,9 +130,9 @@ const AppContent = () => {
 const App = () => (
     <Provider store={store}>
         <ThemeProvider>
-            <Router>
-                <AppContent />
-            </Router>
+                <ErrorBoundary>
+                    <AppContent />
+                </ErrorBoundary>
         </ThemeProvider>
     </Provider>
 );

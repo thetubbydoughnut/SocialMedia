@@ -32,21 +32,39 @@ export const logout = createAsyncThunk('auth/logout', async () => {
   clearAuthToken();
 });
 
+// Async thunk for fetching user profile
+export const fetchCurrentUserProfile = createAsyncThunk(
+  'auth/fetchCurrentUserProfile',
+  async (_, { rejectWithValue }) => {
+    try {
+      const response = await axiosInstance.get('/me');
+      return response.data;
+    } catch (err) {
+      return rejectWithValue(err.response.data);
+    }
+  }
+);
+
 const authSlice = createSlice({
   name: 'auth',
   initialState: {
-    user: JSON.parse(localStorage.getItem('user')) || null,
-    status: 'idle',
+    token: localStorage.getItem('token') || null,
+    user: null,
+    loading: false,
     error: null,
   },
   reducers: {
-    setUser: (state, action) => {
-      state.user = action.payload;
-      localStorage.setItem('user', JSON.stringify(action.payload));
+    loginSuccess: (state, action) => {
+      state.token = action.payload.token;
+      state.user = action.payload.user;
+      state.error = null;
+      localStorage.setItem('token', action.payload.token);
     },
-    clearUser: (state) => {
+    logout: (state) => {
+      state.token = null;
       state.user = null;
-      localStorage.removeItem('user');
+      state.error = null;
+      localStorage.removeItem('token');
     },
   },
   extraReducers: (builder) => {
@@ -95,10 +113,23 @@ const authSlice = createSlice({
       localStorage.removeItem('user');
       localStorage.removeItem('username');
     });
+
+    builder
+      .addCase(fetchCurrentUserProfile.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(fetchCurrentUserProfile.fulfilled, (state, action) => {
+        state.loading = false;
+        state.user = action.payload;
+      })
+      .addCase(fetchCurrentUserProfile.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload.message || 'Failed to fetch profile';
+      });
   },
 });
 
-export const { setUser, clearUser } = authSlice.actions;
+export const { loginSuccess } = authSlice.actions;
 
 export const authSelectors = {
   selectUser: (state) => state.auth.user,

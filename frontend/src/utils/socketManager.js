@@ -1,13 +1,22 @@
-import socket from '../socket';
+import { io } from 'socket.io-client';
+import store from '../store';
 
-export const connectSocket = (user) => {
-  if (user) {
-    socket.auth = { token: user.token };
+const socket = io('http://localhost:9000', {
+  autoConnect: false, // Prevent auto connection
+});
+
+export const connectSocket = () => {
+  const token = store.getState().auth.token;
+  if (token) {
+    socket.io.opts.query = { token };
     socket.connect();
-    socket.emit('join', user.id);
   }
 };
 
 export const disconnectSocket = () => {
-  socket.disconnect();
+  if (socket.connected) {
+    socket.disconnect();
+  }
 };
+
+export default socket;

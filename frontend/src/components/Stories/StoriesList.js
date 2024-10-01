@@ -1,19 +1,19 @@
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { setStories, addStory } from '../../slices/storiesSlice';
-import axios from 'axios';
+import { setStories, addStory, selectMemoizedStories } from '../../slices/storiesSlice';
+import { axiosInstance } from '../../utils/axiosInstance';
 import socket from '../../socket';
 import './StoriesList.css';
 
 function StoriesList() {
   const dispatch = useDispatch();
-  const stories = useSelector((state) => state.stories.items);
+  const stories = useSelector(selectMemoizedStories);
   const user = useSelector((state) => state.auth.user);
 
   useEffect(() => {
     const fetchStories = async () => {
       try {
-        const response = await axios.get('/stories/friends');
+        const response = await axiosInstance.get('/stories/friends');
         dispatch(setStories(response.data));
       } catch (error) {
         console.error('Error fetching stories:', error);
