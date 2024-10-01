@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { BrowserRouter as Router, Route, Routes, useNavigate } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
 import { Provider, useDispatch, useSelector } from 'react-redux';
 import store from './store';
 import Home from './components/Home/Home';
@@ -19,10 +19,14 @@ import { fetchProfile as fetchCurrentUserProfile } from './slices/profileSlice';
 import { loadAuthToken } from './utils/authUtils';
 import { setupInterceptors } from './utils/axiosInstance';
 import { authSelectors } from './slices/authSlice';
+import { connectSocket, disconnectSocket } from './utils/socketManager';
+import ChatList from './components/Chat/ChatList';
+import ChatWindow from './components/Chat/ChatWindow';
+import StoriesList from './components/Stories/StoriesList';
+import UploadStory from './components/Stories/UploadStory';
 
 const AppContent = () => {
     const dispatch = useDispatch();
-    const navigate = useNavigate();
     const user = useSelector(authSelectors.selectUser);
 
     useEffect(() => {
@@ -33,8 +37,8 @@ const AppContent = () => {
     }, [dispatch]);
 
     useEffect(() => {
-        setupInterceptors(navigate);
-    }, [navigate]);
+        setupInterceptors();
+    }, []);
 
     useEffect(() => {
         if (user && user.username) {
@@ -42,12 +46,24 @@ const AppContent = () => {
         }
     }, [user, dispatch]);
 
+    useEffect(() => {
+        if (user) {
+            connectSocket(user);
+        }
+
+        return () => {
+            if (user) {
+                disconnectSocket();
+            }
+        };
+    }, [user]);
+
     return (
         <>
             <Header />
             <Routes>
-                <Route path="/login" element={<Login />} />
-                <Route path="/register" element={<Register />} />
+                <Route path="/login" element={!user ? <Login /> : <Navigate to="/" />} />
+                <Route path="/register" element={!user ? <Register /> : <Navigate to="/" />} />
                 {/* Protected Routes */}
                 <Route 
                     path="/" 

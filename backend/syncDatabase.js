@@ -1,16 +1,16 @@
-const { sequelize, User } = require('./models'); // Adjust the path as necessary
+const knex = require('knex');
+const config = require('./knexfile')[process.env.NODE_ENV || 'development'];
+
+const db = knex(config);
 
 async function syncDatabase() {
   try {
-    await sequelize.sync({ alter: true }); // Use alter to update the schema without dropping tables
-    console.log('Database synced successfully.');
+    await db.migrate.latest();
+    console.log('Database migrated successfully.');
   } catch (error) {
-    if (error.name === 'SequelizeUniqueConstraintError') {
-      console.error('Unique constraint error:', error.errors[0].message);
-      // Additional handling logic here
-    } else {
-      console.error('Database sync error:', error);
-    }
+    console.error('Database migration error:', error);
+  } finally {
+    await db.destroy();
   }
 }
 

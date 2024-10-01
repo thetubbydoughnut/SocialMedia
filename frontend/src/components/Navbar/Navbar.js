@@ -11,7 +11,7 @@ import SearchBar from '../Searchbar/SearchBar';
 import HamburgerMenu from '../HamburgerMenu/HamburgerMenu';
 import { useTheme } from '../../ThemeContext'; // Import ThemeContext
 import { NotificationContext } from '../../contexts/NotficationContext';
-import Notifications from '../Notifications/Notifications';
+import NotificationIcon from '../Notifications/NotificationIcon';
 
 const Header = () => {
   const navigate = useNavigate();
@@ -99,7 +99,7 @@ const Header = () => {
           </>
         )}
       </div>
-      <Notifications />
+      <NotificationIcon />
     </div>
   );
 };

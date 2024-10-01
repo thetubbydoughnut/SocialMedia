@@ -1,11 +1,8 @@
-const knex = require('knex');
-const config = require('./knexfile');
-
-const db = knex(config.development);
+const db = require('./config/database');
 
 async function migrateData() {
   try {
-    // Fetch data from the source database
+    // Fetch data from existing tables
     const users = await db.select('*').from('users');
     const posts = await db.select('*').from('posts');
     const messages = await db.select('*').from('messages');

@@ -18,10 +18,15 @@ const Login = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await dispatch(login({ email, password })).unwrap();
+      const response = await dispatch(login({ email, password })).unwrap();
       navigate('/');
     } catch (error) {
-      console.error('Login error:', error);
+      if (error.response && error.response.status === 500) {
+        console.error('Server error during login. Please try again later.');
+      } else {
+        console.error('Login error:', error.message);
+      }
+      // Optionally, set an error state to display to the user
     }
   };
 

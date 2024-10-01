@@ -1,0 +1,20 @@
+.stories-list {
+    margin: 20px 0;
+  }
+  
+  .stories-container {
+    display: flex;
+    overflow-x: scroll;
+  }
+  
+  .story {
+    margin-right: 10px;
+    text-align: center;
+  }
+  
+  .story img {
+    width: 100px;
+    height: 150px;
+    object-fit: cover;
+    border-radius: 10px;
+  }

@@ -1,55 +1,76 @@
-.home {
-    display: flex;
-    flex-direction: column;
-    padding-top: 70px; /* Adjusted to account for navbar */
-    padding-bottom: 100px;
-    max-width: 900px;
-    margin: 0 auto;
+.home-container {
+  display: flex;
+  flex-direction: column;
+  padding-top: 70px; /* Adjusted to account for navbar */
+  padding-bottom: 100px;
+  max-width: 900px;
+  margin: 0 auto;
 }
 
 .home__content {
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    flex: 2;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  flex: 2;
 }
 
 .newsfeed {
-    width: 100%;
-    margin-top: 20px; /* Add space between widgets and newsfeed */
-    max-width: 1200px; /* Adjust this value based on your desired max width */
+  width: 100%;
+  margin-top: 20px; /* Add space between widgets and newsfeed */
+  max-width: 1200px; /* Adjust this value based on your desired max width */
 }
 
 .home__button {
-    background-color: var(--dark-red);
-    color: var(--white);
-    border: none;
-    padding: 0.75rem 1.5rem;
-    border-radius: 25px;
-    cursor: pointer;
-    transition: background-color 0.3s;
-    font-weight: bold;
-    flex: 1;
+  background-color: var(--dark-red);
+  color: var(--white);
+  border: none;
+  padding: 0.75rem 1.5rem;
+  border-radius: 25px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  font-weight: bold;
+  flex: 1;
 }
 
 .home__button:hover {
-    background-color: #a52a2a;
-    padding: 0.5rem 1rem;
+  background-color: #a52a2a;
+  padding: 0.5rem 1rem;
 }
 
 body.dark .home__button {
-    background-color: var(--dark-red);
-    color: var(--soft-white);
-    cursor: pointer;
+  background-color: var(--dark-red);
+  color: var(--soft-white);
+  cursor: pointer;
 }
 
 body.dark .home__button:hover {
-    background-color: #A52A2A;
-    color: var(--white);
+  background-color: #A52A2A;
+  color: var(--white);
 }
 
 .quick-post-container {
+  width: 100%;
+  max-width: 600px;
+  margin: 0 auto 20px;
+}
+
+.sidebar {
+  width: 25%;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.main-content {
+  width: 50%;
+  padding: 10px;
+}
+
+@media (max-width: 768px) {
+  .home-container {
+    flex-direction: column;
+  }
+
+  .sidebar, .main-content {
     width: 100%;
-    max-width: 600px;
-    margin: 0 auto 20px;
+  }
 }

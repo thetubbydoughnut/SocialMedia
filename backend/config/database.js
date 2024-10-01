@@ -1,6 +1,5 @@
-const { Sequelize } = require('sequelize');
-const config = require('./config.json');
+const environment = process.env.NODE_ENV || 'development';
+const config = require('../knexfile')[environment];
+const knex = require('knex')(config);
 
-const sequelize = new Sequelize(config.development);
-
-module.exports = sequelize;
+module.exports = knex;

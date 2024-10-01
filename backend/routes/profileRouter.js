@@ -2,11 +2,10 @@ const express = require('express');
 const router = express.Router();
 const friendsRouter = require('./friendsRouter'); // Import the friendsRouter
 const authMiddleware = require('../middleware/authMiddleware');
-const User = require('../models/userModel');
 const multer = require('multer');
 const path = require('path');
 const fs = require('fs');
-const { Op } = require('sequelize'); // Correct import
+const knex = require('../config/database'); // Import knex
 
 // Ensure uploads directory exists
 const uploadDir = path.join(__dirname, '../../uploads');
@@ -32,9 +31,7 @@ router.use(authMiddleware);
 // Get Current User Profile
 router.get('/me', async (req, res) => {
     try {
-        const user = await User.findByPk(req.user.id, {
-            attributes: ['id', 'username', 'bio', 'profilePhoto', 'coverPhoto'],
-        });
+        const user = await knex('users').where({ id: req.user.id }).first().select('id', 'username', 'bio', 'profilePhoto', 'coverPhoto');
         if (!user) {
             return res.status(404).json({ message: 'User not found' });
         }
@@ -47,10 +44,7 @@ router.get('/me', async (req, res) => {
 // Get Profile by Username
 router.get('/:username', async (req, res) => {
     try {
-        const user = await User.findOne({
-            where: { username: req.params.username },
-            attributes: ['id', 'username', 'bio', 'profilePhoto', 'coverPhoto'],
-        });
+        const user = await knex('users').where({ username: req.params.username }).first().select('id', 'username', 'bio', 'profilePhoto', 'coverPhoto');
         if (!user) {
             return res.status(404).json({ message: 'User not found' });
         }
@@ -64,16 +58,18 @@ router.get('/:username', async (req, res) => {
 router.put('/me', async (req, res) => {
     try {
         const { username, bio } = req.body;
-        const user = await User.findByPk(req.user.id);
+        const user = await knex('users').where({ id: req.user.id }).first();
         if (!user) {
             return res.status(404).json({ message: 'User not found' });
         }
 
-        user.username = username || user.username;
-        user.bio = bio || user.bio;
-        await user.save();
+        await knex('users').where({ id: req.user.id }).update({
+            username: username || user.username,
+            bio: bio || user.bio
+        });
 
-        res.json(user);
+        const updatedUser = await knex('users').where({ id: req.user.id }).first().select('id', 'username', 'bio', 'profilePhoto', 'coverPhoto');
+        res.json(updatedUser);
     } catch (error) {
         res.status(500).json({ message: 'Server error' });
     }
@@ -82,15 +78,16 @@ router.put('/me', async (req, res) => {
 // Upload Profile Photo
 router.post('/me/profilePhoto', upload.single('profilePhoto'), async (req, res) => {
     try {
-        const user = await User.findByPk(req.user.id);
+        const user = await knex('users').where({ id: req.user.id }).first();
         if (!user) {
             return res.status(404).json({ message: 'User not found' });
         }
 
-        user.profilePhoto = `/uploads/${req.file.filename}`;
-        await user.save();
+        await knex('users').where({ id: req.user.id }).update({
+            profilePhoto: `/uploads/${req.file.filename}`
+        });
 
-        res.json({ profilePhoto: user.profilePhoto });
+        res.json({ profilePhoto: `/uploads/${req.file.filename}` });
     } catch (error) {
         res.status(500).json({ message: 'Server error' });
     }
@@ -99,15 +96,16 @@ router.post('/me/profilePhoto', upload.single('profilePhoto'), async (req, res) 
 // Upload Cover Photo
 router.post('/me/coverPhoto', upload.single('coverPhoto'), async (req, res) => {
     try {
-        const user = await User.findByPk(req.user.id);
+        const user = await knex('users').where({ id: req.user.id }).first();
         if (!user) {
             return res.status(404).json({ message: 'User not found' });
         }
 
-        user.coverPhoto = `/uploads/${req.file.filename}`;
-        await user.save();
+        await knex('users').where({ id: req.user.id }).update({
+            coverPhoto: `/uploads/${req.file.filename}`
+        });
 
-        res.json({ coverPhoto: user.coverPhoto });
+        res.json({ coverPhoto: `/uploads/${req.file.filename}` });
     } catch (error) {
         res.status(500).json({ message: 'Server error' });
     }
@@ -117,14 +115,7 @@ router.post('/me/coverPhoto', upload.single('coverPhoto'), async (req, res) => {
 router.get('/search/profiles', async (req, res) => {
     const { query } = req.query;
     try {
-        const profiles = await User.findAll({
-            where: {
-                username: {
-                    [Op.like]: `%${query}%`
-                }
-            },
-            attributes: ['id', 'username', 'profilePhoto']
-        });
+        const profiles = await knex('users').where('username', 'like', `%${query}%`).select('id', 'username', 'profilePhoto');
         res.json(profiles);
     } catch (error) {
         res.status(500).json({ message: 'Server error' });
