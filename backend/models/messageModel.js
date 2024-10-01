@@ -1,8 +1,15 @@
-const { DataTypes } = require('sequelize');
+const { Model, DataTypes } = require('sequelize');
 const sequelize = require('../config/database');
 const User = require('./userModel');
 
-const Message = sequelize.define('Message', {
+class Message extends Model {}
+
+Message.init({
+    id: {
+        type: DataTypes.INTEGER,
+        primaryKey: true,
+        autoIncrement: true
+    },
     senderId: {
         type: DataTypes.INTEGER,
         allowNull: false,
@@ -20,17 +27,22 @@ const Message = sequelize.define('Message', {
         }
     },
     content: {
-        type: DataTypes.STRING,
+        type: DataTypes.TEXT,
         allowNull: false
     },
-    timestamp: {
-        type: DataTypes.DATE,
-        defaultValue: DataTypes.NOW
-    },
-    read: {
+    // Optionally, add 'isRead' field
+    isRead: {
         type: DataTypes.BOOLEAN,
         defaultValue: false
     }
+}, {
+    sequelize,
+    modelName: 'Message',
+    timestamps: true
 });
+
+// Associations
+Message.belongsTo(User, { as: 'sender', foreignKey: 'senderId' });
+Message.belongsTo(User, { as: 'receiver', foreignKey: 'receiverId' });
 
 module.exports = Message;
