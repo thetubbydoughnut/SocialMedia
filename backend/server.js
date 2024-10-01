@@ -25,6 +25,7 @@ const friendsRouter = require('./routes/friendsRouter');
 const videoUploadRouter = require('./routes/videoUploadRouter');
 const hashtagsRouter = require('./routes/hashtagsRouter'); // Ensure this path is correct
 const searchRouter = require('./routes/searchRouter');
+const notificationsRouter = require('./routes/notificationsRouter');
 
 const app = express();
 const server = http.createServer(app);
@@ -75,6 +76,7 @@ app.use('/friends', friendsRouter);
 app.use('/api/videos', videoUploadRouter);
 app.use('/api/hashtags', hashtagsRouter);
 app.use('/api/search', searchRouter); // Ensure this path is correct
+app.use('/notifications', authMiddleware, notificationsRouter);
 
 // Serve static files from the uploads directory
 app.use('/uploads', express.static(path.join(__dirname, '../uploads')));

@@ -10,9 +10,40 @@ THIS IS A WORK IN PROGRESS.
 - Post creation, editing, and deletion
 - Commenting on posts
 - Liking and sharing posts
+- Search functionality
+- Marketplace for buying and selling items
+- Video uploading and viewing
+- Friends list management
+- Dark mode support
+
+## Future Features
 - Real-time notifications
 - Direct messaging between users
-- Search functionality
+- Stories (Ephemeral Content)
+- Groups or Communities
+- Polls and Surveys
+- Event Creation and Management
+- Advanced Privacy Settings
+- Content Moderation Tools
+- User Analytics and Insights
+- Integration with Other Platforms
+- Emoji Reactions
+- Saved Posts / Bookmarks
+- Hashtags and Trending Topics
+- Live Streaming
+- AI-based Content Recommendations
+- Gamification: Badges and Achievements
+- Multi-language Support
+- Accessibility Features
+- Saved Filters and Effects
+- In-app Tutorials and Onboarding
+- API for Third-Party Integrations
+- Content Scheduling
+- Augmented Reality (AR) Filters
+- Bookmarking External Content
+- Event Invitations and Invitation Management
+- Content Moderation Enhancements
+- Voice and Video Messaging
 
 ## Technologies used
 - React
@@ -32,6 +63,10 @@ THIS IS A WORK IN PROGRESS.
 - FontAwesome
 - Dotenv
 - Web Vitals
+- Create React App
+- Knex
+- Multer
+- Sequelize
 
 ## Installation
 1. Clone the repository:
