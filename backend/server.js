@@ -41,6 +41,11 @@ const io = new Server(server, {
 io.on('connection', (socket) => {
     console.log('A user connected');
 
+    // Join a room based on user ID after authentication
+    socket.on('join', (userId) => {
+        socket.join(`user_${userId}`);
+    });
+
     // Handle events as needed
     socket.on('disconnect', () => {
         console.log('User disconnected');
@@ -101,3 +106,5 @@ process.on('SIGINT', () => {
         process.exit(0);
     });
 });
+
+module.exports = { app, server, io };

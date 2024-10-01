@@ -4,6 +4,8 @@ const authMiddleware = require('../middleware/authMiddleware');
 const Friend = require('../models/FriendModel')
 const User = require('../models/userModel');
 const { Op } = require('sequelize');
+const io = require('../server').io; // Ensure you export io from server.js
+const Notification = require('../models/notificationModel');
 
 // Fetch Friends
 router.get('/', authMiddleware, async (req, res) => {
@@ -54,6 +56,21 @@ router.post('/send', authMiddleware, async (req, res) => {
             senderId: req.user.id,
             receiverId,
         });
+
+        // Create a notification
+        await Notification.create({
+            senderId: req.user.id,
+            receiverId,
+            type: 'friend_request',
+            content: `${req.user.username} sent you a friend request.`,
+        });
+
+        // Emit the notification to the receiver
+        io.to(`user_${receiverId}`).emit('newNotification', {
+            type: 'friend_request',
+            content: `${req.user.username} sent you a friend request.`,
+        });
+
         res.json(friendRequest);
     } catch (error) {
         console.error('Error sending friend request:', error);

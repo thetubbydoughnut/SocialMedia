@@ -1,0 +1,44 @@
+.notifications {
+    position: absolute;
+    right: 20px;
+    top: 60px;
+    width: 300px;
+    max-height: 400px;
+    overflow-y: auto;
+    background-color: var(--white);
+    border: 1px solid var(--dark-red);
+    border-radius: 8px;
+    padding: 1rem;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    z-index: 1000;
+}
+
+.notifications h3 {
+    margin-top: 0;
+}
+
+.notifications ul {
+    list-style: none;
+    padding: 0;
+}
+
+.notifications li {
+    padding: 0.5rem 0;
+    border-bottom: 1px solid #ccc;
+}
+
+.notifications li.unread {
+    background-color: #ffe6e6;
+}
+
+.notifications li.read {
+    background-color: #f9f9f9;
+}
+
+.notifications button {
+    background: none;
+    border: none;
+    color: var(--dark-red);
+    cursor: pointer;
+    font-size: 0.8rem;
+}

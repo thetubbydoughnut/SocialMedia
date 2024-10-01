@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState, useRef, useContext } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { logout } from '../../slices/authSlice';
@@ -10,6 +10,8 @@ import './Navbar.css';
 import SearchBar from '../Searchbar/SearchBar';
 import HamburgerMenu from '../HamburgerMenu/HamburgerMenu';
 import { useTheme } from '../../ThemeContext'; // Import ThemeContext
+import { NotificationContext } from '../../contexts/NotficationContext';
+import Notifications from '../Notifications/Notifications';
 
 const Header = () => {
   const navigate = useNavigate();
@@ -21,6 +23,8 @@ const Header = () => {
   
   const { theme, toggleTheme } = useTheme(); // Destructure theme and toggleTheme from context
   const lastScrollY = useRef(0);
+  const { notifications } = useContext(NotificationContext);
+  const unreadCount = notifications.filter(n => !n.isRead).length;
 
   useEffect(() => {
     document.body.className = theme; // Apply theme class to body
@@ -72,6 +76,9 @@ const Header = () => {
         <button onClick={toggleTheme} className="header__theme-button">
           Toggle Theme
         </button>
+        <button onClick={() => {/* Toggle Notifications Dropdown */}}>
+          Notifications {unreadCount > 0 && <span className="badge">{unreadCount}</span>}
+        </button>
         {user ? (
           <>
             <button onClick={handleLogout} className="header__logout-button auth-button">
@@ -92,6 +99,7 @@ const Header = () => {
           </>
         )}
       </div>
+      <Notifications />
     </div>
   );
 };
