@@ -4,21 +4,63 @@
     padding: 20px;
 }
 
-.post-creation {
+.create-post-button {
     background-color: var(--card-background);
     border-radius: 10px;
-    padding: 20px;
+    padding: 15px;
+    display: flex;
+    align-items: center;
+    cursor: pointer;
     margin-bottom: 20px;
 }
 
-.post-creation form {
+.create-post-button .avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    margin-right: 10px;
+}
+
+.create-post-button span {
+    color: var(--text-color);
+    opacity: 0.7;
+}
+
+.create-post-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.7);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.create-post-modal {
+    background-color: var(--background-color); /* Changed from var(--card-background) */
+    border-radius: 10px;
+    padding: 20px;
+    width: 90%;
+    max-width: 500px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.08);
+}
+
+.create-post-modal h2 {
+    color: var(--text-color);
+    margin-bottom: 15px;
+}
+
+.create-post-modal form {
     display: flex;
     flex-direction: column;
 }
 
-.post-creation textarea,
-.post-creation input[type="text"],
-.post-creation input[type="file"] {
+.create-post-modal textarea,
+.create-post-modal input[type="text"],
+.create-post-modal input[type="file"] {
     margin-bottom: 10px;
     padding: 10px;
     border: 1px solid rgba(255, 255, 255, 0.2);
@@ -27,17 +69,41 @@
     color: var(--text-color);
 }
 
-.post-creation button {
-    background-color: var(--primary-color);
-    color: white;
-    border: none;
-    padding: 10px;
-    border-radius: 5px;
-    cursor: pointer;
+.create-post-modal textarea {
+    height: 100px;
+    resize: vertical;
 }
 
-.post-preview {
-    margin-top: 20px;
+.image-preview {
+    margin-bottom: 10px;
+}
+
+.image-preview img {
+    max-width: 100%;
+    border-radius: 5px;
+}
+
+.create-post-actions {
+    display: flex;
+    justify-content: flex-end;
+}
+
+.create-post-actions button {
+    padding: 10px 15px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-left: 10px;
+}
+
+.create-post-actions button[type="button"] {
+    background-color: var(--secondary-color);
+    color: var(--text-color);
+}
+
+.create-post-actions button[type="submit"] {
+    background-color: var(--primary-color);
+    color: white;
 }
 
 .post {
@@ -62,6 +128,7 @@
 
 .username {
     font-weight: bold;
+    color: var(--text-color);
 }
 
 .post-image {
@@ -76,6 +143,7 @@
 
 .post-content p {
     margin: 0;
+    color: var(--text-color);
 }
 
 .error-message {

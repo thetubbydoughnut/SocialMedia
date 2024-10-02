@@ -86,7 +86,11 @@ router.post('/', auth, upload.single('image'), handleUploadError, async (req, re
     res.json(post);
   } catch (error) {
     console.error('Error creating post:', error);
-    res.status(500).json({ message: 'Server error', error: error.message });
+    res.status(500).json({ 
+      message: 'Server error', 
+      error: error.message,
+      stack: error.stack
+    });
   }
 });
 
