@@ -1,74 +1,101 @@
 .newsfeed {
-    padding: 1rem;
     max-width: 600px;
     margin: 0 auto;
-    margin-bottom: 20px;
-    color: var(--text-color);
+    padding: 20px;
 }
 
-.post {
-    margin-bottom: 2rem;
+.post-creation {
     background-color: var(--card-background);
     border-radius: 10px;
     padding: 20px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-    overflow: hidden;
-    transition: box-shadow 0.3s ease;
+    margin-bottom: 20px;
 }
 
-.post:hover {
-    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
-}
-
-.post h2, .post h3 {
-    margin: 0 0 10px;
-    color: var(--text-color);
-}
-
-.post p {
-    margin: 0;
-    color: var(--text-color);
-}
-
-.newsfeed form {
+.post-creation form {
     display: flex;
     flex-direction: column;
-    margin-bottom: 30px;
 }
 
-.newsfeed textarea,
-.newsfeed input[type="text"],
-.newsfeed input[type="file"] {
-    width: 100%;
-    padding: 10px;
+.post-creation textarea,
+.post-creation input[type="text"],
+.post-creation input[type="file"] {
     margin-bottom: 10px;
-    background-color: rgba(255, 255, 255, 0.1);
+    padding: 10px;
     border: 1px solid rgba(255, 255, 255, 0.2);
     border-radius: 5px;
+    background-color: rgba(255, 255, 255, 0.1);
     color: var(--text-color);
 }
 
-.newsfeed textarea::placeholder,
-.newsfeed input::placeholder {
-    color: rgba(255, 255, 255, 0.6);
-}
-
-.newsfeed button {
+.post-creation button {
     background-color: var(--primary-color);
-    color: var(--text-color);
+    color: white;
     border: none;
-    padding: 10px 20px;
+    padding: 10px;
     border-radius: 5px;
     cursor: pointer;
-    transition: background-color 0.3s ease;
 }
 
-.newsfeed button:hover {
-    background-color: var(--secondary-color);
+.post-preview {
+    margin-top: 20px;
 }
 
-.post img {
-    max-width: 100%;
-    border-radius: 5px;
-    margin-top: 10px;
+.post {
+    background-color: var(--card-background);
+    border-radius: 10px;
+    margin-bottom: 20px;
+    overflow: hidden;
+}
+
+.post-header {
+    display: flex;
+    align-items: center;
+    padding: 10px;
+}
+
+.avatar {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    margin-right: 10px;
+}
+
+.username {
+    font-weight: bold;
+}
+
+.post-image {
+    width: 100%;
+    max-height: 500px;
+    object-fit: cover;
+}
+
+.post-content {
+    padding: 10px;
+}
+
+.post-content p {
+    margin: 0;
+}
+
+.error-message {
+    color: #ff4d4d;
+    margin-bottom: 20px;
+}
+
+.no-posts-message {
+    background-color: var(--card-background);
+    border-radius: 10px;
+    padding: 20px;
+    text-align: center;
+    margin-top: 20px;
+}
+
+.no-posts-message p {
+    margin: 10px 0;
+    color: var(--text-color);
+}
+
+.no-posts-message p:first-child {
+    font-weight: bold;
 }

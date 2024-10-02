@@ -1,7 +1,12 @@
 .navbar {
-    background-color: #8B0000; /* Dark red */
-    color: #FFF5EE; /* Seashell white */
+    background-color: var(--primary-color);
+    color: var(--text-color);
     padding: 10px 0;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1000;
 }
 
 .navbar__container {
@@ -13,10 +18,30 @@
     padding: 0 20px;
 }
 
+.navbar__left {
+    display: flex;
+    align-items: center;
+}
+
+.navbar__hamburger {
+    background: none;
+    border: none;
+    color: var(--text-color);
+    font-size: 24px;
+    cursor: pointer;
+    padding: 5px 10px;
+    margin-right: 15px;
+    transition: background-color 0.3s ease;
+}
+
+.navbar__hamburger:hover {
+    background-color: var(--secondary-color);
+}
+
 .navbar__logo {
     font-size: 24px;
     font-weight: bold;
-    color: #FFF5EE; /* Seashell white */
+    color: var(--text-color);
     text-decoration: none;
 }
 
@@ -26,7 +51,7 @@
 }
 
 .navbar__link {
-    color: #FFF5EE; /* Seashell white */
+    color: var(--text-color);
     text-decoration: none;
     margin-left: 20px;
     padding: 5px 10px;
@@ -35,21 +60,16 @@
 }
 
 .navbar__link:hover {
-    background-color: #A52A2A; /* Brown */
+    background-color: var(--secondary-color);
 }
 
 .navbar__link--highlight {
-    background-color: #FFD700; /* Gold */
-    color: #8B0000; /* Dark red */
-}
-
-.navbar__link--highlight:hover {
-    background-color: #FFA500; /* Orange */
+    background-color: var(--secondary-color);
 }
 
 .navbar__button {
-    background-color: #A52A2A; /* Brown */
-    color: #FFF5EE; /* Seashell white */
+    background-color: var(--secondary-color);
+    color: var(--text-color);
     border: none;
     padding: 5px 10px;
     margin-left: 20px;
@@ -59,14 +79,19 @@
 }
 
 .navbar__button:hover {
-    background-color: #CD5C5C; /* Indian Red */
+    background-color: var(--primary-color);
 }
 
 .navbar__notifications {
-    background-color: #FFD700; /* Gold */
-    color: #8B0000; /* Dark red */
+    background-color: #ff4d4d;
+    color: white;
     border-radius: 50%;
     padding: 2px 6px;
     font-size: 12px;
     margin-right: 10px;
+}
+
+/* Add some padding to the body to account for the fixed navbar */
+body {
+    padding-top: 60px;
 }
