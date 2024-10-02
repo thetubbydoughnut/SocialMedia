@@ -26,13 +26,13 @@ router.post('/register', async (req, res) => {
       username,
       email,
       password: hashedPassword,
-      createdAt: new Date(),  // Add this line
-      updatedAt: new Date()   // Add this line if you have an updatedAt field
+      createdAt: new Date(),
+      updatedAt: new Date()
     });
 
     const token = jwt.sign({ user: { id: userId } }, process.env.JWT_SECRET, { expiresIn: '1h' });
 
-    res.json({ token, user: { id: userId, username, email } });  // Include user data in the response
+    res.json({ token, user: { id: userId, username, email } });
   } catch (error) {
     console.error('Registration error:', error);
     res.status(500).json({ message: 'Server error', error: error.message });
@@ -41,21 +41,17 @@ router.post('/register', async (req, res) => {
 
 router.post('/login', async (req, res) => {
   const { email, password } = req.body;
-
   try {
     const user = await req.db('users').where({ email }).first();
     if (!user) {
       return res.status(400).json({ message: 'Invalid credentials' });
     }
-
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) {
       return res.status(400).json({ message: 'Invalid credentials' });
     }
-
-    const token = jwt.sign({ user: { id: user.id } }, process.env.JWT_SECRET, { expiresIn: '1h' });
-
-    res.json({ token, user: { id: user.id, username: user.username, email: user.email } });
+    const token = jwt.sign({ id: user.id }, process.env.JWT_SECRET, { expiresIn: '1h' });
+    res.json({ token, user: { id: user.id, email: user.email, username: user.username } });
   } catch (error) {
     console.error('Login error:', error);
     res.status(500).json({ message: 'Server error', error: error.message });

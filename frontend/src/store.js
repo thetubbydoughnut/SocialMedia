@@ -1,26 +1,13 @@
 import { configureStore } from '@reduxjs/toolkit';
-import authReducer from './slices/authSlice';
-import profileReducer from './slices/profileSlice';
-import friendReducer from './slices/friendSlice';
-import searchReducer from './slices/searchSlice';
-import marketplaceReducer from './slices/marketplaceSlice';
-import notificationsReducer from './slices/notificationsSlice';
-import storiesReducer from './slices/storiesSlice';
-import chatsReducer from './slices/chatSlice';
-import messagesReducer from './slices/messagesSlice';
+import postsReducer from './redux/postsSlice';
+import authReducer from './redux/authSlice'; // Import the authReducer
 
 const store = configureStore({
   reducer: {
-    auth: authReducer,
-    profile: profileReducer,
-    friends: friendReducer,
-    search: searchReducer,
-    marketplace: marketplaceReducer,
-    notifications: notificationsReducer,
-    stories: storiesReducer,
-    chats: chatsReducer,
-    messages: messagesReducer,
-  }
+    posts: postsReducer,
+    auth: authReducer, // Add the auth slice to the store
+    // Add other reducers here if needed
+  },
 });
 
 export default store;

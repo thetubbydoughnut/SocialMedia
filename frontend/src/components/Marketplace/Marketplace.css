@@ -1,163 +1,24 @@
 .marketplace {
     display: flex;
-    padding: 2rem;
-    margin-top: 60px;
-    background-color: #f5f5f5; /* Light background */
-    color: #333; /* Dark text */
-}
-
-body.dark .marketplace {
-    background-color: #333333; /* Dark grey background */
-    color: #8B0000; /* Dark red text */
-}
-
-.marketplace__sidebar {
-    flex: 0.2;
-    padding: 1rem;
-    background-color: #fff;
-    border-radius: 10px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    margin-right: 2rem;
-}
-
-body.dark .marketplace__sidebar {
-    background-color: #444444; /* Dark grey background */
-}
-
-.marketplace__content {
-    flex: 0.8;
-    display: flex;
     flex-direction: column;
+    gap: 20px;
+    padding: 20px;
 }
 
-.marketplace__new-listing-button {
-    padding: 0.5rem 1rem;
-    border: none;
-    background-color: #8b0000; /* Dark red */
-    color: #fff;
-    border-radius: 5px;
-    cursor: pointer;
-    margin-bottom: 1rem;
-}
-
-.marketplace__new-listing-button:hover {
-    background-color: #a52a2a; /* Slightly lighter dark red */
-}
-
-.marketplace__form-preview-container {
-    display: flex;
-    gap: 2rem;
-    margin-bottom: 2rem;
-}
-
-.marketplace__form {
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
-}
-
-.marketplace__form input,
-.marketplace__form textarea,
-.marketplace__form select {
-    padding: 0.5rem;
+.post {
     border: 1px solid #ccc;
+    padding: 15px;
     border-radius: 5px;
 }
 
-.marketplace__form button {
-    padding: 0.5rem 1rem;
-    border: none;
-    background-color: #8b0000; /* Dark red */
-    color: #fff;
-    border-radius: 5px;
-    cursor: pointer;
+.post h2 {
+    margin-bottom: 10px;
 }
 
-.marketplace__form button:hover {
-    background-color: #a52a2a; /* Slightly lighter dark red */
+.post p {
+    margin-bottom: 5px;
 }
 
-.custom-file-upload {
-    display: inline-block;
-    padding: 0.5rem 1rem;
-    cursor: pointer;
-    background-color: #8b0000; /* Dark red */
-    color: #fff;
-    border-radius: 5px;
-    text-align: center;
-}
-
-.custom-file-upload:hover {
-    background-color: #a52a2a; /* Slightly lighter dark red */
-}
-
-.marketplace__form input[type="file"] {
-    display: none;
-}
-
-.marketplace__preview {
-    flex: 1;
-}
-
-.marketplace__items {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-    gap: 2rem;
-}
-
-.marketplace__item {
-    background-color: #fff;
-    border-radius: 10px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    padding: 1rem;
-    text-align: center;
-}
-
-body.dark .marketplace__item {
-    background-color: #444444; /* Dark grey background */
-}
-
-.marketplace__item-header {
-    display: flex;
-    align-items: center;
-    margin-bottom: 1rem;
-}
-
-.marketplace__item-profile-picture {
-    width: 50px;
-    height: 50px;
-    border-radius: 50%;
-    margin-right: 1rem;
-}
-
-.marketplace__item-user {
-    margin: 0;
-    color: #333; /* Dark text */
-}
-
-body.dark .marketplace__item-user {
-    color: #8B0000; /* Dark red text */
-}
-
-.marketplace__item-image {
-    width: 100%;
-    border-radius: 10px;
-}
-
-.marketplace__item-name {
-    margin: 0.5rem 0;
-    color: #333; /* Dark text */
-}
-
-body.dark .marketplace__item-name {
-    color: #8B0000; /* Dark red text */
-}
-
-.marketplace__item-price {
-    color: #8b0000; /* Dark red */
-    font-weight: bold;
-}
-
-.marketplace__item-description {
+.post small {
     color: #555;
 }

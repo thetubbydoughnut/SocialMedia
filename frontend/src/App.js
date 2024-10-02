@@ -1,20 +1,26 @@
-import React from 'react';
-import { Provider } from 'react-redux';
-import store from './store';
-import { NotificationProvider } from './contexts/NotificationContext';
+import React, { useEffect } from 'react';
+import { useDispatch } from 'react-redux';
+import { fetchPosts } from './redux/postsSlice';
+import Marketplace from './components/Marketplace/Marketplace';
 import Navbar from './components/Navbar/Navbar';
 import AppRoutes from './Routes';
+import { NotificationProvider } from './contexts/NotificationContext';
 
 function App() {
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(fetchPosts());
+  }, [dispatch]);
+
   return (
-    <Provider store={store}>
-      <NotificationProvider>
-        <div className="App">
-          <Navbar />
-          <AppRoutes />
-        </div>
-      </NotificationProvider>
-    </Provider>
+    <NotificationProvider>
+      <div className="App">
+        <Navbar />
+        <AppRoutes />
+        <Marketplace />
+      </div>
+    </NotificationProvider>
   );
 }
 

@@ -79,7 +79,7 @@ const NewsFeed = () => {
     return (
         <div className="newsfeed">
             <div className="create-post-button" onClick={() => setIsCreatePostOpen(true)}>
-                <img src={user.profilePhoto || '/path/to/default-avatar.png'} alt={user.username} className="avatar" />
+                <img src={user.profilePhoto || '/default-avatar.png'} alt={user.username} className="avatar" />
                 <span>What's on your mind, {user.username}?</span>
             </div>
 
@@ -132,7 +132,7 @@ const NewsFeed = () => {
                 posts.map(post => (
                     <div key={post.id} className="post">
                         <div className="post-header">
-                            <img src={post.userProfilePhoto || '/path/to/default-avatar.png'} alt={post.username} className="avatar" />
+                            <img src={post.profilePhoto || '/default-avatar.png'} alt={post.username} className="avatar" />
                             <span className="username">{post.username}</span>
                         </div>
                         {post.image_url && <img src={post.image_url} alt="Post" className="post-image" />}
