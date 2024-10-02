@@ -4,6 +4,12 @@ const jwt = require('jsonwebtoken');
 const auth = require('../middleware/auth');
 const router = express.Router();
 
+// Add this check at the top of the file
+if (!process.env.JWT_SECRET) {
+  console.error('JWT_SECRET is not set. Please check your .env file.');
+  process.exit(1);
+}
+
 router.post('/register', async (req, res) => {
   const { username, email, password } = req.body;
 
@@ -47,10 +53,10 @@ router.post('/login', async (req, res) => {
 
     const token = jwt.sign({ user: { id: user.id } }, process.env.JWT_SECRET, { expiresIn: '1h' });
 
-    res.json({ token });
+    res.json({ token, user: { id: user.id, username: user.username, email: user.email } });
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: 'Server error' });
+    console.error('Login error:', error);
+    res.status(500).json({ message: 'Server error', error: error.message });
   }
 });
 
