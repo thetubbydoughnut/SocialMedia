@@ -74,3 +74,20 @@ body.dark .home__button:hover {
     width: 100%;
   }
 }
+
+.home {
+  display: flex;
+  justify-content: space-between;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.newsfeed {
+  flex: 2;
+  margin: 0 20px;
+}
+
+.sidebar, .widgets {
+  flex: 1;
+}

@@ -2,7 +2,7 @@ const express = require('express');
 const auth = require('../middleware/auth');
 const router = express.Router();
 
-router.get('/', async (req, res) => {
+router.get('/', auth, async (req, res) => {
   try {
     const posts = await req.db('posts')
       .join('users', 'posts.user_id', 'users.id')
@@ -11,8 +11,8 @@ router.get('/', async (req, res) => {
 
     res.json(posts);
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: 'Server error' });
+    console.error('Error fetching posts:', error);
+    res.status(500).json({ message: 'Server error', error: error.message });
   }
 });
 

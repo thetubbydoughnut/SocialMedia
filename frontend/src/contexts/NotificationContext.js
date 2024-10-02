@@ -1,5 +1,5 @@
 import React, { createContext, useState, useEffect, useContext } from 'react';
-import { axiosInstance } from '../utils/axiosInstance';
+import axiosInstance from '../utils/axiosInstance';
 import { useSelector } from 'react-redux';
 
 const NotificationContext = createContext();

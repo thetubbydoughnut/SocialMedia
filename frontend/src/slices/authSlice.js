@@ -1,5 +1,5 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import { axiosInstance } from '../utils/axiosInstance';
+import axiosInstance from '../utils/axiosInstance';
 
 // Async Thunks
 export const login = createAsyncThunk(
@@ -7,13 +7,10 @@ export const login = createAsyncThunk(
   async ({ email, password }, { rejectWithValue }) => {
     try {
       const response = await axiosInstance.post('/auth/login', { email, password });
+      localStorage.setItem('token', response.data.token);
       return response.data;
     } catch (error) {
-      if (error.response && error.response.data) {
-        return rejectWithValue(error.response.data);
-      } else {
-        return rejectWithValue({ message: 'An unexpected error occurred' });
-      }
+      return rejectWithValue(error.response.data);
     }
   }
 );
@@ -22,8 +19,8 @@ const authSlice = createSlice({
   name: 'auth',
   initialState: {
     user: null,
-    token: null,
-    isAuthenticated: false,
+    token: localStorage.getItem('token'),
+    isAuthenticated: !!localStorage.getItem('token'),
     error: null,
   },
   reducers: {
@@ -31,6 +28,7 @@ const authSlice = createSlice({
       state.user = null;
       state.token = null;
       state.isAuthenticated = false;
+      localStorage.removeItem('token');
     },
   },
   extraReducers: (builder) => {

@@ -1,5 +1,5 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import { axiosInstance } from '../utils/axiosInstance';
+import axiosInstance from '../utils/axiosInstance';
 
 export const searchProfiles = createAsyncThunk('search/searchProfiles', async (query) => {
   const response = await axiosInstance.get(`/search/profiles?q=${query}`);
