@@ -1,37 +1,34 @@
 import axios from 'axios';
-import { clearAuthToken } from './authUtils';
-import store from '../store';
 
-const axiosInstance = axios.create({
-    baseURL: process.env.REACT_APP_API_URL || 'http://localhost:9000', // Adjust if needed
-    headers: { 'Content-Type': 'application/json' }
+export const axiosInstance = axios.create({
+    baseURL: 'http://localhost:9000',
+    // other configurations...
 });
 
-// Add a response interceptor
-export const setupInterceptors = (navigate) => {
+export const setupInterceptors = (store) => {
+    axiosInstance.interceptors.request.use(
+        (config) => {
+            const token = store.getState().auth.token;
+            if (token) {
+                config.headers['Authorization'] = `Bearer ${token}`;
+            }
+            return config;
+        },
+        (error) => {
+            return Promise.reject(error);
+        }
+    );
+
     axiosInstance.interceptors.response.use(
         (response) => response,
         (error) => {
             if (error.response && error.response.status === 401) {
-                clearAuthToken();
-                navigate('/login'); // Redirect to login page
+                // Handle unauthorized access (e.g., redirect to login)
+                store.dispatch({ type: 'auth/logout' });
             }
             return Promise.reject(error);
         }
     );
 };
 
-export const requestInterceptor = axiosInstance.interceptors.request.use(
-    (config) => {
-        const token = store.getState().auth.token;
-        if (token) {
-            config.headers['Authorization'] = `Bearer ${token}`;
-        }
-        return config;
-    },
-    (error) => {
-        return Promise.reject(error);
-    }
-);
-
-export { axiosInstance };
+export default axiosInstance;
