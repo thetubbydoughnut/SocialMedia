@@ -11,6 +11,7 @@ const commentRoutes = require('./routes/comments');
 const http = require('http');
 const socketIo = require('socket.io');
 const notificationRoutes = require('./routes/notifications');
+const path = require('path');
 
 const app = express();
 const server = http.createServer(app);
@@ -32,6 +33,9 @@ app.use((req, res, next) => {
   next();
 });
 
+// Serve static files from the uploads directory
+app.use('/uploads', express.static(path.join(__dirname, '../uploads')));
+
 // Add this before your other routes
 app.get('/health', (req, res) => {
   res.status(200).json({ status: 'OK', message: 'Server is running' });
@@ -52,11 +56,16 @@ io.on('connection', (socket) => {
   });
 });
 
-// Add this after all your routes
+// Global error handler
 app.use((err, req, res, next) => {
-  console.error(err.stack);
-  res.status(500).send('Something broke!');
+  console.error('Global error handler:', err);
+  res.status(500).json({ message: 'An unexpected error occurred', error: err.message });
 });
 
 const PORT = process.env.PORT || 9000;
 server.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+
+// Unhandled promise rejection handler
+process.on('unhandledRejection', (reason, promise) => {
+  console.error('Unhandled Rejection at:', promise, 'reason:', reason);
+});

@@ -2,7 +2,7 @@ const express = require('express');
 const auth = require('../middleware/auth');
 const router = express.Router();
 
-router.get('/:postId', async (req, res) => {
+router.get('/:postId', auth, async (req, res) => {
   try {
     const comments = await req.db('comments')
       .join('users', 'comments.user_id', 'users.id')
@@ -12,8 +12,8 @@ router.get('/:postId', async (req, res) => {
 
     res.json(comments);
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: 'Server error' });
+    console.error('Error fetching comments:', error);
+    res.status(500).json({ message: 'Server error', error: error.message });
   }
 });
 
@@ -36,8 +36,8 @@ router.post('/', auth, async (req, res) => {
 
     res.json(comment);
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: 'Server error' });
+    console.error('Error creating comment:', error);
+    res.status(500).json({ message: 'Server error', error: error.message });
   }
 });
 

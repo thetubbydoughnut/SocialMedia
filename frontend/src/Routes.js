@@ -5,15 +5,16 @@ import Login from './components/Auth/Login';
 import Register from './components/Auth/Register';
 import Profile from './components/Profile/Profile';
 import NotFound from './components/NotFound/NotFound';
+import PrivateRoute from './components/PrivateRoute';
 
 const AppRoutes = () => {
   return (
     <Routes>
-      <Route path="/" element={<Home />} />
       <Route path="/login" element={<Login />} />
       <Route path="/register" element={<Register />} />
-      <Route path="/profile/:username" element={<Profile />} />
-      <Route path="*" element={<NotFound />} />
+      <Route path="/" element={<PrivateRoute><Home /></PrivateRoute>} />
+      <Route path="/profile/:username" element={<PrivateRoute><Profile /></PrivateRoute>} />
+      <Route path="*" element={<PrivateRoute><NotFound /></PrivateRoute>} />
     </Routes>
   );
 };

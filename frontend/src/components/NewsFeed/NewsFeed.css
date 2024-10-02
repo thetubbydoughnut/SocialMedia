@@ -3,12 +3,14 @@
     max-width: 600px;
     margin: 0 auto;
     margin-bottom: 20px;
+    color: var(--text-color);
 }
 
 .post {
     margin-bottom: 2rem;
-    background-color: var(--form-background-color);
-    border-radius: 15px;
+    background-color: var(--card-background);
+    border-radius: 10px;
+    padding: 20px;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
     overflow: hidden;
     transition: box-shadow 0.3s ease;
@@ -18,10 +20,55 @@
     box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
 }
 
-.post h2 {
+.post h2, .post h3 {
     margin: 0 0 10px;
+    color: var(--text-color);
 }
 
 .post p {
     margin: 0;
+    color: var(--text-color);
+}
+
+.newsfeed form {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 30px;
+}
+
+.newsfeed textarea,
+.newsfeed input[type="text"],
+.newsfeed input[type="file"] {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 10px;
+    background-color: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 5px;
+    color: var(--text-color);
+}
+
+.newsfeed textarea::placeholder,
+.newsfeed input::placeholder {
+    color: rgba(255, 255, 255, 0.6);
+}
+
+.newsfeed button {
+    background-color: var(--primary-color);
+    color: var(--text-color);
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.newsfeed button:hover {
+    background-color: var(--secondary-color);
+}
+
+.post img {
+    max-width: 100%;
+    border-radius: 5px;
+    margin-top: 10px;
 }

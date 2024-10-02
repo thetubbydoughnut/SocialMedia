@@ -25,15 +25,17 @@ router.post('/register', async (req, res) => {
     const [userId] = await req.db('users').insert({
       username,
       email,
-      password: hashedPassword
+      password: hashedPassword,
+      createdAt: new Date(),  // Add this line
+      updatedAt: new Date()   // Add this line if you have an updatedAt field
     });
 
     const token = jwt.sign({ user: { id: userId } }, process.env.JWT_SECRET, { expiresIn: '1h' });
 
-    res.json({ token });
+    res.json({ token, user: { id: userId, username, email } });  // Include user data in the response
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: 'Server error' });
+    console.error('Registration error:', error);
+    res.status(500).json({ message: 'Server error', error: error.message });
   }
 });
 
@@ -65,8 +67,8 @@ router.get('/user', auth, async (req, res) => {
     const user = await req.db('users').where({ id: req.user.id }).first().select('id', 'username', 'email');
     res.json(user);
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: 'Server error' });
+    console.error('Get user error:', error);
+    res.status(500).json({ message: 'Server error', error: error.message });
   }
 });
 
