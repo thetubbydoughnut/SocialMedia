@@ -2,7 +2,7 @@ import axios from 'axios';
 
 const instance = axios.create({
   baseURL: 'http://localhost:9000/api',
-  timeout: 5000,
+  timeout: 10000, // Increased to 10 seconds
   headers: {
     'Content-Type': 'application/json',
   },
@@ -11,7 +11,7 @@ const instance = axios.create({
 instance.interceptors.response.use(
   (response) => response,
   (error) => {
-    console.error('Axios error:', error);
+    console.error('Axios error:', error.response?.data || error.message);
     return Promise.reject(error);
   }
 );

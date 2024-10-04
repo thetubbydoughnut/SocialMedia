@@ -1,35 +1,19 @@
-import React, { createContext, useState, useEffect, useContext } from 'react';
-import axiosInstance from '../utils/axiosInstance';
-import { useSelector } from 'react-redux';
+import React from 'react';
+import { useSelector, useDispatch } from 'react-redux';
+// Import your notification actions here
+// import { addNotification, removeNotification } from './notificationSlice';
 
-const NotificationContext = createContext();
+export const NotificationContext = React.createContext();
 
 export const NotificationProvider = ({ children }) => {
-  const [notifications, setNotifications] = useState([]);
-  const isAuthenticated = useSelector(state => state.auth.isAuthenticated);
+  const notifications = useSelector(state => state.notifications);
+  const dispatch = useDispatch();
 
-  useEffect(() => {
-    if (isAuthenticated) {
-      fetchNotifications();
-    } else {
-      setNotifications([]);
-    }
-  }, [isAuthenticated]);
-
-  const fetchNotifications = async () => {
-    try {
-      const response = await axiosInstance.get('/notifications');
-      setNotifications(response.data);
-    } catch (error) {
-      console.error('Error fetching notifications:', error);
-    }
-  };
+  // Implement your notification logic here
 
   return (
-    <NotificationContext.Provider value={{ notifications, fetchNotifications }}>
+    <NotificationContext.Provider value={{ notifications /* other values */ }}>
       {children}
     </NotificationContext.Provider>
   );
 };
-
-export const useNotifications = () => useContext(NotificationContext);

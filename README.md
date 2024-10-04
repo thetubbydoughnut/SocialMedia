@@ -66,7 +66,6 @@ THIS IS A WORK IN PROGRESS.
 - Create React App
 - Knex
 - Multer
-- Sequelize
 
 ## Installation
 1. Clone the repository:

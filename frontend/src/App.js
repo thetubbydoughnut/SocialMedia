@@ -1,24 +1,24 @@
-import React, { useEffect } from 'react';
-import { useDispatch } from 'react-redux';
-import { fetchPosts } from './redux/postsSlice';
-import Marketplace from './components/Marketplace/Marketplace';
+import React from 'react';
+import { Route, Routes } from 'react-router-dom';
 import Navbar from './components/Navbar/Navbar';
-import AppRoutes from './Routes';
+import NewsFeed from './components/NewsFeed/NewsFeed';
+import UserProfile from './components/UserProfile/UserProfile';
 import { NotificationProvider } from './contexts/NotificationContext';
 
 function App() {
-  const dispatch = useDispatch();
-
-  useEffect(() => {
-    dispatch(fetchPosts());
-  }, [dispatch]);
+  const toggleDarkMode = () => {
+    document.body.classList.toggle('dark-mode');
+  };
 
   return (
     <NotificationProvider>
       <div className="App">
-        <Navbar />
-        <AppRoutes />
-        <Marketplace />
+        <Navbar toggleDarkMode={toggleDarkMode} />
+        <Routes>
+          <Route path="/" element={<NewsFeed />} />
+          <Route path="/user/:username" element={<UserProfile />} />
+          {/* Add other routes as needed */}
+        </Routes>
       </div>
     </NotificationProvider>
   );

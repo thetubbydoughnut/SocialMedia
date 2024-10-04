@@ -1,18 +1,19 @@
 import React from 'react';
-import { createRoot } from 'react-dom/client';
+import ReactDOM from 'react-dom';
+import { BrowserRouter as Router } from 'react-router-dom';
 import { Provider } from 'react-redux';
-import { BrowserRouter } from 'react-router-dom'; // Import BrowserRouter
 import store from './store';
+import './styles/global.css'; // Add this line
+import './index.css';
 import App from './App';
-import './index.css'; // Include any global styles
 
-const root = createRoot(document.getElementById('root'));
-root.render(
+ReactDOM.render(
   <React.StrictMode>
     <Provider store={store}>
-      <BrowserRouter> {/* Wrap App with BrowserRouter */}
+      <Router>
         <App />
-      </BrowserRouter>
+      </Router>
     </Provider>
-  </React.StrictMode>
+  </React.StrictMode>,
+  document.getElementById('root')
 );

@@ -1,12 +1,13 @@
 import { configureStore } from '@reduxjs/toolkit';
 import postsReducer from './redux/postsSlice';
-import authReducer from './redux/authSlice'; // Import the authReducer
+import authReducer from './redux/authSlice';
+import notificationsReducer from './redux/notificationsSlice'; // Create this file if it doesn't exist
 
 const store = configureStore({
   reducer: {
     posts: postsReducer,
-    auth: authReducer, // Add the auth slice to the store
-    // Add other reducers here if needed
+    auth: authReducer,
+    notifications: notificationsReducer, // Add this line
   },
 });
 
