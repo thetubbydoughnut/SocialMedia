@@ -5,7 +5,7 @@ import './Friends.css';
 
 const Friends = () => {
   const dispatch = useDispatch();
-  const { friends, friendRequests } = useSelector(state => state.friends);
+  const { friends = [], friendRequests = [] } = useSelector(state => state.friends) || {};
 
   useEffect(() => {
     dispatch(fetchFriends());

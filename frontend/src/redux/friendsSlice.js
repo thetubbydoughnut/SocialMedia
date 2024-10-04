@@ -32,9 +32,17 @@ const friendsSlice = createSlice({
   reducers: {},
   extraReducers: (builder) => {
     builder
+      .addCase(fetchFriends.pending, (state) => {
+        state.status = 'loading';
+      })
       .addCase(fetchFriends.fulfilled, (state, action) => {
+        state.status = 'succeeded';
         state.friends = action.payload.friends;
         state.friendRequests = action.payload.friendRequests;
+      })
+      .addCase(fetchFriends.rejected, (state, action) => {
+        state.status = 'failed';
+        state.error = action.error.message;
       })
       .addCase(sendFriendRequest.fulfilled, (state, action) => {
         state.friendRequests.push(action.payload);
