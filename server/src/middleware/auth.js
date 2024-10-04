@@ -1,6 +1,9 @@
 const jwt = require('jsonwebtoken');
 const User = require('../models/User');
 
+// Add this line at the top of the file for debugging
+console.log('JWT_SECRET in auth middleware:', process.env.JWT_SECRET);
+
 module.exports = async (req, res, next) => {
   try {
     const token = req.header('Authorization').replace('Bearer ', '');

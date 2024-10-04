@@ -1,12 +1,10 @@
+require('dotenv').config({ path: require('path').resolve(__dirname, '..', '.env') });
 const express = require('express');
 const cors = require('cors');
-const dotenv = require('dotenv');
 const socketIo = require('socket.io');
 const http = require('http');
 const db = require('./config/database');
 const authRoutes = require('./routes/authRoutes');
-
-dotenv.config();
 
 // Add this line to check if JWT_SECRET is loaded
 console.log('JWT_SECRET:', process.env.JWT_SECRET);
