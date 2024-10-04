@@ -1,18 +1,26 @@
 import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 import { login, clearError } from '../../../../redux/slices/authSlice';
 
 const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
-  const { error, status } = useSelector((state) => state.auth);
+  const { error, status, user } = useSelector((state) => state.auth);
 
   useEffect(() => {
     // Clear any existing errors when the component mounts
     return () => dispatch(clearError());
   }, [dispatch]);
+
+  useEffect(() => {
+    if (user) {
+      navigate('/');
+    }
+  }, [user, navigate]);
 
   const handleSubmit = (e) => {
     e.preventDefault();

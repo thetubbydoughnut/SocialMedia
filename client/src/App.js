@@ -4,6 +4,8 @@ import Header from './components/layout/Header';
 import Login from './components/features/auth/login/Login';
 import Register from './components/features/auth/register/Register';
 import Profile from './components/features/auth/profile/Profile';
+import Home from './components/Home';
+import ProtectedRoute from './components/ProtectedRoute';
 
 const App = () => {
   return (
@@ -11,10 +13,12 @@ const App = () => {
       <div>
         <Header />
         <Routes>
-          <Route path="/" element={<h1>Welcome to Social Media App</h1>} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
-          <Route path="/profile" element={<Profile />} />
+          <Route element={<ProtectedRoute />}>
+            <Route path="/" element={<Home />} />
+            <Route path="/profile" element={<Profile />} />
+          </Route>
         </Routes>
       </div>
     </Router>

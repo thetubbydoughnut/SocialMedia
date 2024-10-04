@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 import { register, clearError } from '../../../../redux/slices/authSlice';
 
 const Register = () => {
@@ -11,12 +12,19 @@ const Register = () => {
     lastName: '',
   });
   const dispatch = useDispatch();
-  const { error, status } = useSelector((state) => state.auth);
+  const navigate = useNavigate();
+
+  const { error, status, user } = useSelector((state) => state.auth);
 
   useEffect(() => {
-    // Clear any existing errors when the component mounts
     return () => dispatch(clearError());
   }, [dispatch]);
+
+  useEffect(() => {
+    if (user) {
+      navigate('/');
+    }
+  }, [user, navigate]);
 
   const handleChange = (e) => {
     setUserData({ ...userData, [e.target.name]: e.target.value });

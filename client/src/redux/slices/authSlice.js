@@ -5,9 +5,9 @@ export const login = createAsyncThunk('auth/login', async (credentials, { reject
   try {
     const response = await api.post('/auth/login', credentials);
     localStorage.setItem('token', response.data.token);
+    localStorage.setItem('user', JSON.stringify(response.data.user));
     return response.data;
   } catch (error) {
-    console.error('Login error:', error.response?.data || error.message);
     return rejectWithValue(error.response?.data?.message || 'Login failed');
   }
 });
@@ -16,9 +16,9 @@ export const register = createAsyncThunk('auth/register', async (userData, { rej
   try {
     const response = await api.post('/auth/register', userData);
     localStorage.setItem('token', response.data.token);
+    localStorage.setItem('user', JSON.stringify(response.data.user));
     return response.data;
   } catch (error) {
-    console.error('Registration error:', error.response?.data || error.message);
     return rejectWithValue(error.response?.data?.message || 'Registration failed');
   }
 });
@@ -30,6 +30,7 @@ export const getProfile = createAsyncThunk('auth/getProfile', async () => {
 
 export const updateProfile = createAsyncThunk('auth/updateProfile', async (profileData) => {
   const response = await api.put('/auth/profile', profileData);
+  localStorage.setItem('user', JSON.stringify(response.data));
   return response.data;
 });
 
@@ -41,7 +42,7 @@ export const changePassword = createAsyncThunk('auth/changePassword', async (pas
 const authSlice = createSlice({
   name: 'auth',
   initialState: {
-    user: null,
+    user: JSON.parse(localStorage.getItem('user')) || null,
     token: localStorage.getItem('token'),
     status: 'idle',
     error: null,
@@ -51,6 +52,7 @@ const authSlice = createSlice({
       state.user = null;
       state.token = null;
       localStorage.removeItem('token');
+      localStorage.removeItem('user');
     },
     clearError: (state) => {
       state.error = null;
@@ -60,30 +62,35 @@ const authSlice = createSlice({
     builder
       .addCase(login.pending, (state) => {
         state.status = 'loading';
+        state.error = null;
       })
       .addCase(login.fulfilled, (state, action) => {
         state.status = 'succeeded';
         state.user = action.payload.user;
         state.token = action.payload.token;
+        state.error = null;
       })
       .addCase(login.rejected, (state, action) => {
         state.status = 'failed';
-        state.error = action.payload || 'Login failed';
+        state.error = action.payload;
       })
       .addCase(register.pending, (state) => {
         state.status = 'loading';
+        state.error = null;
       })
       .addCase(register.fulfilled, (state, action) => {
         state.status = 'succeeded';
         state.user = action.payload.user;
         state.token = action.payload.token;
+        state.error = null;
       })
       .addCase(register.rejected, (state, action) => {
         state.status = 'failed';
-        state.error = action.error.message || 'Registration failed';
+        state.error = action.payload;
       })
       .addCase(getProfile.fulfilled, (state, action) => {
         state.user = action.payload;
+        localStorage.setItem('user', JSON.stringify(action.payload));
       })
       .addCase(updateProfile.fulfilled, (state, action) => {
         state.user = { ...state.user, ...action.payload };

@@ -1,11 +1,11 @@
 import React from 'react';
-import { useSelector, useDispatch } from 'react-redux';
 import { Link } from 'react-router-dom';
+import { useSelector, useDispatch } from 'react-redux';
 import { logout } from '../../redux/slices/authSlice';
 
 const Header = () => {
-  const user = useSelector((state) => state.auth.user);
   const dispatch = useDispatch();
+  const { user } = useSelector((state) => state.auth);
 
   const handleLogout = () => {
     dispatch(logout());
@@ -15,9 +15,9 @@ const Header = () => {
     <header>
       <nav>
         <ul>
-          <li><Link to="/">Home</Link></li>
           {user ? (
             <>
+              <li><Link to="/">Home</Link></li>
               <li><Link to="/profile">Profile</Link></li>
               <li><button onClick={handleLogout}>Logout</button></li>
             </>
