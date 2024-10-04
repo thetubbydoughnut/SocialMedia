@@ -40,10 +40,12 @@ exports.createPost = [
 
 exports.getAllPosts = async (req, res) => {
   try {
+    console.log('Fetching all posts');
     const posts = await Post.findAll();
+    console.log('Posts fetched:', posts);
     res.json(posts);
   } catch (error) {
-    console.error(error);
+    console.error('Error fetching posts:', error);
     res.status(500).json({ message: 'Error fetching posts' });
   }
 };

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate, Link } from 'react-router-dom';
-import { login, clearError } from '../../../../redux/slices/authSlice';
+import { loginUser as login, clearError } from '../../../../redux/slices/authSlice';
 
 const Login = () => {
   const [email, setEmail] = useState('');
@@ -21,9 +21,12 @@ const Login = () => {
     }
   }, [user, navigate]);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    dispatch(login({ email, password }));
+    const result = await dispatch(login({ email, password }));
+    if (!result.error) {
+      navigate('/');
+    }
   };
 
   return (

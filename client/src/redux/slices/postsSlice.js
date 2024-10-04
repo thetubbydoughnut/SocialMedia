@@ -2,7 +2,9 @@ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import api from '../../services/api';
 
 export const fetchPosts = createAsyncThunk('posts/fetchPosts', async () => {
+  console.log('Fetching posts...');
   const response = await api.get('/posts');
+  console.log('Fetched posts:', response.data);
   return response.data;
 });
 
@@ -32,13 +34,16 @@ const postsSlice = createSlice({
   extraReducers: (builder) => {
     builder
       .addCase(fetchPosts.pending, (state) => {
+        console.log('fetchPosts.pending');
         state.status = 'loading';
       })
       .addCase(fetchPosts.fulfilled, (state, action) => {
+        console.log('fetchPosts.fulfilled', action.payload);
         state.status = 'succeeded';
         state.posts = action.payload;
       })
       .addCase(fetchPosts.rejected, (state, action) => {
+        console.log('fetchPosts.rejected', action.error);
         state.status = 'failed';
         state.error = action.error.message;
       })

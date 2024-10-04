@@ -92,4 +92,29 @@ process.on('unhandledRejection', (err) => {
   server.close(() => process.exit(1));
 });
 
+// Authentication middleware
+const authenticateJWT = (req, res, next) => {
+  const authHeader = req.headers.authorization;
+  console.log('Auth header:', authHeader); // Add this line
+
+  if (authHeader) {
+    const token = authHeader.split(' ')[1];
+    jwt.verify(token, process.env.JWT_SECRET, (err, user) => {
+      if (err) {
+        console.log('JWT verification error:', err); // Add this line
+        return res.sendStatus(403);
+      }
+      req.user = user;
+      next();
+    });
+  } else {
+    res.sendStatus(401);
+  }
+};
+
+// Profile route with authentication middleware
+app.get('/api/auth/profile', authenticateJWT, (req, res) => {
+  // Your profile route logic here
+});
+
 module.exports = app;

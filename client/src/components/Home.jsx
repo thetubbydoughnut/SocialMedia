@@ -1,26 +1,13 @@
-import React, { useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { fetchPosts } from '../redux/slices/postsSlice';
+import React from 'react';
 import CreatePost from './features/posts/CreatePost';
-import PostList from './features/posts/PostList';
+import NewsFeed from './features/posts/NewsFeed';
 
 const Home = () => {
-  const dispatch = useDispatch();
-  const { posts, status, error } = useSelector((state) => state.posts);
-
-  useEffect(() => {
-    if (status === 'idle') {
-      dispatch(fetchPosts());
-    }
-  }, [status, dispatch]);
-
   return (
     <div>
       <h1>Home</h1>
       <CreatePost />
-      {status === 'loading' && <div>Loading posts...</div>}
-      {error && <div>Error: {error}</div>}
-      {status === 'succeeded' && <PostList posts={posts} />}
+      <NewsFeed />
     </div>
   );
 };
