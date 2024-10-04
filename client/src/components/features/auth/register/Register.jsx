@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
-import { useDispatch } from 'react-redux';
-import { register } from '../../../../redux/slices/authSlice';
+import React, { useState, useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { register, clearError } from '../../../../redux/slices/authSlice';
 
 const Register = () => {
   const [userData, setUserData] = useState({
@@ -11,6 +11,12 @@ const Register = () => {
     lastName: '',
   });
   const dispatch = useDispatch();
+  const { error, status } = useSelector((state) => state.auth);
+
+  useEffect(() => {
+    // Clear any existing errors when the component mounts
+    return () => dispatch(clearError());
+  }, [dispatch]);
 
   const handleChange = (e) => {
     setUserData({ ...userData, [e.target.name]: e.target.value });
@@ -23,6 +29,7 @@ const Register = () => {
 
   return (
     <form onSubmit={handleSubmit}>
+      {error && <div style={{color: 'red'}}>{error}</div>}
       <input
         type="text"
         name="username"
@@ -61,7 +68,9 @@ const Register = () => {
         onChange={handleChange}
         placeholder="Last Name"
       />
-      <button type="submit">Register</button>
+      <button type="submit" disabled={status === 'loading'}>
+        {status === 'loading' ? 'Registering...' : 'Register'}
+      </button>
     </form>
   );
 };

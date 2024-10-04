@@ -1,11 +1,22 @@
 const jwt = require('jsonwebtoken');
-const { User } = require('../models');
+const User = require('../models/User');
+
+// Add this line at the top of the file
+const JWT_SECRET = '97ada07a19c416c5114359a4db277e0542147790238a621e923c6d409075c080f792a20568a1e42e38d6e12802873f24e825f2e4a87d997c3f06a42e02f9db56';
 
 exports.register = async (req, res) => {
   try {
     const { username, email, password, firstName, lastName } = req.body;
+    
+    // Check if user with this email already exists
+    const existingUser = await User.findByEmail(email);
+    if (existingUser) {
+      return res.status(400).json({ message: 'User with this email already exists' });
+    }
+    
     const user = await User.create({ username, email, password, firstName, lastName });
-    const token = jwt.sign({ id: user.id }, process.env.JWT_SECRET, { expiresIn: '1d' });
+    // Use JWT_SECRET here
+    const token = jwt.sign({ id: user.id }, JWT_SECRET, { expiresIn: '1d' });
     res.status(201).json({ 
       user: { 
         id: user.id, 
@@ -17,21 +28,27 @@ exports.register = async (req, res) => {
       token 
     });
   } catch (error) {
-    res.status(400).json({ message: error.message });
+    console.error('Registration error:', error);
+    res.status(400).json({ message: 'Error creating user', error: error.message });
   }
 };
 
 exports.login = async (req, res) => {
   try {
     const { email, password } = req.body;
-    const user = await User.findOne({ where: { email } });
-    if (!user || !(await user.validatePassword(password))) {
-      return res.status(401).json({ message: 'Invalid credentials' });
+    const user = await User.findByEmail(email);
+    if (!user) {
+      return res.status(400).json({ message: 'User not found' });
     }
-    const token = jwt.sign({ id: user.id }, process.env.JWT_SECRET, { expiresIn: '1d' });
+    if (!(await User.validatePassword(user, password))) {
+      return res.status(400).json({ message: 'Invalid password' });
+    }
+    
+    // Use JWT_SECRET here
+    const token = jwt.sign({ id: user.id }, JWT_SECRET, { expiresIn: '1d' });
     
     // Update last login
-    await user.update({ lastLogin: new Date() });
+    await User.update(user.id, { lastLogin: new Date() });
 
     res.json({ 
       user: { 
@@ -44,26 +61,44 @@ exports.login = async (req, res) => {
       token 
     });
   } catch (error) {
-    res.status(400).json({ message: error.message });
+    console.error('Login error:', error);
+    res.status(500).json({ message: 'Server error during login' });
   }
 };
 
 exports.getProfile = async (req, res) => {
   try {
-    const user = await User.findByPk(req.user.id, {
-      attributes: ['id', 'username', 'email', 'firstName', 'lastName', 'bio', 'profilePicture', 'lastLogin'],
+    const user = await User.findById(req.user.id);
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+    res.json({
+      id: user.id,
+      username: user.username,
+      email: user.email,
+      firstName: user.firstName,
+      lastName: user.lastName,
+      bio: user.bio,
+      profilePicture: user.profilePicture
     });
-    res.json(user);
   } catch (error) {
-    res.status(400).json({ message: error.message });
+    res.status(500).json({ message: error.message });
   }
 };
 
 exports.updateProfile = async (req, res) => {
   try {
     const { firstName, lastName, bio } = req.body;
-    await User.update({ firstName, lastName, bio }, { where: { id: req.user.id } });
-    res.json({ message: 'Profile updated successfully' });
+    const updatedUser = await User.update(req.user.id, { firstName, lastName, bio });
+    res.json({
+      id: updatedUser.id,
+      username: updatedUser.username,
+      email: updatedUser.email,
+      firstName: updatedUser.firstName,
+      lastName: updatedUser.lastName,
+      bio: updatedUser.bio,
+      profilePicture: updatedUser.profilePicture
+    });
   } catch (error) {
     res.status(400).json({ message: error.message });
   }
@@ -72,18 +107,15 @@ exports.updateProfile = async (req, res) => {
 exports.changePassword = async (req, res) => {
   try {
     const { currentPassword, newPassword } = req.body;
-    const user = await User.findByPk(req.user.id);
-    
-    if (!(await user.validatePassword(currentPassword))) {
-      return res.status(401).json({ message: 'Current password is incorrect' });
+    const user = await User.findById(req.user.id);
+    if (!user || !(await User.validatePassword(user, currentPassword))) {
+      return res.status(400).json({ message: 'Current password is incorrect' });
     }
-
-    const salt = await bcrypt.genSalt(10);
-    const hashedPassword = await bcrypt.hash(newPassword, salt);
-    await user.update({ password: hashedPassword });
-
-    res.json({ message: 'Password changed successfully' });
+    await User.update(req.user.id, { password: newPassword });
+    res.json({ message: 'Password updated successfully' });
   } catch (error) {
     res.status(400).json({ message: error.message });
   }
 };
+
+// ... other controller methods

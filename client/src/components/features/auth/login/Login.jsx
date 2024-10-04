@@ -1,11 +1,18 @@
-import React, { useState } from 'react';
-import { useDispatch } from 'react-redux';
-import { login } from '../../../../redux/slices/authSlice';
+import React, { useState, useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { login, clearError } from '../../../../redux/slices/authSlice';
 
 const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const dispatch = useDispatch();
+
+  const { error, status } = useSelector((state) => state.auth);
+
+  useEffect(() => {
+    // Clear any existing errors when the component mounts
+    return () => dispatch(clearError());
+  }, [dispatch]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -14,6 +21,7 @@ const Login = () => {
 
   return (
     <form onSubmit={handleSubmit}>
+      {error && <div style={{color: 'red'}}>{error}</div>}
       <input
         type="email"
         value={email}
@@ -28,7 +36,9 @@ const Login = () => {
         placeholder="Password"
         required
       />
-      <button type="submit">Login</button>
+      <button type="submit" disabled={status === 'loading'}>
+        {status === 'loading' ? 'Logging in...' : 'Login'}
+      </button>
     </form>
   );
 };

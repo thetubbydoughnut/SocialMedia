@@ -1,69 +1,38 @@
-const { Model } = require('sequelize');
 const bcrypt = require('bcrypt');
+const db = require('../config/database');
 
-module.exports = (sequelize, DataTypes) => {
-  class User extends Model {
-    static associate(models) {
-      // We'll define associations later
-    }
+const User = {
+  async create(userData) {
+    const { password, ...otherData } = userData;
+    const salt = await bcrypt.genSalt(10);
+    const hashedPassword = await bcrypt.hash(password, salt);
+    const [id] = await db('users').insert({
+      ...otherData,
+      password: hashedPassword
+    });
+    return this.findById(id);
+  },
 
-    async validatePassword(password) {
-      return bcrypt.compare(password, this.password);
-    }
+  async findById(id) {
+    return db('users').where({ id }).first();
+  },
+
+  async findByEmail(email) {
+    return db('users').where({ email }).first();
+  },
+
+  async findByUsername(username) {
+    return db('users').where({ username }).first();
+  },
+
+  async update(id, updateData) {
+    await db('users').where({ id }).update(updateData);
+    return this.findById(id);
+  },
+
+  async validatePassword(user, password) {
+    return bcrypt.compare(password, user.password);
   }
-
-  User.init({
-    username: {
-      type: DataTypes.STRING,
-      allowNull: false,
-      unique: true,
-    },
-    email: {
-      type: DataTypes.STRING,
-      allowNull: false,
-      unique: true,
-      validate: {
-        isEmail: true,
-      },
-    },
-    password: {
-      type: DataTypes.STRING,
-      allowNull: false,
-    },
-    firstName: {
-      type: DataTypes.STRING,
-      allowNull: true,
-    },
-    lastName: {
-      type: DataTypes.STRING,
-      allowNull: true,
-    },
-    bio: {
-      type: DataTypes.TEXT,
-      allowNull: true,
-    },
-    profilePicture: {
-      type: DataTypes.STRING,
-      allowNull: true,
-    },
-    isActive: {
-      type: DataTypes.BOOLEAN,
-      defaultValue: true,
-    },
-    lastLogin: {
-      type: DataTypes.DATE,
-      allowNull: true,
-    },
-  }, {
-    sequelize,
-    modelName: 'User',
-    hooks: {
-      beforeCreate: async (user) => {
-        const salt = await bcrypt.genSalt(10);
-        user.password = await bcrypt.hash(user.password, salt);
-      },
-    },
-  });
-
-  return User;
 };
+
+module.exports = User;

@@ -3,10 +3,13 @@ const cors = require('cors');
 const dotenv = require('dotenv');
 const socketIo = require('socket.io');
 const http = require('http');
-const { sequelize } = require('./models');
+const db = require('./config/database');
 const authRoutes = require('./routes/authRoutes');
 
 dotenv.config();
+
+// Add this line to check if JWT_SECRET is loaded
+console.log('JWT_SECRET:', process.env.JWT_SECRET);
 
 const app = express();
 const server = http.createServer(app);
@@ -18,7 +21,13 @@ const io = socketIo(server, {
 });
 
 // Middleware
-app.use(cors());
+const corsOptions = {
+  origin: process.env.CLIENT_URL || 'http://localhost:3000',
+  methods: ['GET', 'POST', 'PUT', 'DELETE'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
+};
+
+app.use(cors(corsOptions));
 app.use(express.json());
 
 // Initialize socket service
@@ -55,21 +64,21 @@ try {
 
 const PORT = process.env.PORT || 9000;
 
-// Sync database and start server
-sequelize.sync({ force: false }).then(() => {
-  server.listen(PORT, () => {
-    console.log(`Server running on port ${PORT}`);
-  }).on('error', (err) => {
-    if (err.code === 'EADDRINUSE') {
-      console.log(`Port ${PORT} is busy, trying ${PORT + 1}`);
-      server.listen(PORT + 1);
-    } else {
-      console.error('Unable to start server:', err);
-    }
+// Initialize database
+db.raw('SELECT 1')
+  .then(() => {
+    console.log('Database connected');
+    // Start server here
+    server.listen(PORT, () => {
+      console.log(`Server running on port ${PORT}`);
+    });
+  })
+  .catch((err) => {
+    console.error('Database connection failed', err);
+    console.error('Current working directory:', process.cwd());
+    console.error('Attempted database path:', path.resolve(__dirname, '..', 'database.sqlite'));
+    process.exit(1);
   });
-}).catch(err => {
-  console.error('Unable to connect to the database:', err);
-});
 
 // Handle unhandled promise rejections
 process.on('unhandledRejection', (err) => {
