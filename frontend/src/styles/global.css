@@ -60,6 +60,30 @@ body.dark-mode {
   --shadow: var(--dark-shadow);
 }
 
+/* Apply dark mode styles to specific components */
+body.dark-mode .card,
+body.dark-mode .post,
+body.dark-mode .create-post-modal,
+body.dark-mode .search-container,
+body.dark-mode .marketplace-container,
+body.dark-mode .friends-container {
+  background-color: var(--dark-background);
+  color: var(--dark-text);
+}
+
+body.dark-mode input,
+body.dark-mode textarea {
+  background-color: var(--dark-background);
+  color: var(--dark-text);
+  border-color: var(--dark-text);
+}
+
+body.dark-mode .button,
+body.dark-mode button {
+  background-color: var(--dark-nav);
+  color: var(--dark-nav-text);
+}
+
 /* Modern card style */
 .card {
   background-color: var(--background);

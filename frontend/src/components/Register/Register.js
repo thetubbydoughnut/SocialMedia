@@ -1,8 +1,6 @@
 import React, { useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
-import { register } from '../../slices/authSlice';
-import { authSelectors } from '../../slices/authSlice';
+import { useDispatch } from 'react-redux';
+import { registerUser } from '../../redux/authSlice';
 import './Register.css';
 
 const Register = () => {
@@ -10,32 +8,16 @@ const Register = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const dispatch = useDispatch();
-    const navigate = useNavigate();
 
-    const authStatus = useSelector(authSelectors.selectAuthStatus);
-    const authError = useSelector(authSelectors.selectAuthError);
-    const user = useSelector(authSelectors.selectUser);
-
-    const handleSubmit = async (e) => {
+    const handleSubmit = (e) => {
         e.preventDefault();
-        try {
-            await dispatch(register({ username, email, password })).unwrap();
-            navigate('/');
-        } catch (error) {
-            console.error('Registration error:', error);
-        }
+        dispatch(registerUser({ username, email, password }));
     };
 
-    // Redirect if already logged in
-    if (user) {
-        navigate('/');
-    }
-
     return (
-        <div className="register">
-            <form onSubmit={handleSubmit}>
+        <div className="register-container">
+            <form onSubmit={handleSubmit} className="register-form">
                 <h2>Register</h2>
-                {authError && <p className="error">{authError}</p>}
                 <input
                     type="text"
                     placeholder="Username"
@@ -57,9 +39,7 @@ const Register = () => {
                     onChange={(e) => setPassword(e.target.value)}
                     required
                 />
-                <button type="submit" disabled={authStatus === 'loading'}>
-                    {authStatus === 'loading' ? 'Registering...' : 'Register'}
-                </button>
+                <button type="submit">Register</button>
             </form>
         </div>
     );

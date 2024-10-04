@@ -1,92 +1,68 @@
 import React, { useState } from 'react';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faThumbsUp, faHeart, faLaugh, faSurprise, faSadTear, faAngry } from '@fortawesome/free-solid-svg-icons';
+import { useDispatch } from 'react-redux';
+import { likePost, commentOnPost, deletePost } from '../../redux/postsSlice';
 import './Post.css';
-import { Link } from 'react-router-dom';
 
 const Post = ({ post }) => {
-    const [reactions, setReactions] = useState(post.reactions || {});
-    const [userReaction, setUserReaction] = useState(null);
-    const [comments, setComments] = useState(post.comments || []);
-    const [newComment, setNewComment] = useState('');
+  const [comment, setComment] = useState('');
+  const dispatch = useDispatch();
 
-    const handleReaction = (type) => {
-        if (userReaction) return; // Prevent multiple reactions
+  const handleLike = () => {
+    dispatch(likePost(post.id));
+  };
 
-        setReactions({
-            ...reactions,
-            [type]: (reactions[type] || 0) + 1,
-        });
-        setUserReaction(type);
-    };
+  const handleComment = (e) => {
+    e.preventDefault();
+    dispatch(commentOnPost({ postId: post.id, content: comment }));
+    setComment('');
+  };
 
-    const handleComment = (e) => {
-        e.preventDefault();
-        if (newComment.trim()) {
-            const updatedComments = [...comments, { user: 'Current User', text: newComment }];
-            setComments(updatedComments);
-            setNewComment('');
-        }
-    };
+  const handleDelete = () => {
+    if (window.confirm('Are you sure you want to delete this post?')) {
+      dispatch(deletePost(post.id));
+    }
+  };
 
-    
-
-    const getIcon = (type) => {
-        switch (type) {
-            case 'like': return faThumbsUp;
-            case 'love': return faHeart;
-            case 'haha': return faLaugh;
-            case 'wow': return faSurprise;
-            case 'sad': return faSadTear;
-            case 'angry': return faAngry;
-            default: return faThumbsUp;
-        }
-    };
-
-    return (
-        <div className="post">
-            <div className="post__header">
-                <Link to={`/profile/${post.user.username}`} className="post__user-link">
-                    <img src={post.user.profilePicture} alt={post.user.name} className="post__profile-picture" />
-                    <div className="post__user-info">
-                        <h3>{post.user.name}</h3>
-                    </div>
-                </Link>
-            </div>
-            <div className="post__content">
-                <p>{post.content}</p>
-                {post.image && <img src={post.image} alt="Post" className="post__image" />}
-            </div>
-            <div className="post__reactions">
-                {Object.keys(post.reactions).map((type) => (
-                    <button
-                        key={type}
-                        onClick={() => handleReaction(type)}
-                        className={userReaction === type ? 'clicked' : ''}
-                        disabled={!!userReaction} // Disable all buttons if a reaction is made
-                    >
-                        <FontAwesomeIcon icon={getIcon(type)} /> {post.reactions[type]}
-                    </button>
-                ))}
-            </div>
-            <div className="post__comments">
-                {comments.map((comment, index) => (
-                    <div key={index} className="post__comment">
-                        <strong>{comment.user}</strong> {comment.text}
-                    </div>
-                ))}
-                <form onSubmit={handleComment}>
-                    <input
-                        type="text"
-                        value={newComment}
-                        onChange={(e) => setNewComment(e.target.value)}
-                        placeholder="Write a comment..."
-                    />
-                    <button type="submit" className="comment-button">Comment</button>
-                </form>
-            </div>
-        </div>
-    );
+  return (
+    <div className="post">
+      <div className="post-header">
+        <img src={post.author.avatar} alt={post.author.username} className="avatar" />
+        <span className="username">{post.author.username}</span>
+      </div>
+      {post.type === 'image' && <img src={post.content} alt="Post content" className="post-image" />}
+      {post.type === 'video' && (
+        <video controls className="post-video">
+          <source src={post.content} type="video/mp4" />
+          Your browser does not support the video tag.
+        </video>
+      )}
+      <div className="post-actions">
+        <button onClick={handleLike}>❤️ {post.likes.length}</button>
+        <button>💬 {post.comments.length}</button>
+        <button>🚀 Share</button>
+        {post.author.username === currentUser.username && (
+          <button onClick={handleDelete}>🗑️ Delete</button>
+        )}
+      </div>
+      <div className="post-content">
+        <p><strong>{post.author.username}</strong> {post.caption}</p>
+      </div>
+      <div className="post-comments">
+        {post.comments.map(comment => (
+          <p key={comment.id}><strong>{comment.author.username}</strong> {comment.content}</p>
+        ))}
+      </div>
+      <form onSubmit={handleComment} className="comment-form">
+        <input
+          type="text"
+          placeholder="Add a comment..."
+          value={comment}
+          onChange={(e) => setComment(e.target.value)}
+        />
+        <button type="submit">Post</button>
+      </form>
+    </div>
+  );
 };
 
 export default Post;

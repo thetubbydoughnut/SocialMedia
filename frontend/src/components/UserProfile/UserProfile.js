@@ -1,39 +1,60 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import axios from '../../axiosConfig';
+import { useSelector, useDispatch } from 'react-redux';
+import { fetchUserProfile, updateUserProfile } from '../../redux/userSlice';
 import './UserProfile.css';
 
 const UserProfile = () => {
-  const [user, setUser] = useState(null);
-  const [error, setError] = useState('');
   const { username } = useParams();
+  const dispatch = useDispatch();
+  const profile = useSelector(state => state.user.profile);
+  const [isEditing, setIsEditing] = useState(false);
+  const [editedProfile, setEditedProfile] = useState({});
 
   useEffect(() => {
-    const fetchUser = async () => {
-      try {
-        const response = await axios.get(`/users/${username}`);
-        setUser(response.data);
-      } catch (error) {
-        console.error('Error fetching user:', error.response?.data || error.message);
-        setError('Failed to fetch user profile. Please try again later.');
-      }
-    };
+    dispatch(fetchUserProfile(username));
+  }, [dispatch, username]);
 
-    fetchUser();
-  }, [username]);
+  const handleEdit = () => {
+    setIsEditing(true);
+    setEditedProfile(profile);
+  };
 
-  if (error) return <div className="error-message">{error}</div>;
-  if (!user) return <div>Loading...</div>;
+  const handleSave = () => {
+    dispatch(updateUserProfile(editedProfile));
+    setIsEditing(false);
+  };
+
+  const handleChange = (e) => {
+    setEditedProfile({ ...editedProfile, [e.target.name]: e.target.value });
+  };
+
+  if (!profile) return <div>Loading...</div>;
 
   return (
     <div className="user-profile">
-      <div className="profile-header">
-        <img src="/default-avatar.png" alt={`${user.username}'s avatar`} className="profile-avatar" />
-        <h1>{user.username}</h1>
-      </div>
-      <p className="bio">{user.bio}</p>
-      <div className="post-count">Posts: {user.posts.length}</div>
-      {/* You can add more user information here */}
+      <img src={profile.avatar} alt={profile.username} className="profile-avatar" />
+      {isEditing ? (
+        <>
+          <input
+            name="username"
+            value={editedProfile.username}
+            onChange={handleChange}
+          />
+          <textarea
+            name="bio"
+            value={editedProfile.bio}
+            onChange={handleChange}
+          />
+          <button onClick={handleSave}>Save</button>
+        </>
+      ) : (
+        <>
+          <h2>{profile.username}</h2>
+          <p>{profile.bio}</p>
+          <button onClick={handleEdit}>Edit Profile</button>
+        </>
+      )}
     </div>
   );
 };

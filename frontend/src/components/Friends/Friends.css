@@ -1,0 +1,40 @@
+.friends-container {
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.friends-list, .friend-requests {
+  margin-top: 20px;
+}
+
+.friend-card, .request-card {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+  padding: 10px;
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.avatar {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  margin-right: 10px;
+}
+
+button {
+  margin-left: auto;
+  padding: 5px 10px;
+  border: none;
+  border-radius: 4px;
+  background-color: #0095f6;
+  color: #fff;
+  cursor: pointer;
+}
+
+button:hover {
+  background-color: #0077c5;
+}

@@ -1,31 +1,66 @@
-import React from 'react';
-import { useSelector } from 'react-redux';
+import React, { useState, useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { fetchListings, createListing } from '../../redux/marketplaceSlice';
 import './Marketplace.css';
 
-function Marketplace() {
-  const posts = useSelector((state) => state.posts.items);
-  const postStatus = useSelector((state) => state.posts.status);
-  const error = useSelector((state) => state.posts.error);
+const Marketplace = () => {
+  const [title, setTitle] = useState('');
+  const [description, setDescription] = useState('');
+  const [price, setPrice] = useState('');
+  const dispatch = useDispatch();
+  const listings = useSelector(state => state.marketplace.listings);
 
-  if (postStatus === 'loading') {
-    return <div>Loading...</div>;
-  }
+  useEffect(() => {
+    dispatch(fetchListings());
+  }, [dispatch]);
 
-  if (postStatus === 'failed') {
-    return <div>Error: {error}</div>;
-  }
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    dispatch(createListing({ title, description, price: parseFloat(price) }));
+    setTitle('');
+    setDescription('');
+    setPrice('');
+  };
 
   return (
-    <div className="marketplace">
-      {posts.map((post) => (
-        <div key={post.id} className="post">
-          <h2>{post.title}</h2>
-          <p>{post.content}</p>
-          <small>By User ID: {post.user_id}</small>
-        </div>
-      ))}
+    <div className="marketplace-container">
+      <h2>Marketplace</h2>
+      <form onSubmit={handleSubmit} className="create-listing-form">
+        <input
+          type="text"
+          value={title}
+          onChange={(e) => setTitle(e.target.value)}
+          placeholder="Title"
+          required
+        />
+        <textarea
+          value={description}
+          onChange={(e) => setDescription(e.target.value)}
+          placeholder="Description"
+          required
+        />
+        <input
+          type="number"
+          value={price}
+          onChange={(e) => setPrice(e.target.value)}
+          placeholder="Price"
+          step="0.01"
+          required
+        />
+        <button type="submit">Create Listing</button>
+      </form>
+      <div className="listings-grid">
+        {listings.map(listing => (
+          <div key={listing.id} className="listing-card">
+            <h3>{listing.title}</h3>
+            <p>{listing.description}</p>
+            <p className="price">${listing.price.toFixed(2)}</p>
+            <button>Contact Seller</button>
+          </div>
+        ))}
+      </div>
     </div>
   );
-}
+};
 
 export default Marketplace;

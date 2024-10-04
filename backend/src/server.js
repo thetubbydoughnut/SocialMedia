@@ -8,6 +8,9 @@ const authRoutes = require('./routes/auth');
 const postsRoutes = require('./routes/posts'); // Add this line
 const notificationsRoutes = require('./routes/notifications');
 const usersRoutes = require('./routes/users');
+const marketplaceRoutes = require('./routes/marketplace');
+const searchRoutes = require('./routes/search');
+const friendsRoutes = require('./routes/friends');
 
 const app = express();
 
@@ -32,6 +35,9 @@ app.use('/api/auth', authRoutes);
 app.use('/api/posts', postsRoutes); // Add this line
 app.use('/api/notifications', notificationsRoutes); // Add this line
 app.use('/api/users', usersRoutes); // Add this line
+app.use('/api/marketplace', marketplaceRoutes);
+app.use('/api/search', searchRoutes);
+app.use('/api/friends', friendsRoutes);
 
 // Health check route
 app.get('/health', (req, res) => {

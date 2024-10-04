@@ -1,25 +1,40 @@
 import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { login } from '../../features/auth/authSlice';
+import { loginUser } from '../../redux/authSlice';
+import './Login.css';
 
 const Login = () => {
-  const [username, setUsername] = useState('');
+  const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const dispatch = useDispatch();
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
-    try {
-      await dispatch(login({ username, password })).unwrap();
-      console.log('Login successful');
-      // Redirect or update UI as needed
-    } catch (error) {
-      console.error('Failed to log in:', error.message || 'An unknown error occurred');
-      // Update UI to show error message
-    }
+    dispatch(loginUser({ email, password }));
   };
 
-  // Render form...
+  return (
+    <div className="login-container">
+      <form onSubmit={handleSubmit} className="login-form">
+        <h2>Login</h2>
+        <input
+          type="email"
+          placeholder="Email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          required
+        />
+        <input
+          type="password"
+          placeholder="Password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          required
+        />
+        <button type="submit">Login</button>
+      </form>
+    </div>
+  );
 };
 
 export default Login;
