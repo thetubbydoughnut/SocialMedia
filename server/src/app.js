@@ -40,7 +40,7 @@ try {
 }
 
 // Routes
-app.use('/api/auth', authRoutes);
+app.use('/api/auth', authRoutes)
 
 // Conditionally load postsRoutes if it exists
 try {
