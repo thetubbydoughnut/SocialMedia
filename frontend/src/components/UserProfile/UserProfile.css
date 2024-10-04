@@ -1,26 +1,106 @@
 .user-profile {
   max-width: 600px;
   margin: 0 auto;
-  padding: 20px;
+  background-color: var(--background);
+  color: var(--text);
 }
 
 .profile-header {
-  display: flex;
-  align-items: center;
-  margin-bottom: 20px;
+  position: relative;
+}
+
+.profile-banner {
+  height: 200px;
+  background-color: var(--nav);
+  border-bottom: 1px solid var(--nav-text);
+}
+
+.profile-info {
+  padding: 20px;
+  position: relative;
 }
 
 .profile-avatar {
-  width: 100px;
-  height: 100px;
+  width: 134px;
+  height: 134px;
   border-radius: 50%;
-  margin-right: 20px;
+  border: 4px solid var(--background);
+  position: absolute;
+  top: -67px;
+  left: 20px;
 }
 
-.bio {
-  margin-bottom: 20px;
+.profile-details {
+  margin-top: 60px;
 }
 
-.post-count {
+.profile-details h2 {
+  margin: 0;
+  font-size: 20px;
   font-weight: bold;
+}
+
+.profile-handle {
+  color: #8899a6;
+  margin: 0;
+  font-size: 15px;
+}
+
+.profile-bio, .profile-bio-edit {
+  margin-top: 10px;
+  font-size: 15px;
+  line-height: 1.5;
+}
+
+.profile-bio-edit {
+  width: 100%;
+  min-height: 100px;
+  padding: 10px;
+  border: 1px solid var(--nav);
+  border-radius: 5px;
+  background-color: var(--background);
+  color: var(--text);
+}
+
+.profile-edit-button {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  padding: 8px 16px;
+  border: 1px solid var(--nav);
+  border-radius: 20px;
+  background-color: var(--background);
+  color: var(--nav);
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.3s, color 0.3s;
+}
+
+.profile-edit-button:hover {
+  background-color: var(--nav);
+  color: var(--nav-text);
+}
+
+.profile-stats {
+  display: flex;
+  justify-content: space-around;
+  padding: 15px 0;
+  border-top: 1px solid var(--nav);
+  border-bottom: 1px solid var(--nav);
+}
+
+.stat {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.stat-value {
+  font-size: 18px;
+  font-weight: bold;
+}
+
+.stat-label {
+  font-size: 14px;
+  color: #8899a6;
 }

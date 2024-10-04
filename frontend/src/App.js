@@ -1,5 +1,7 @@
-import React from 'react';
-import { Route, Routes } from 'react-router-dom';
+import React, { useEffect } from 'react';
+import { Route, Routes, Navigate } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+import { fetchCurrentUser } from './redux/authSlice';
 import Navbar from './components/Navbar/Navbar';
 import NewsFeed from './components/NewsFeed/NewsFeed';
 import UserProfile from './components/UserProfile/UserProfile';
@@ -10,7 +12,19 @@ import Marketplace from './components/Marketplace/Marketplace';
 import Friends from './components/Friends/Friends';
 import { NotificationProvider } from './contexts/NotificationContext';
 
+const ProtectedRoute = ({ children }) => {
+  const user = useSelector(state => state.auth.user);
+  return user ? children : <Navigate to="/login" replace />;
+};
+
 function App() {
+  const dispatch = useDispatch();
+  const user = useSelector(state => state.auth.user);
+
+  useEffect(() => {
+    dispatch(fetchCurrentUser());
+  }, [dispatch]);
+
   const toggleDarkMode = () => {
     document.body.classList.toggle('dark-mode');
   };
@@ -20,13 +34,34 @@ function App() {
       <div className="App">
         <Navbar toggleDarkMode={toggleDarkMode} />
         <Routes>
-          <Route path="/" element={<NewsFeed />} />
-          <Route path="/user/:username" element={<UserProfile />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
-          <Route path="/search" element={<Search />} />
-          <Route path="/marketplace" element={<Marketplace />} />
-          <Route path="/friends" element={<Friends />} />
+          <Route path="/" element={
+            <ProtectedRoute>
+              <NewsFeed />
+            </ProtectedRoute>
+          } />
+          <Route path="/user/:username" element={
+            <ProtectedRoute>
+              <UserProfile />
+            </ProtectedRoute>
+          } />
+          <Route path="/search" element={
+            <ProtectedRoute>
+              <Search />
+            </ProtectedRoute>
+          } />
+          <Route path="/marketplace" element={
+            <ProtectedRoute>
+              <Marketplace />
+            </ProtectedRoute>
+          } />
+          <Route path="/friends" element={
+            <ProtectedRoute>
+              <Friends />
+            </ProtectedRoute>
+          } />
+          <Route path="*" element={<Navigate to={user ? "/" : "/login"} replace />} />
         </Routes>
       </div>
     </NotificationProvider>

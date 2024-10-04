@@ -4,19 +4,30 @@ import axios from '../axiosConfig';
 // Async thunk to handle user registration
 export const registerUser = createAsyncThunk('auth/register', async (userData) => {
   const response = await axios.post('/auth/register', userData);
-  return response.data;
+  localStorage.setItem('token', response.data.token);
+  return response.data.user;
 });
 
 // Async thunk to handle user login
 export const loginUser = createAsyncThunk('auth/login', async (credentials) => {
   const response = await axios.post('/auth/login', credentials);
-  return response.data;
+  localStorage.setItem('token', response.data.token);
+  return response.data.user;
 });
 
 // Async thunk to fetch current user (optional)
-export const fetchCurrentUser = createAsyncThunk('auth/fetchCurrentUser', async () => {
-  const response = await axios.get('/auth/me');
-  return response.data;
+export const fetchCurrentUser = createAsyncThunk('auth/fetchCurrentUser', async (_, { rejectWithValue }) => {
+  try {
+    const token = localStorage.getItem('token');
+    if (!token) return rejectWithValue('No token found');
+    
+    const response = await axios.get('/auth/me', {
+      headers: { Authorization: `Bearer ${token}` }
+    });
+    return response.data;
+  } catch (error) {
+    return rejectWithValue(error.response.data);
+  }
 });
 
 const authSlice = createSlice({
@@ -30,6 +41,7 @@ const authSlice = createSlice({
     // Synchronous logout action
     logout: (state) => {
       state.user = null;
+      localStorage.removeItem('token');
     },
   },
   extraReducers: (builder) => {
@@ -50,6 +62,13 @@ const authSlice = createSlice({
       .addCase(fetchCurrentUser.fulfilled, (state, action) => {
         state.user = action.payload;
         state.status = 'succeeded';
+      })
+      
+      // Handle rejected current user
+      .addCase(fetchCurrentUser.rejected, (state) => {
+        state.user = null;
+        state.status = 'failed';
+        localStorage.removeItem('token');
       });
   },
 });
