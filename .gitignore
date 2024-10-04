@@ -4,5 +4,5 @@ backend/.env
 *.db3
 uploads/
 .cursorrules
-   # Ignore uploaded files
-   backend/uploads/
+# Ignore uploaded files
+backend/uploads/

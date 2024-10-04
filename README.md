@@ -4,68 +4,70 @@ I am creating a social media app.
 
 THIS IS A WORK IN PROGRESS.
 
-## Features
+## Future Features
 - User authentication and authorization
 - Profile creation and management
 - Post creation, editing, and deletion
 - Commenting on posts
 - Liking and sharing posts
 - Search functionality
-- Marketplace for buying and selling items
 - Video uploading and viewing
 - Friends list management
-- Dark mode support
-
-## Future Features
 - Real-time notifications
 - Direct messaging between users
+- Marketplace for buying and selling items
 - Stories (Ephemeral Content)
 - Groups or Communities
+- Dark mode support
 - Polls and Surveys
 - Event Creation and Management
 - Advanced Privacy Settings
 - Content Moderation Tools
 - User Analytics and Insights
-- Integration with Other Platforms
 - Emoji Reactions
 - Saved Posts / Bookmarks
 - Hashtags and Trending Topics
-- Live Streaming
-- AI-based Content Recommendations
 - Gamification: Badges and Achievements
-- Multi-language Support
 - Accessibility Features
-- Saved Filters and Effects
 - In-app Tutorials and Onboarding
-- API for Third-Party Integrations
 - Content Scheduling
-- Augmented Reality (AR) Filters
 - Bookmarking External Content
 - Event Invitations and Invitation Management
 - Content Moderation Enhancements
 - Voice and Video Messaging
 
-## Technologies used
-- React
-- Express
-- Node
-- SQLite
-- JSON Web Token
-- Bcrypt
-- CORS
-- Redux
-- Redux Toolkit
-- React Router
-- React Hook Form
-- Yup
-- Axios
-- Socket.io
-- FontAwesome
-- Dotenv
-- Web Vitals
-- Create React App
-- Knex
-- Multer
+## Technologies Stack
+
+### Frontend & Backend
+- **Language:** JavaScript (ES6+), TypeScript (optional for type safety)
+- **Framework:** Next.js
+- **UI Framework:** Tailwind CSS or Material-UI (MUI)
+- **State Management:** Redux Toolkit
+- **Routing:** Next.js built-in routing
+- **HTTP Client:** Axios
+- **Real-time Communication:** Socket.io-client
+- **Icons:** FontAwesome or Material Icons
+- **Styling:** CSS Modules, Tailwind CSS, or styled-components
+- **Testing:** Jest, React Testing Library, Supertest
+
+### Backend
+- **Runtime Environment:** Node.js
+- **Framework:** Next.js API Routes
+- **Database:** SQLite3
+- **Query Builder:** Knex.js
+- **Real-time Communication:** Socket.io
+- **Authentication:** JSON Web Tokens (JWT), bcrypt
+- **Environment Variables:** dotenv
+- **Testing:** Jest, Supertest
+
+### Additional Tools
+- **Version Control:** Git
+- **Package Management:** npm or Yarn
+- **Linting and Formatting:** ESLint, Prettier
+- **Environment Management:** dotenv
+
+## Project Structure
+
 
 ## Installation
 1. Clone the repository:
