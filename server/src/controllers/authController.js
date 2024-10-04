@@ -42,11 +42,17 @@ exports.register = async (req, res) => {
 exports.login = async (req, res) => {
   try {
     const { email, password } = req.body;
+    console.log('Login attempt for email:', email); // Add this line
+
     const user = await User.findByEmail(email);
     if (!user) {
+      console.log('User not found for email:', email); // Add this line
       return res.status(400).json({ message: 'User not found' });
     }
-    if (!(await User.validatePassword(user, password))) {
+
+    const isValidPassword = await User.validatePassword(user, password);
+    if (!isValidPassword) {
+      console.log('Invalid password for email:', email); // Add this line
       return res.status(400).json({ message: 'Invalid password' });
     }
     
@@ -54,6 +60,8 @@ exports.login = async (req, res) => {
     
     // Update last login
     await User.update(user.id, { lastLogin: new Date() });
+
+    console.log('Login successful for email:', email); // Add this line
 
     res.json({ 
       user: { 
@@ -67,7 +75,7 @@ exports.login = async (req, res) => {
     });
   } catch (error) {
     console.error('Login error:', error);
-    res.status(500).json({ message: 'Server error during login' });
+    res.status(500).json({ message: 'Server error during login', error: error.message });
   }
 };
 
@@ -81,13 +89,11 @@ exports.getProfile = async (req, res) => {
       id: user.id,
       username: user.username,
       email: user.email,
-      firstName: user.firstName,
-      lastName: user.lastName,
-      bio: user.bio,
-      profilePicture: user.profilePicture
+      // Add other fields as needed, but exclude sensitive information like password
     });
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    console.error(error.message);
+    res.status(500).json({ message: 'Server Error' });
   }
 };
 

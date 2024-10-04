@@ -7,3 +7,11 @@ uploads/
 .cursorrules
 # Ignore uploaded files
 server/uploads/
+# Environment variables
+.env
+
+# Database
+*.sqlite
+*.sqlite3
+
+# Other entries...

@@ -1,16 +1,18 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import api from '../../services/api';
 
-export const login = createAsyncThunk('auth/login', async (credentials, { rejectWithValue }) => {
-  try {
-    const response = await api.post('/auth/login', credentials);
-    localStorage.setItem('token', response.data.token);
-    localStorage.setItem('user', JSON.stringify(response.data.user));
-    return response.data;
-  } catch (error) {
-    return rejectWithValue(error.response?.data?.message || 'Login failed');
+export const login = createAsyncThunk(
+  'auth/login',
+  async (credentials, { rejectWithValue }) => {
+    try {
+      const response = await api.post('/auth/login', credentials);
+      localStorage.setItem('token', response.data.token);
+      return response.data;
+    } catch (error) {
+      return rejectWithValue(error.response?.data?.message || 'An error occurred');
+    }
   }
-});
+);
 
 export const register = createAsyncThunk('auth/register', async (userData, { rejectWithValue }) => {
   try {
@@ -79,7 +81,7 @@ export const logoutAndRedirect = createAsyncThunk(
 const authSlice = createSlice({
   name: 'auth',
   initialState: {
-    user: JSON.parse(localStorage.getItem('user')) || null,
+    user: null,
     token: localStorage.getItem('token'),
     status: 'idle',
     error: null,
@@ -89,7 +91,6 @@ const authSlice = createSlice({
       state.user = null;
       state.token = null;
       localStorage.removeItem('token');
-      localStorage.removeItem('user');
     },
     clearError: (state) => {
       state.error = null;

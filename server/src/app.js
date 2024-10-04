@@ -3,23 +3,21 @@ const express = require('express');
 const cors = require('cors');
 const socketIo = require('socket.io');
 const http = require('http');
+const path = require('path'); // Add this line
 const db = require('./config/database');
 const authRoutes = require('./routes/authRoutes');
+const postsRoutes = require('./routes/postsRoutes');
 
 const app = express();
-const server = http.createServer(app);
-const io = socketIo(server, {
-  cors: {
-    origin: process.env.CLIENT_URL || 'http://localhost:3000',
-    methods: ['GET', 'POST']
-  }
-});
+const server = http.createServer(app); // Add this line
 
-// Middleware
+// CORS configuration
 const corsOptions = {
   origin: process.env.CLIENT_URL || 'http://localhost:3000',
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
-  allowedHeaders: ['Content-Type', 'Authorization'],
+  allowedHeaders: ['Content-Type', 'Authorization', 'x-auth-token'],
+  credentials: true,
+  optionsSuccessStatus: 200
 };
 
 app.use(cors(corsOptions));
@@ -29,13 +27,17 @@ app.use(express.json());
 let socketService;
 try {
   const SocketService = require('./services/socketService');
+  const io = socketIo(server, {
+    cors: corsOptions
+  });
   socketService = new SocketService(io);
 } catch (error) {
   console.warn('socketService not found. Real-time features will be disabled.');
 }
 
 // Routes
-app.use('/api/auth', authRoutes)
+app.use('/api/auth', authRoutes);
+app.use('/api/posts', postsRoutes);
 
 // Conditionally load postsRoutes if it exists
 try {
@@ -56,6 +58,15 @@ try {
     res.status(500).send('Something broke!');
   });
 }
+
+// Global error handler
+app.use((err, req, res, next) => {
+  console.error(err.stack);
+  res.status(500).json({ 
+    message: 'An unexpected error occurred', 
+    error: process.env.NODE_ENV === 'development' ? err.message : undefined
+  });
+});
 
 const PORT = process.env.PORT || 9000;
 
