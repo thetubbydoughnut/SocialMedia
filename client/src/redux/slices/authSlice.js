@@ -7,6 +7,7 @@ export const login = createAsyncThunk(
     try {
       const response = await api.post('/auth/login', credentials);
       localStorage.setItem('token', response.data.token);
+      localStorage.setItem('user', JSON.stringify(response.data.user));
       return response.data;
     } catch (error) {
       return rejectWithValue(error.response?.data?.message || 'An error occurred');
@@ -71,30 +72,28 @@ export const verifyEmail = createAsyncThunk('auth/verifyEmail', async (token, { 
   }
 });
 
-export const logoutAndRedirect = createAsyncThunk(
-  'auth/logoutAndRedirect',
-  async (_, { dispatch }) => {
-    dispatch(logout());
-  }
-);
+export const logout = createAsyncThunk('auth/logout', async (_, { dispatch }) => {
+  localStorage.removeItem('token');
+  localStorage.removeItem('user');
+  delete api.defaults.headers.common['x-auth-token'];
+  return null;
+});
+
+const initialState = {
+  token: localStorage.getItem('token') || null,
+  isAuthenticated: !!localStorage.getItem('token'),
+  user: null,
+  // ... other state properties
+};
 
 const authSlice = createSlice({
   name: 'auth',
-  initialState: {
-    user: null,
-    token: localStorage.getItem('token'),
-    status: 'idle',
-    error: null,
-  },
+  initialState,
   reducers: {
-    logout: (state) => {
-      state.user = null;
-      state.token = null;
-      localStorage.removeItem('token');
-    },
     clearError: (state) => {
       state.error = null;
     },
+    // Removed the synchronous 'logout' reducer
   },
   extraReducers: (builder) => {
     builder
@@ -106,6 +105,8 @@ const authSlice = createSlice({
         state.status = 'succeeded';
         state.user = action.payload.user;
         state.token = action.payload.token;
+        localStorage.setItem('user', JSON.stringify(action.payload.user));
+        localStorage.setItem('token', action.payload.token);
         state.error = null;
       })
       .addCase(login.rejected, (state, action) => {
@@ -120,6 +121,8 @@ const authSlice = createSlice({
         state.status = 'succeeded';
         state.user = action.payload.user;
         state.token = action.payload.token;
+        localStorage.setItem('user', JSON.stringify(action.payload.user));
+        localStorage.setItem('token', action.payload.token);
         state.error = null;
       })
       .addCase(register.rejected, (state, action) => {
@@ -132,6 +135,7 @@ const authSlice = createSlice({
       })
       .addCase(updateProfile.fulfilled, (state, action) => {
         state.user = { ...state.user, ...action.payload };
+        localStorage.setItem('user', JSON.stringify(state.user));
       })
       .addCase(forgotPassword.pending, (state) => {
         state.status = 'loading';
@@ -143,13 +147,15 @@ const authSlice = createSlice({
         state.status = 'failed';
         state.error = action.payload;
       })
-      .addCase(logoutAndRedirect.fulfilled, (state) => {
+      .addCase(logout.fulfilled, (state) => {
         state.user = null;
         state.token = null;
+        state.isAuthenticated = false;
+        state.status = 'idle';
       });
   },
 });
 
-export const { logout, clearError } = authSlice.actions;
+export const { clearError } = authSlice.actions;
 
 export default authSlice.reducer;

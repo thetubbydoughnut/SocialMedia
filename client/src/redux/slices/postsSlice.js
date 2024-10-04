@@ -1,19 +1,24 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import axios from 'axios';
+import api from '../../services/api';
 
 export const fetchPosts = createAsyncThunk('posts/fetchPosts', async () => {
-  const response = await axios.get('/api/posts');
+  const response = await api.get('/posts');
   return response.data;
 });
 
-export const addPost = createAsyncThunk('posts/addPost', async (postData) => {
-  const response = await axios.post('/api/posts', postData);
+export const createPost = createAsyncThunk('posts/createPost', async (postData) => {
+  const response = await api.post('/posts', postData);
   return response.data;
 });
 
-export const deletePost = createAsyncThunk('posts/deletePost', async (postId) => {
-  await axios.delete(`/api/posts/${postId}`);
-  return postId;
+export const updatePost = createAsyncThunk('posts/updatePost', async ({ id, postData }) => {
+  const response = await api.put(`/posts/${id}`, postData);
+  return response.data;
+});
+
+export const deletePost = createAsyncThunk('posts/deletePost', async (id) => {
+  await api.delete(`/posts/${id}`);
+  return id;
 });
 
 const postsSlice = createSlice({
@@ -37,11 +42,17 @@ const postsSlice = createSlice({
         state.status = 'failed';
         state.error = action.error.message;
       })
-      .addCase(addPost.fulfilled, (state, action) => {
+      .addCase(createPost.fulfilled, (state, action) => {
         state.posts.unshift(action.payload);
       })
+      .addCase(updatePost.fulfilled, (state, action) => {
+        const index = state.posts.findIndex(post => post.id === action.payload.id);
+        if (index !== -1) {
+          state.posts[index] = action.payload;
+        }
+      })
       .addCase(deletePost.fulfilled, (state, action) => {
-        state.posts = state.posts.filter((post) => post.id !== action.payload);
+        state.posts = state.posts.filter(post => post.id !== action.payload);
       });
   },
 });

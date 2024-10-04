@@ -1,13 +1,26 @@
-import React from 'react';
-import { useSelector } from 'react-redux';
+import React, { useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { fetchPosts } from '../redux/slices/postsSlice';
+import CreatePost from './features/posts/CreatePost';
+import PostList from './features/posts/PostList';
 
 const Home = () => {
-  const { user } = useSelector((state) => state.auth);
+  const dispatch = useDispatch();
+  const { posts, status, error } = useSelector((state) => state.posts);
+
+  useEffect(() => {
+    if (status === 'idle') {
+      dispatch(fetchPosts());
+    }
+  }, [status, dispatch]);
 
   return (
     <div>
-      <h1>Welcome to the Home Page</h1>
-      {user && <p>Hello, {user.username}!</p>}
+      <h1>Home</h1>
+      <CreatePost />
+      {status === 'loading' && <div>Loading posts...</div>}
+      {error && <div>Error: {error}</div>}
+      {status === 'succeeded' && <PostList posts={posts} />}
     </div>
   );
 };

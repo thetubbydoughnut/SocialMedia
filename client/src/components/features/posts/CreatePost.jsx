@@ -1,36 +1,25 @@
 import React, { useState } from 'react';
-import axios from 'axios';
 import { useDispatch } from 'react-redux';
-import { addPost } from '../../../redux/slices/postsSlice';
+import { createPost } from '../../../redux/slices/postsSlice';
 
 const CreatePost = () => {
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
-  const [media, setMedia] = useState(null);
+  const [image, setImage] = useState(null);
   const dispatch = useDispatch();
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
     const formData = new FormData();
     formData.append('title', title);
     formData.append('content', content);
-    if (media) {
-      formData.append('media', media);
+    if (image) {
+      formData.append('image', image);
     }
-
-    try {
-      const response = await axios.post('/api/posts', formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
-      });
-      dispatch(addPost(response.data));
-      setTitle('');
-      setContent('');
-      setMedia(null);
-    } catch (error) {
-      console.error('Error creating post:', error);
-    }
+    dispatch(createPost(formData));
+    setTitle('');
+    setContent('');
+    setImage(null);
   };
 
   return (
@@ -50,8 +39,8 @@ const CreatePost = () => {
       />
       <input
         type="file"
-        onChange={(e) => setMedia(e.target.files[0])}
-        accept="image/*,video/*"
+        onChange={(e) => setImage(e.target.files[0])}
+        accept="image/*"
       />
       <button type="submit">Create Post</button>
     </form>

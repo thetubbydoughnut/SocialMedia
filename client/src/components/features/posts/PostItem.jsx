@@ -7,22 +7,16 @@ const PostItem = ({ post }) => {
   const currentUser = useSelector((state) => state.auth.user);
 
   const handleDelete = () => {
-    dispatch(deletePost(post.id));
+    if (window.confirm('Are you sure you want to delete this post?')) {
+      dispatch(deletePost(post.id));
+    }
   };
 
   return (
     <div>
       <h2>{post.title}</h2>
       <p>{post.content}</p>
-      {post.mediaUrl && (
-        <div>
-          {post.mediaUrl.endsWith('.mp4') ? (
-            <video src={post.mediaUrl} controls />
-          ) : (
-            <img src={post.mediaUrl} alt="Post media" />
-          )}
-        </div>
-      )}
+      {post.imageUrl && <img src={post.imageUrl} alt="Post" style={{ maxWidth: '100%' }} />}
       {currentUser && currentUser.id === post.userId && (
         <button onClick={handleDelete}>Delete</button>
       )}

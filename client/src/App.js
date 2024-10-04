@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { Routes, Route, useLocation } from 'react-router-dom';
-import { login } from './redux/slices/authSlice';
+import { login, getProfile } from './redux/slices/authSlice';
 import Header from './components/layout/Header';
 import Login from './components/features/auth/login/Login';
 import Register from './components/features/auth/register/Register';
@@ -15,16 +15,23 @@ import EmailVerification from './components/features/auth/emailVerification/Emai
 const App = () => {
   const dispatch = useDispatch();
   const location = useLocation();
+  const { user } = useSelector((state) => state.auth);
 
   useEffect(() => {
     const params = new URLSearchParams(location.search);
     const token = params.get('token');
     if (token) {
       dispatch(login({ token }));
-      // Remove the token from the URL
       window.history.replaceState({}, document.title, "/");
     }
   }, [dispatch, location]);
+
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+    if (token && !user) {
+      dispatch(getProfile());
+    }
+  }, [dispatch, user]);
 
   return (
     <div>
@@ -32,13 +39,11 @@ const App = () => {
       <Routes>
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
-        <Route element={<ProtectedRoute />}>
-          <Route path="/" element={<Home />} />
-          <Route path="/profile" element={<Profile />} />
-          <Route path="/forgot-password" element={<ForgotPassword />} />
-          <Route path="/reset-password/:token" element={<ResetPassword />} />
-          <Route path="/verify-email/:token" element={<EmailVerification />} />
-        </Route>
+        <Route path="/" element={<ProtectedRoute><Home /></ProtectedRoute>} />
+        <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
+        <Route path="/forgot-password" element={<ForgotPassword />} />
+        <Route path="/reset-password/:token" element={<ResetPassword />} />
+        <Route path="/verify-email/:token" element={<EmailVerification />} />
       </Routes>
     </div>
   );

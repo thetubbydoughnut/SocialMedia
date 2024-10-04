@@ -1,37 +1,42 @@
-let validationResult;
-try {
-  ({ validationResult } = require('express-validator'));
-} catch (error) {
-  console.warn('express-validator not found. Validation will be skipped.');
-  validationResult = () => ({ isEmpty: () => true, array: () => [] });
-}
-
 const Post = require('../models/Post');
+const multer = require('multer');
+const path = require('path');
 
-exports.createPost = async (req, res) => {
-  try {
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-      return res.status(400).json({ errors: errors.array() });
-    }
-
-    const { title, content } = req.body;
-    const userId = req.user.id;
-    const mediaUrl = req.file ? `/uploads/${req.file.filename}` : null;
-
-    const newPost = await Post.create({
-      title,
-      content,
-      userId,
-      mediaUrl
-    });
-
-    res.status(201).json(newPost);
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: 'Server error' });
+// Configure multer for file uploads
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, 'uploads/');
+  },
+  filename: (req, file, cb) => {
+    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
+    cb(null, file.fieldname + '-' + uniqueSuffix + path.extname(file.originalname));
   }
-};
+});
+
+const upload = multer({ storage: storage });
+
+exports.createPost = [
+  upload.single('image'),
+  async (req, res) => {
+    try {
+      const { title, content } = req.body;
+      const userId = req.user.id;
+      const imageUrl = req.file ? `/uploads/${req.file.filename}` : null;
+
+      const post = await Post.create({
+        title,
+        content,
+        userId,
+        imageUrl
+      });
+
+      res.status(201).json(post);
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ message: 'Error creating post' });
+    }
+  }
+];
 
 exports.getAllPosts = async (req, res) => {
   try {
@@ -39,7 +44,7 @@ exports.getAllPosts = async (req, res) => {
     res.json(posts);
   } catch (error) {
     console.error(error);
-    res.status(500).json({ message: 'Server error' });
+    res.status(500).json({ message: 'Error fetching posts' });
   }
 };
 
@@ -52,30 +57,40 @@ exports.getPostById = async (req, res) => {
     res.json(post);
   } catch (error) {
     console.error(error);
-    res.status(500).json({ message: 'Server error' });
+    res.status(500).json({ message: 'Error fetching post' });
   }
 };
 
-exports.updatePost = async (req, res) => {
-  try {
-    const { title, content } = req.body;
-    const post = await Post.findById(req.params.id);
+exports.updatePost = [
+  upload.single('image'),
+  async (req, res) => {
+    try {
+      const { title, content } = req.body;
+      const post = await Post.findById(req.params.id);
 
-    if (!post) {
-      return res.status(404).json({ message: 'Post not found' });
+      if (!post) {
+        return res.status(404).json({ message: 'Post not found' });
+      }
+
+      if (post.userId !== req.user.id) {
+        return res.status(403).json({ message: 'Not authorized to update this post' });
+      }
+
+      const imageUrl = req.file ? `/uploads/${req.file.filename}` : post.imageUrl;
+
+      const updatedPost = await Post.update(req.params.id, {
+        title,
+        content,
+        imageUrl
+      });
+
+      res.json(updatedPost);
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ message: 'Error updating post' });
     }
-
-    if (post.userId !== req.user.id) {
-      return res.status(403).json({ message: 'Not authorized to update this post' });
-    }
-
-    const updatedPost = await Post.update(req.params.id, { title, content });
-    res.json(updatedPost);
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: 'Server error' });
   }
-};
+];
 
 exports.deletePost = async (req, res) => {
   try {
@@ -93,6 +108,6 @@ exports.deletePost = async (req, res) => {
     res.json({ message: 'Post deleted successfully' });
   } catch (error) {
     console.error(error);
-    res.status(500).json({ message: 'Server error' });
+    res.status(500).json({ message: 'Error deleting post' });
   }
 };

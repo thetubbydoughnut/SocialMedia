@@ -1,23 +1,7 @@
-import React, { useEffect } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
-import { fetchPosts } from '../../../redux/slices/postsSlice';
+import React from 'react';
 import PostItem from './PostItem';
 
-const PostList = () => {
-  const dispatch = useDispatch();
-  const posts = useSelector((state) => state.posts.posts);
-  const status = useSelector((state) => state.posts.status);
-
-  useEffect(() => {
-    if (status === 'idle') {
-      dispatch(fetchPosts());
-    }
-  }, [status, dispatch]);
-
-  if (status === 'loading') {
-    return <div>Loading...</div>;
-  }
-
+const PostList = ({ posts }) => {
   return (
     <div>
       {posts.map((post) => (

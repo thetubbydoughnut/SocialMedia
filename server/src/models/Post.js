@@ -1,26 +1,30 @@
-const knex = require('../config/database');
+const db = require('../config/database');
 
 const Post = {
-  create: async (postData) => {
-    const [id] = await knex('posts').insert(postData);
-    return knex('posts').where({ id }).first();
+  async create(postData) {
+    const [id] = await db('posts').insert(postData);
+    return this.findById(id);
   },
 
-  findAll: async (orderBy = 'createdAt', order = 'desc') => {
-    return knex('posts').orderBy(orderBy, order);
+  async findAll() {
+    return db('posts').select('*').orderBy('createdAt', 'desc');
   },
 
-  findById: async (id) => {
-    return knex('posts').where({ id }).first();
+  async findById(id) {
+    return db('posts').where({ id }).first();
   },
 
-  update: async (id, postData) => {
-    await knex('posts').where({ id }).update(postData);
-    return knex('posts').where({ id }).first();
+  async update(id, postData) {
+    await db('posts').where({ id }).update(postData);
+    return this.findById(id);
   },
 
-  delete: async (id) => {
-    return knex('posts').where({ id }).del();
+  async delete(id) {
+    return db('posts').where({ id }).del();
+  },
+
+  async findByUserId(userId) {
+    return db('posts').where({ userId }).orderBy('createdAt', 'desc');
   }
 };
 
