@@ -2,9 +2,9 @@
   "name": "your-project-name",
   "version": "1.0.0",
   "description": "Your project description",
-  "main": "authExample.js",
+  "main": "app.js",
   "scripts": {
-    "start": "node authExample.js",
+    "start": "node app.js",
     "dev": "nodemon app.js"
   },
   "dependencies": {
