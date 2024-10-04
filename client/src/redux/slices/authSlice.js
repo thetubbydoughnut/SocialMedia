@@ -69,6 +69,13 @@ export const verifyEmail = createAsyncThunk('auth/verifyEmail', async (token, { 
   }
 });
 
+export const logoutAndRedirect = createAsyncThunk(
+  'auth/logoutAndRedirect',
+  async (_, { dispatch }) => {
+    dispatch(logout());
+  }
+);
+
 const authSlice = createSlice({
   name: 'auth',
   initialState: {
@@ -134,6 +141,10 @@ const authSlice = createSlice({
       .addCase(forgotPassword.rejected, (state, action) => {
         state.status = 'failed';
         state.error = action.payload;
+      })
+      .addCase(logoutAndRedirect.fulfilled, (state) => {
+        state.user = null;
+        state.token = null;
       });
   },
 });

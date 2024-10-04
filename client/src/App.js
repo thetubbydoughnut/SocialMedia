@@ -1,5 +1,7 @@
-import React from 'react';
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import React, { useEffect } from 'react';
+import { useDispatch } from 'react-redux';
+import { Routes, Route, useLocation } from 'react-router-dom';
+import { login } from './redux/slices/authSlice';
 import Header from './components/layout/Header';
 import Login from './components/features/auth/login/Login';
 import Register from './components/features/auth/register/Register';
@@ -11,23 +13,34 @@ import ResetPassword from './components/features/auth/resetPassword/ResetPasswor
 import EmailVerification from './components/features/auth/emailVerification/EmailVerification';
 
 const App = () => {
+  const dispatch = useDispatch();
+  const location = useLocation();
+
+  useEffect(() => {
+    const params = new URLSearchParams(location.search);
+    const token = params.get('token');
+    if (token) {
+      dispatch(login({ token }));
+      // Remove the token from the URL
+      window.history.replaceState({}, document.title, "/");
+    }
+  }, [dispatch, location]);
+
   return (
-    <Router>
-      <div>
-        <Header />
-        <Routes>
-          <Route path="/login" element={<Login />} />
-          <Route path="/register" element={<Register />} />
+    <div>
+      <Header />
+      <Routes>
+        <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
+        <Route element={<ProtectedRoute />}>
+          <Route path="/" element={<Home />} />
+          <Route path="/profile" element={<Profile />} />
           <Route path="/forgot-password" element={<ForgotPassword />} />
           <Route path="/reset-password/:token" element={<ResetPassword />} />
           <Route path="/verify-email/:token" element={<EmailVerification />} />
-          <Route element={<ProtectedRoute />}>
-            <Route path="/" element={<Home />} />
-            <Route path="/profile" element={<Profile />} />
-          </Route>
-        </Routes>
-      </div>
-    </Router>
+        </Route>
+      </Routes>
+    </div>
   );
 };
 

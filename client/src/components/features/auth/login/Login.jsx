@@ -12,7 +12,6 @@ const Login = () => {
   const { error, status, user } = useSelector((state) => state.auth);
 
   useEffect(() => {
-    // Clear any existing errors when the component mounts
     return () => dispatch(clearError());
   }, [dispatch]);
 
