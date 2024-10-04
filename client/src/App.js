@@ -6,7 +6,7 @@ import Header from './components/layout/Header';
 import Login from './components/features/auth/login/Login';
 import Register from './components/features/auth/register/Register';
 import Profile from './components/features/auth/profile/Profile';
-import Home from './components/Home';
+import Home from './components/Home'; // Make sure this import is correct
 import ProtectedRoute from './components/ProtectedRoute';
 import ForgotPassword from './components/features/auth/forgotPassword/ForgotPassword';
 import ResetPassword from './components/features/auth/resetPassword/ResetPassword';
@@ -30,12 +30,14 @@ const App = () => {
   useEffect(() => {
     const token = localStorage.getItem('token');
     if (token && !user && !isAuthenticated) {
-      dispatch(getProfile()).unwrap()
+      dispatch(getProfile())
+        .unwrap()
         .then(userData => {
           console.log('Profile fetched successfully:', userData);
         })
         .catch(error => {
           console.error('Error fetching profile:', error);
+          dispatch(logout()); // Dispatch logout action on error
           localStorage.removeItem('token');
         });
     }

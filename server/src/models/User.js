@@ -17,7 +17,16 @@ const User = {
   },
 
   async findById(id) {
-    return db('users').where({ id }).first();
+    try {
+      const user = await db('users').where({ id }).first();
+      if (!user) {
+        throw new Error('User not found');
+      }
+      return user;
+    } catch (error) {
+      console.error('Error in User.findById:', error);
+      throw error;
+    }
   },
 
   async validatePassword(user, password) {

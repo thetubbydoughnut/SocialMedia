@@ -25,6 +25,7 @@ const Login = () => {
     e.preventDefault();
     const result = await dispatch(login({ email, password }));
     if (!result.error) {
+      console.log('Token after login:', localStorage.getItem('token')); // Add this line
       navigate('/');
     }
   };

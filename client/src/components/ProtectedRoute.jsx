@@ -1,18 +1,15 @@
 import React from 'react';
-import { Navigate, Outlet, useLocation } from 'react-router-dom';
+import { Navigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 
-const ProtectedRoute = () => {
-  const { user } = useSelector((state) => state.auth);
-  const location = useLocation();
+const ProtectedRoute = ({ children }) => {
+  const { isAuthenticated } = useSelector((state) => state.auth);
 
-  if (!user && location.pathname !== '/register') {
-    // Redirect to login for all routes except register when not authenticated
+  if (!isAuthenticated) {
     return <Navigate to="/login" replace />;
   }
 
-  // If there is a user, or it's the register route, render the child routes
-  return <Outlet />;
+  return children;
 };
 
 export default ProtectedRoute;

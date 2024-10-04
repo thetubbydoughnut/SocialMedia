@@ -1,17 +1,24 @@
 const db = require('../config/database');
 
 const Post = {
+  async findAll() {
+    return db('posts')
+      .join('users', 'posts.userId', '=', 'users.id')
+      .select('posts.*', 'users.username')
+      .orderBy('posts.createdAt', 'desc');
+  },
+
   async create(postData) {
     const [id] = await db('posts').insert(postData);
     return this.findById(id);
   },
 
-  async findAll() {
-    return db('posts').select('*').orderBy('createdAt', 'desc');
-  },
-
   async findById(id) {
-    return db('posts').where({ id }).first();
+    return db('posts')
+      .join('users', 'posts.userId', '=', 'users.id')
+      .select('posts.*', 'users.username')
+      .where('posts.id', id)
+      .first();
   },
 
   async update(id, postData) {

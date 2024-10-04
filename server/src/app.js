@@ -7,6 +7,7 @@ const path = require('path'); // Add this line
 const db = require('./config/database');
 const authRoutes = require('./routes/authRoutes');
 const postsRoutes = require('./routes/postsRoutes');
+const authController = require('./controllers/authController'); // Add this line
 
 const app = express();
 const server = http.createServer(app); // Add this line
@@ -113,8 +114,7 @@ const authenticateJWT = (req, res, next) => {
 };
 
 // Profile route with authentication middleware
-app.get('/api/auth/profile', authenticateJWT, (req, res) => {
-  // Your profile route logic here
-});
+const auth = require('./middleware/auth');
+app.get('/api/auth/profile', auth, authController.getProfile);
 
 module.exports = app;

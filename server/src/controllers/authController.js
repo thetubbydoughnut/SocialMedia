@@ -81,10 +81,13 @@ exports.login = async (req, res) => {
 
 exports.getProfile = async (req, res) => {
   try {
+    console.log('Fetching profile for user ID:', req.user.id);
     const user = await User.findById(req.user.id);
     if (!user) {
+      console.log('User not found for ID:', req.user.id);
       return res.status(404).json({ message: 'User not found' });
     }
+    console.log('User found:', user);
     res.json({
       id: user.id,
       username: user.username,
@@ -92,8 +95,8 @@ exports.getProfile = async (req, res) => {
       // Add other fields as needed, but exclude sensitive information like password
     });
   } catch (error) {
-    console.error(error.message);
-    res.status(500).json({ message: 'Server Error' });
+    console.error('Error in getProfile:', error);
+    res.status(500).json({ message: 'Server Error', error: error.message });
   }
 };
 

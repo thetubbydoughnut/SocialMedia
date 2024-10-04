@@ -1,15 +1,17 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { getProfile, updateProfile, changePassword } from '../../../../redux/slices/authSlice';
 
 const Profile = () => {
   const dispatch = useDispatch();
-  const user = useSelector((state) => state.auth.user);
+  const { user, isLoading, error } = useSelector((state) => state.auth);
+
   const [profileData, setProfileData] = useState({
     firstName: '',
     lastName: '',
     bio: '',
   });
+
   const [passwordData, setPasswordData] = useState({
     currentPassword: '',
     newPassword: '',
@@ -38,12 +40,12 @@ const Profile = () => {
     setPasswordData({ ...passwordData, [e.target.name]: e.target.value });
   };
 
-  const handleUpdateProfile = (e) => {
+  const handleProfileSubmit = (e) => {
     e.preventDefault();
     dispatch(updateProfile(profileData));
   };
 
-  const handleChangePassword = (e) => {
+  const handlePasswordSubmit = (e) => {
     e.preventDefault();
     if (passwordData.newPassword !== passwordData.confirmPassword) {
       alert("New passwords don't match");
@@ -55,58 +57,77 @@ const Profile = () => {
     }));
   };
 
-  if (!user) return <div>Loading...</div>;
+  if (isLoading) return <div>Loading...</div>;
+  if (error) return <div>Error: {error}</div>;
 
   return (
     <div>
       <h2>Profile</h2>
-      <form onSubmit={handleUpdateProfile}>
-        <input
-          type="text"
-          name="firstName"
-          value={profileData.firstName}
-          onChange={handleProfileChange}
-          placeholder="First Name"
-        />
-        <input
-          type="text"
-          name="lastName"
-          value={profileData.lastName}
-          onChange={handleProfileChange}
-          placeholder="Last Name"
-        />
-        <textarea
-          name="bio"
-          value={profileData.bio}
-          onChange={handleProfileChange}
-          placeholder="Bio"
-        />
+      <form onSubmit={handleProfileSubmit}>
+        <div>
+          <label htmlFor="firstName">First Name:</label>
+          <input
+            type="text"
+            id="firstName"
+            name="firstName"
+            value={profileData.firstName}
+            onChange={handleProfileChange}
+          />
+        </div>
+        <div>
+          <label htmlFor="lastName">Last Name:</label>
+          <input
+            type="text"
+            id="lastName"
+            name="lastName"
+            value={profileData.lastName}
+            onChange={handleProfileChange}
+          />
+        </div>
+        <div>
+          <label htmlFor="bio">Bio:</label>
+          <textarea
+            id="bio"
+            name="bio"
+            value={profileData.bio}
+            onChange={handleProfileChange}
+          />
+        </div>
         <button type="submit">Update Profile</button>
       </form>
 
       <h3>Change Password</h3>
-      <form onSubmit={handleChangePassword}>
-        <input
-          type="password"
-          name="currentPassword"
-          value={passwordData.currentPassword}
-          onChange={handlePasswordChange}
-          placeholder="Current Password"
-        />
-        <input
-          type="password"
-          name="newPassword"
-          value={passwordData.newPassword}
-          onChange={handlePasswordChange}
-          placeholder="New Password"
-        />
-        <input
-          type="password"
-          name="confirmPassword"
-          value={passwordData.confirmPassword}
-          onChange={handlePasswordChange}
-          placeholder="Confirm New Password"
-        />
+      <form onSubmit={handlePasswordSubmit}>
+        <div>
+          <label htmlFor="currentPassword">Current Password:</label>
+          <input
+            type="password"
+            id="currentPassword"
+            name="currentPassword"
+            value={passwordData.currentPassword}
+            onChange={handlePasswordChange}
+          />
+        </div>
+        <div>
+          <label htmlFor="newPassword">New Password:</label>
+          <input
+            type="password"
+            id="newPassword"
+            name="newPassword"
+            value={passwordData.newPassword}
+            onChange={handlePasswordChange}
+          />
+        </div>
+        <div>
+          <label htmlFor="confirmPassword">Confirm New Password:</label>
+          <input
+            type="password"
+            id="confirmPassword"
+            name="confirmPassword"
+            value={passwordData.confirmPassword}
+            onChange={handlePasswordChange}
+          />
+        </div>
         <button type="submit">Change Password</button>
       </form>
     </div>
