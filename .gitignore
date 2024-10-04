@@ -1,8 +1,9 @@
 node_modules/
-frontend/node_modules/
-backend/.env
+client/node_modules/
+server/node_modules/
+server/.env
 *.db3
 uploads/
 .cursorrules
 # Ignore uploaded files
-backend/uploads/
+server/uploads/
