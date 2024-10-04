@@ -32,7 +32,5 @@ app.get('/health', (req, res) => {
 
 const PORT = process.env.PORT || 9000;
 app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
-  console.log(`Environment: ${process.env.NODE_ENV}`);
-  console.log(`JWT_SECRET is ${process.env.JWT_SECRET ? 'set' : 'not set'}`);
+  console.log(`Server is running on port ${PORT}`);
 });
