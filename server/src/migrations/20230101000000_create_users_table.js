@@ -7,7 +7,7 @@ exports.up = function(knex) {
         table.increments('id');
         table.string('username').notNullable().unique();
         table.string('email').notNullable().unique();
-        table.string('password').notNullable();
+        table.string('password', 60).notNullable(); // bcrypt always generates 60 character hashes
         table.string('firstName');
         table.string('lastName');
         table.text('bio');

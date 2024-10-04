@@ -1,8 +1,6 @@
 const jwt = require('jsonwebtoken');
 const User = require('../models/User');
 
-// Add this line at the top of the file for debugging
-console.log('JWT_SECRET in authController:', process.env.JWT_SECRET);
 
 // Use process.env.JWT_SECRET instead
 exports.register = async (req, res) => {
@@ -44,8 +42,6 @@ exports.login = async (req, res) => {
       return res.status(400).json({ message: 'Invalid password' });
     }
     
-    // Log the JWT_SECRET right before using it
-    console.log('JWT_SECRET before signing:', process.env.JWT_SECRET);
     const token = jwt.sign({ id: user.id }, process.env.JWT_SECRET, { expiresIn: '1d' });
     
     // Update last login
@@ -112,7 +108,7 @@ exports.changePassword = async (req, res) => {
     if (!user || !(await User.validatePassword(user, currentPassword))) {
       return res.status(400).json({ message: 'Current password is incorrect' });
     }
-    await User.update(req.user.id, { password: newPassword });
+    await User.changePassword(req.user.id, newPassword);
     res.json({ message: 'Password updated successfully' });
   } catch (error) {
     res.status(400).json({ message: error.message });

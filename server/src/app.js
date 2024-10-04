@@ -6,9 +6,6 @@ const http = require('http');
 const db = require('./config/database');
 const authRoutes = require('./routes/authRoutes');
 
-// Add this line to check if JWT_SECRET is loaded
-console.log('JWT_SECRET:', process.env.JWT_SECRET);
-
 const app = express();
 const server = http.createServer(app);
 const io = socketIo(server, {

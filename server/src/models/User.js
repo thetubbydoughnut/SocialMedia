@@ -32,6 +32,13 @@ const User = {
 
   async validatePassword(user, password) {
     return bcrypt.compare(password, user.password);
+  },
+
+  async changePassword(id, newPassword) {
+    const salt = await bcrypt.genSalt(10);
+    const hashedPassword = await bcrypt.hash(newPassword, salt);
+    await db('users').where({ id }).update({ password: hashedPassword });
+    return this.findById(id);
   }
 };
 
