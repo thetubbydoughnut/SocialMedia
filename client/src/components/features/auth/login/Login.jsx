@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { login, clearError } from '../../../../redux/slices/authSlice';
 
 const Login = () => {
@@ -47,6 +47,9 @@ const Login = () => {
       <button type="submit" disabled={status === 'loading'}>
         {status === 'loading' ? 'Logging in...' : 'Login'}
       </button>
+      <Link to="/forgot-password">
+        <button type="button">Forgot Password?</button>
+      </Link>
     </form>
   );
 };
