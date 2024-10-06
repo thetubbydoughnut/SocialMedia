@@ -6,7 +6,7 @@ class Comment {
   }
 
   static async findByPostId(postId) {
-    return db('comments').where({ postId }).select('*');
+    return db('comments').where({ postId }).orderBy('created_at', 'desc');
   }
 
   static async create({ postId, userId, content }) {
@@ -14,8 +14,7 @@ class Comment {
       postId,
       userId,
       content,
-      createdAt: new Date(),
-      updatedAt: new Date()
+      // SQLite will automatically handle created_at and updated_at
     });
     return this.findById(id);
   }

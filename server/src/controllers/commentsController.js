@@ -17,7 +17,7 @@ exports.getCommentsByPostId = async (req, res) => {
     res.json(comments);
   } catch (error) {
     console.error('Error fetching comments for post:', error);
-    res.status(500).json({ message: 'Error fetching comments' });
+    res.status(500).json({ message: 'Error fetching comments', error: error.message });
   }
 };
 
@@ -39,7 +39,7 @@ exports.createComment = async (req, res) => {
     res.status(201).json(newComment);
   } catch (error) {
     console.error('Error creating comment:', error);
-    res.status(500).json({ message: 'Error creating comment' });
+    res.status(500).json({ message: 'Error creating comment', error: error.message });
   }
 };
 
