@@ -1,44 +1,34 @@
-const columnCache = {};
-
-async function columnExists(knex, tableName, columnName) {
-  if (!columnCache[tableName]) {
-    const columns = await knex.table(tableName).columnInfo();
-    columnCache[tableName] = Object.keys(columns);
-  }
-  return columnCache[tableName].includes(columnName);
-}
+const { addColumnIfNotExists } = require('../src/utils/migrationHelpers');
 
 exports.up = async function(knex) {
-  const tableExists = await knex.schema.hasTable('users');
+  const exists = await knex.schema.hasTable('users');
 
-  if (!tableExists) {
-    return knex.schema.createTable('users', table => {
-      table.increments('id');
+  if (!exists) {
+    await knex.schema.createTable('users', (table) => {
+      table.increments('id').primary();
       table.string('username').notNullable().unique();
       table.string('email').notNullable().unique();
-      table.string('password', 60).notNullable();
+      table.string('password').notNullable();
       table.string('firstName');
       table.string('lastName');
-      table.text('bio');
-      table.string('profilePicture');
-      table.boolean('isActive').defaultTo(true);
-      table.timestamp('lastLogin');
+      table.boolean('isEmailVerified').defaultTo(false);
+      table.string('emailVerificationToken');
+      table.string('resetPasswordToken');
+      table.datetime('resetPasswordExpires');
       table.timestamps(true, true);
     });
+    console.log('Created users table');
   } else {
-    return knex.schema.table('users', async function(table) {
-      if (!await columnExists(knex, 'users', 'username')) table.string('username').notNullable().unique();
-      if (!await columnExists(knex, 'users', 'email')) table.string('email').notNullable().unique();
-      if (!await columnExists(knex, 'users', 'password')) table.string('password', 60).notNullable();
-      if (!await columnExists(knex, 'users', 'firstName')) table.string('firstName');
-      if (!await columnExists(knex, 'users', 'lastName')) table.string('lastName');
-      if (!await columnExists(knex, 'users', 'bio')) table.text('bio');
-      if (!await columnExists(knex, 'users', 'profilePicture')) table.string('profilePicture');
-      if (!await columnExists(knex, 'users', 'isActive')) table.boolean('isActive').defaultTo(true);
-      if (!await columnExists(knex, 'users', 'lastLogin')) table.timestamp('lastLogin');
-      if (!await columnExists(knex, 'users', 'created_at')) table.timestamp('created_at').defaultTo(knex.fn.now());
-      if (!await columnExists(knex, 'users', 'updated_at')) table.timestamp('updated_at').defaultTo(knex.fn.now());
-    });
+    console.log('Users table already exists');
+    await addColumnIfNotExists(knex, 'users', 'username', (t) => t.string('username').notNullable().unique());
+    await addColumnIfNotExists(knex, 'users', 'email', (t) => t.string('email').notNullable().unique());
+    await addColumnIfNotExists(knex, 'users', 'password', (t) => t.string('password').notNullable());
+    await addColumnIfNotExists(knex, 'users', 'firstName', (t) => t.string('firstName'));
+    await addColumnIfNotExists(knex, 'users', 'lastName', (t) => t.string('lastName'));
+    await addColumnIfNotExists(knex, 'users', 'isEmailVerified', (t) => t.boolean('isEmailVerified').defaultTo(false));
+    await addColumnIfNotExists(knex, 'users', 'emailVerificationToken', (t) => t.string('emailVerificationToken'));
+    await addColumnIfNotExists(knex, 'users', 'resetPasswordToken', (t) => t.string('resetPasswordToken'));
+    await addColumnIfNotExists(knex, 'users', 'resetPasswordExpires', (t) => t.datetime('resetPasswordExpires'));
   }
 };
 

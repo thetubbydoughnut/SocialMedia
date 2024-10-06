@@ -1,18 +1,10 @@
-const columnCache = {};
-
-async function columnExists(knex, tableName, columnName) {
-  if (!columnCache[tableName]) {
-    const columns = await knex.table(tableName).columnInfo();
-    columnCache[tableName] = Object.keys(columns);
-  }
-  return columnCache[tableName].includes(columnName);
-}
+const { addColumnIfNotExists } = require('../src/utils/migrationHelpers');
 
 exports.up = async function(knex) {
-  const tableExists = await knex.schema.hasTable('posts');
+  const exists = await knex.schema.hasTable('posts');
 
-  if (!tableExists) {
-    return knex.schema.createTable('posts', function(table) {
+  if (!exists) {
+    await knex.schema.createTable('posts', (table) => {
       table.increments('id').primary();
       table.string('title').notNullable();
       table.text('content').notNullable();
@@ -21,18 +13,16 @@ exports.up = async function(knex) {
       table.string('imageUrl');
       table.timestamps(true, true);
     });
+    console.log('Created posts table');
   } else {
-    return knex.schema.table('posts', async function(table) {
-      if (!await columnExists(knex, 'posts', 'title')) table.string('title').notNullable();
-      if (!await columnExists(knex, 'posts', 'content')) table.text('content').notNullable();
-      if (!await columnExists(knex, 'posts', 'userId')) {
-        table.integer('userId').unsigned().notNullable();
-        table.foreign('userId').references('users.id');
-      }
-      if (!await columnExists(knex, 'posts', 'imageUrl')) table.string('imageUrl');
-      if (!await columnExists(knex, 'posts', 'created_at')) table.timestamp('created_at').defaultTo(knex.fn.now());
-      if (!await columnExists(knex, 'posts', 'updated_at')) table.timestamp('updated_at').defaultTo(knex.fn.now());
+    console.log('Posts table already exists');
+    await addColumnIfNotExists(knex, 'posts', 'title', (t) => t.string('title').notNullable());
+    await addColumnIfNotExists(knex, 'posts', 'content', (t) => t.text('content').notNullable());
+    await addColumnIfNotExists(knex, 'posts', 'userId', (t) => {
+      t.integer('userId').unsigned().notNullable();
+      t.foreign('userId').references('users.id');
     });
+    await addColumnIfNotExists(knex, 'posts', 'imageUrl', (t) => t.string('imageUrl'));
   }
 };
 

@@ -130,3 +130,77 @@ exports.deletePost = async (req, res) => {
     res.status(500).json({ message: 'Error deleting post' });
   }
 };
+
+exports.likePost = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const userId = req.user.id;
+
+    const post = await knex('posts').where({ id }).first();
+    if (!post) {
+      return res.status(404).json({ message: 'Post not found' });
+    }
+
+    // Check if user has already liked the post
+    const existingLike = await knex('likes').where({ postId: id, userId }).first();
+    if (existingLike) {
+      return res.status(400).json({ message: 'You have already liked this post' });
+    }
+
+    // Add like
+    await knex('likes').insert({ postId: id, userId });
+
+    // Update post likes count
+    await knex('posts').where({ id }).increment('likes', 1);
+
+    res.json({ message: 'Post liked successfully' });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Error liking post' });
+  }
+};
+
+exports.getComments = async (req, res) => {
+  try {
+    const { id } = req.params;
+    console.log('Fetching comments for post:', id);
+
+    // Check if comments table exists
+    const hasCommentsTable = await knex.schema.hasTable('comments');
+    if (!hasCommentsTable) {
+      console.error('Comments table does not exist');
+      return res.status(500).json({ message: 'Comments table does not exist' });
+    }
+
+    const comments = await knex('comments')
+      .join('users', 'comments.userId', '=', 'users.id')
+      .where('comments.postId', id)
+      .select('comments.*', 'users.username')
+      .orderBy('comments.created_at', 'desc');
+
+    console.log('Fetched comments:', comments);
+    res.json(comments);
+  } catch (error) {
+    console.error('Error in getComments:', error);
+    res.status(500).json({ message: 'Error fetching comments', error: error.message, stack: error.stack });
+  }
+};
+
+exports.addComment = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { content } = req.body;
+    const userId = req.user.id;
+
+    const newComment = await knex('comments').insert({
+      postId: id,
+      userId,
+      content
+    }).returning('*');
+
+    res.status(201).json(newComment[0]);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Error adding comment' });
+  }
+};

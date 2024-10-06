@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import LikeButton from './LikeButton';
+import CommentSection from './CommentSection';
 
 const Home = () => {
   const [posts, setPosts] = useState([]);
@@ -9,10 +11,7 @@ const Home = () => {
   useEffect(() => {
     const fetchPosts = async () => {
       try {
-        // Retrieve the token from localStorage
         const token = localStorage.getItem('token');
-        
-        // Include the token in the request headers
         const config = {
           headers: { Authorization: `Bearer ${token}` }
         };
@@ -30,6 +29,24 @@ const Home = () => {
     fetchPosts();
   }, []);
 
+  const handleLike = async (postId) => {
+    try {
+      const token = localStorage.getItem('token');
+      const config = {
+        headers: { Authorization: `Bearer ${token}` }
+      };
+      
+      await axios.post(`http://localhost:9000/api/posts/${postId}/like`, {}, config);
+      
+      // Update the posts state to reflect the new like
+      setPosts(posts.map(post => 
+        post.id === postId ? { ...post, likes: post.likes + 1 } : post
+      ));
+    } catch (error) {
+      console.error('Error liking post:', error);
+    }
+  };
+
   if (loading) return <div>Loading...</div>;
   if (error) return <div>{error}</div>;
 
@@ -37,10 +54,12 @@ const Home = () => {
     <div>
       <h1>Home Feed</h1>
       {posts.map(post => (
-        <div key={post.id}>
+        <div key={post.id} className="post">
           <h2>{post.title}</h2>
           <p>{post.content}</p>
           {post.username && <p>Posted by: {post.username}</p>}
+          <LikeButton likes={post.likes} onLike={() => handleLike(post.id)} />
+          <CommentSection postId={post.id} />
         </div>
       ))}
     </div>
