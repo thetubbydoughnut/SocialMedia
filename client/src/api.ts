@@ -1,13 +1,12 @@
-import axios from 'axios';
+import axios, { AxiosInstance } from 'axios';
 
-const api = axios.create({
+const api: AxiosInstance = axios.create({
   baseURL: process.env.REACT_APP_API_URL,
   headers: {
     'Content-Type': 'application/json',
   },
 });
 
-// Optionally, add interceptors for request/response handling
 api.interceptors.request.use((config) => {
   const token = localStorage.getItem('token');
   if (token) {

@@ -4,19 +4,35 @@ import LikeButton from './LikeButton';
 import CommentSection from './CommentSection';
 import { useDispatch } from 'react-redux';
 import { addComment } from '../redux/slices/commentsSlice';
+import { AppDispatch } from '../store';
 
-const PostItem = ({ post, onUpdatePost }) => {
+interface Post {
+  id: number;
+  title: string;
+  content: string;
+  imageUrl?: string;
+  username: string;
+  likes: number;
+  isLiked: boolean;
+}
+
+interface PostItemProps {
+  post: Post;
+  onUpdatePost: (post: Post) => void;
+}
+
+const PostItem: React.FC<PostItemProps> = ({ post, onUpdatePost }) => {
   const [isLiked, setIsLiked] = useState(post.isLiked);
   const [likeCount, setLikeCount] = useState(post.likes);
   const [newComment, setNewComment] = useState('');
-  const [error, setError] = useState(null);
-  const dispatch = useDispatch();
+  const [error, setError] = useState<string | null>(null);
+  const dispatch = useDispatch<AppDispatch>();
 
   const handleLike = async () => {
     // ... (keep the existing like functionality)
   };
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
       const token = localStorage.getItem('token');

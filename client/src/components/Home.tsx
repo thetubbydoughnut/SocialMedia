@@ -5,22 +5,23 @@ import { useDispatch, useSelector } from 'react-redux';
 import { fetchComments, addComment } from '../redux/slices/commentsSlice';
 import io from 'socket.io-client';
 import { fetchPosts } from '../redux/slices/postsSlice';
+import { RootState, AppDispatch } from '../store';
 
-const socket = io(process.env.REACT_APP_API_URL, {
+const socket = io(process.env.REACT_APP_API_URL || '', {
   transports: ['websocket'],
   upgrade: false
 });
 
-const Home = () => {
-  const dispatch = useDispatch();
-  const comments = useSelector((state) => state.comments.items);
-  const posts = useSelector((state) => state.posts.posts); // Get posts from Redux store
+const Home: React.FC = () => {
+  const dispatch = useDispatch<AppDispatch>();
+  const comments = useSelector((state: RootState) => state.comments.allComments);
+  const posts = useSelector((state: RootState) => state.posts.posts);
   const [newComment, setNewComment] = useState('');
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    dispatch(fetchComments());
+    dispatch(fetchComments()); // This is now valid as fetchComments can be called without arguments
 
     socket.on('new-comment', (comment) => {
       dispatch(addComment(comment));
@@ -59,12 +60,12 @@ const Home = () => {
     }
   }, [posts, dispatch]);
 
-  const handleUpdatePost = (updatedPost) => {
+  const handleUpdatePost = (updatedPost: any) => {
     // This function should dispatch an action to update the post in the Redux store
     // For example: dispatch(updatePost(updatedPost));
   };
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
       const token = localStorage.getItem('token');
@@ -109,13 +110,6 @@ const Home = () => {
         />
         <button type="submit">Submit Comment</button>
       </form>
-      <div>
-        {comments && comments.map((comment) => (
-          <div key={comment.id}>
-            <p><strong>{comment.name}</strong>: {comment.text}</p>
-          </div>
-        ))}
-      </div>
     </div>
   );
 };
