@@ -1,16 +1,18 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchComments } from '../redux/slices/commentsSlice';
+import { makeSelectCommentsByPostId } from '../redux/selectors/commentsSelectors';
 
 const CommentSection = ({ postId }) => {
   const dispatch = useDispatch();
-  const comments = useSelector(state => state.comments[postId] || []);
+  const selectCommentsByPostId = useMemo(makeSelectCommentsByPostId, []);
+  const comments = useSelector(state => selectCommentsByPostId(state, postId));
 
   useEffect(() => {
     dispatch(fetchComments(postId));
   }, [dispatch, postId]);
 
-  if (!comments || comments.length === 0) {
+  if (comments.length === 0) {
     return <p>No comments yet.</p>;
   }
 

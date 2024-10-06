@@ -15,7 +15,7 @@ export const addComment = createAsyncThunk(
   'comments/addComment',
   async ({ postId, content }) => {
     const response = await api.post('/comments', { postId, content });
-    return response.data;
+    return { postId, comment: response.data };
   }
 );
 
@@ -32,11 +32,11 @@ const commentsSlice = createSlice({
       })
       // {{ edit_5 }} Handle addComment fulfilled
       .addCase(addComment.fulfilled, (state, action) => {
-        const { postId } = action.payload;
+        const { postId, comment } = action.payload;
         if (!state[postId]) {
           state[postId] = [];
         }
-        state[postId].unshift(action.payload);
+        state[postId].unshift(comment);
       });
   },
 });
