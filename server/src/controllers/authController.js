@@ -79,24 +79,14 @@ exports.login = async (req, res) => {
   }
 };
 
-exports.getProfile = async (req, res) => {
+exports.getProfile = (req, res) => {
   try {
-    console.log('Fetching profile for user ID:', req.user.id);
-    const user = await User.findById(req.user.id);
-    if (!user) {
-      console.log('User not found for ID:', req.user.id);
-      return res.status(404).json({ message: 'User not found' });
-    }
-    console.log('User found:', user);
-    res.json({
-      id: user.id,
-      username: user.username,
-      email: user.email,
-      // Add other fields as needed, but exclude sensitive information like password
-    });
+    const userId = req.user.id; // Ensure req.user is defined
+    // Fetch user profile from database using userId
+    // ...
   } catch (error) {
     console.error('Error in getProfile:', error);
-    res.status(500).json({ message: 'Server Error', error: error.message });
+    res.status(500).json({ message: 'Server Error' });
   }
 };
 

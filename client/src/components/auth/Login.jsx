@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { login } from '../../redux/slices/authSlice';
+import { loginUser } from '../../redux/slices/authSlice'; // Import loginUser
 
 const Login = () => {
   const [email, setEmail] = useState('');
@@ -10,11 +10,12 @@ const Login = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    dispatch(login({ email, password }));
+    dispatch(loginUser({ email, password })); // Dispatch loginUser
   };
 
   return (
     <form onSubmit={handleSubmit}>
+      <h2>Login</h2>
       <input
         type="email"
         value={email}
@@ -32,7 +33,7 @@ const Login = () => {
       <button type="submit" disabled={status === 'loading'}>
         {status === 'loading' ? 'Logging in...' : 'Login'}
       </button>
-      {error && <div style={{color: 'red'}}>{error}</div>}
+      {error && <div style={{ color: 'red' }}>{error}</div>} {/* Display error message */}
     </form>
   );
 };

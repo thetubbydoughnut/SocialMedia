@@ -1,13 +1,16 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import api from '../../services/api';
+import api from '../../api'; // Adjust the path as necessary
 
-export const fetchPosts = createAsyncThunk('posts/fetchPosts', async () => {
-  const response = await api.get('/posts');
+export const fetchPosts = createAsyncThunk('posts/fetchPosts', async (_, { getState }) => {
+  const token = getState().auth.token;
+  const response = await api.get('/posts', {
+    headers: { Authorization: `Bearer ${token}` },
+  });
   return response.data;
 });
 
 export const createPost = createAsyncThunk('posts/createPost', async (postData) => {
-  const response = await api.post('/posts', postData);
+  const response = await api.post('/posts', postData); // Ensure 'api' is defined
   return response.data;
 });
 

@@ -8,9 +8,17 @@ const db = require('./config/database');
 const authRoutes = require('./routes/authRoutes');
 const postsRoutes = require('./routes/postsRoutes');
 const authController = require('./controllers/authController'); // Add this line
+const commentsRoutes = require('./routes/commentsRoutes');
+const commentsController = require('./controllers/commentsController');
 
 const app = express();
 const server = http.createServer(app); // Add this line
+const io = socketIo(server, {
+  cors: {
+    origin: process.env.CLIENT_URL || 'http://localhost:3000',
+    methods: ['GET', 'POST']
+  }
+});
 
 // CORS configuration
 const corsOptions = {
@@ -25,28 +33,12 @@ app.use(cors(corsOptions));
 app.use(express.json());
 
 // Initialize socket service
-let socketService;
-try {
-  const SocketService = require('./services/socketService');
-  const io = socketIo(server, {
-    cors: corsOptions
-  });
-  socketService = new SocketService(io);
-} catch (error) {
-  console.warn('socketService not found. Real-time features will be disabled.');
-}
+commentsController.initializeSocket(io);
 
 // Routes
 app.use('/api/auth', authRoutes);
 app.use('/api/posts', postsRoutes);
-
-// Conditionally load postsRoutes if it exists
-try {
-  const postsRoutes = require('./routes/postsRoutes');
-  app.use('/api/posts', postsRoutes);
-} catch (error) {
-  console.warn('postsRoutes not found. Skipping...');
-}
+app.use('/api/comments', commentsRoutes); // Ensure the base path is correct
 
 // Error handling middleware
 try {
@@ -69,7 +61,7 @@ app.use((err, req, res, next) => {
   });
 });
 
-const PORT = process.env.PORT || 9000;
+const PORT = process.env.PORT || 5000;
 
 // Initialize database
 db.raw('SELECT 1')
@@ -96,13 +88,13 @@ process.on('unhandledRejection', (err) => {
 // Authentication middleware
 const authenticateJWT = (req, res, next) => {
   const authHeader = req.headers.authorization;
-  console.log('Auth header:', authHeader); // Add this line
+  console.log('Auth header:', authHeader); // For debugging
 
   if (authHeader) {
     const token = authHeader.split(' ')[1];
     jwt.verify(token, process.env.JWT_SECRET, (err, user) => {
       if (err) {
-        console.log('JWT verification error:', err); // Add this line
+        console.log('JWT verification error:', err); // For debugging
         return res.sendStatus(403);
       }
       req.user = user;
@@ -117,4 +109,4 @@ const authenticateJWT = (req, res, next) => {
 const auth = require('./middleware/auth');
 app.get('/api/auth/profile', auth, authController.getProfile);
 
-module.exports = app;
+module.exports = { app, server, io };

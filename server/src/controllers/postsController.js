@@ -41,10 +41,15 @@ exports.createPost = [
 
 exports.getAllPosts = async (req, res) => {
   try {
+    const userId = req.user.id;
     const posts = await knex('posts')
       .select('posts.*', 'users.username')
+      .leftJoin('likes', function() {
+        this.on('posts.id', '=', 'likes.postId').andOn('likes.userId', '=', knex.raw('?', [userId]))
+      })
       .join('users', 'posts.userId', '=', 'users.id')
-      .orderBy('posts.created_at', 'desc');
+      .orderBy('posts.created_at', 'desc')
+      .select(knex.raw('CASE WHEN likes.id IS NOT NULL THEN TRUE ELSE FALSE END as isLiked'));
     
     res.json(posts);
   } catch (error) {
@@ -143,20 +148,21 @@ exports.likePost = async (req, res) => {
 
     // Check if user has already liked the post
     const existingLike = await knex('likes').where({ postId: id, userId }).first();
+    
     if (existingLike) {
-      return res.status(400).json({ message: 'You have already liked this post' });
+      // If the user has already liked the post, unlike it
+      await knex('likes').where({ postId: id, userId }).del();
+      await knex('posts').where({ id }).decrement('likes', 1);
+      return res.json({ message: 'Post unliked successfully', liked: false });
+    } else {
+      // If the user hasn't liked the post, like it
+      await knex('likes').insert({ postId: id, userId });
+      await knex('posts').where({ id }).increment('likes', 1);
+      return res.json({ message: 'Post liked successfully', liked: true });
     }
-
-    // Add like
-    await knex('likes').insert({ postId: id, userId });
-
-    // Update post likes count
-    await knex('posts').where({ id }).increment('likes', 1);
-
-    res.json({ message: 'Post liked successfully' });
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: 'Error liking post' });
+    console.error('Error in likePost:', error);
+    res.status(500).json({ message: 'Error liking/unliking post', error: error.message });
   }
 };
 
@@ -192,15 +198,31 @@ exports.addComment = async (req, res) => {
     const { content } = req.body;
     const userId = req.user.id;
 
-    const newComment = await knex('comments').insert({
+    console.log('Adding comment:', { postId: id, userId, content });
+
+    const [newComment] = await knex('comments').insert({
       postId: id,
       userId,
       content
     }).returning('*');
 
-    res.status(201).json(newComment[0]);
+    console.log('New comment added:', newComment);
+
+    // Fetch the username for the comment
+    const user = await knex('users').where({ id: userId }).first('username');
+
+    const commentWithUsername = {
+      id: newComment.id,
+      content: newComment.content,
+      username: user.username,
+      createdAt: newComment.created_at
+    };
+
+    console.log('Sending comment with username:', commentWithUsername);
+
+    res.status(201).json(commentWithUsername);
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: 'Error adding comment' });
+    console.error('Error adding comment:', error);
+    res.status(500).json({ message: 'Error adding comment', error: error.message });
   }
 };

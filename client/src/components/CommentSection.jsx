@@ -1,60 +1,37 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import { useDispatch, useSelector } from 'react-redux';
+import { fetchComments, addComment } from '../redux/slices/commentsSlice';
 
 const CommentSection = ({ postId }) => {
-  const [comments, setComments] = useState([]);
-  const [newComment, setNewComment] = useState('');
+  const dispatch = useDispatch();
+  const comments = useSelector((state) => state.comments.items);
+  const [newCommentContent, setNewCommentContent] = useState('');
 
   useEffect(() => {
-    fetchComments();
-  }, [postId]);
+    dispatch(fetchComments(postId));
+  }, [dispatch, postId]);
 
-  const fetchComments = async () => {
-    try {
-      const token = localStorage.getItem('token');
-      const config = {
-        headers: { Authorization: `Bearer ${token}` }
-      };
-      
-      const response = await axios.get(`http://localhost:9000/api/posts/${postId}/comments`, config);
-      setComments(response.data);
-    } catch (error) {
-      console.error('Error fetching comments:', error);
-    }
-  };
-
-  const handleSubmitComment = async (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
-    try {
-      const token = localStorage.getItem('token');
-      const config = {
-        headers: { Authorization: `Bearer ${token}` }
-      };
-      
-      await axios.post(`http://localhost:9000/api/posts/${postId}/comments`, { content: newComment }, config);
-      setNewComment('');
-      fetchComments(); // Refresh comments after posting
-    } catch (error) {
-      console.error('Error posting comment:', error);
-    }
+    dispatch(addComment({ postId, content: newCommentContent }));
+    setNewCommentContent('');
   };
 
   return (
-    <div className="comment-section">
+    <div>
       <h3>Comments</h3>
-      {comments.map(comment => (
-        <div key={comment.id} className="comment">
+      {comments.map((comment) => (
+        <div key={comment.id}>
           <p>{comment.content}</p>
-          <small>By: {comment.username}</small>
         </div>
       ))}
-      <form onSubmit={handleSubmitComment}>
+      <form onSubmit={handleSubmit}>
         <textarea
-          value={newComment}
-          onChange={(e) => setNewComment(e.target.value)}
-          placeholder="Write a comment..."
+          value={newCommentContent}
+          onChange={(e) => setNewCommentContent(e.target.value)}
+          required
         />
-        <button type="submit">Post Comment</button>
+        <button type="submit">Add Comment</button>
       </form>
     </div>
   );

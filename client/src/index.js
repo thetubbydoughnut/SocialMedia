@@ -1,17 +1,17 @@
 import React from 'react';
-import { createRoot } from 'react-dom/client';
+import ReactDOM from 'react-dom/client'; // Updated import for React 18
 import { Provider } from 'react-redux';
-import { BrowserRouter } from 'react-router-dom';
-import { store } from './redux/store';
+import { BrowserRouter } from 'react-router-dom'; // Import BrowserRouter
+import store from './redux/store';
 import App from './App';
 
-const root = createRoot(document.getElementById('root'));
+const container = document.getElementById('root');
+const root = ReactDOM.createRoot(container);
+
 root.render(
-  <React.StrictMode>
-    <Provider store={store}>
-      <BrowserRouter>
-        <App />
-      </BrowserRouter>
-    </Provider>
-  </React.StrictMode>
+  <Provider store={store}>
+    <BrowserRouter> {/* Wrap App with BrowserRouter */}
+      <App />
+    </BrowserRouter>
+  </Provider>
 );
