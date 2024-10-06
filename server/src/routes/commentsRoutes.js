@@ -3,11 +3,13 @@ const router = express.Router();
 const commentsController = require('../controllers/commentsController');
 const auth = require('../middleware/auth');
 
-// Ensure you have the correct path to your controller
-const { createComment } = require('../controllers/commentController');
-
+// Route to get all comments
 router.get('/', commentsController.getAllComments);
+
+// Route to get comments by post ID
 router.get('/post/:postId', commentsController.getCommentsByPostId);
-router.post('/', createComment);
+
+// Route to create a new comment
+router.post('/', auth, commentsController.createComment);
 
 module.exports = router;

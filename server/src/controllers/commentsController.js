@@ -1,38 +1,11 @@
-const Comment = require('../models/Comment');
-const SocketService = require('../services/socketService');
-
-let socketService;
-
-// Initialize SocketService
-const initializeSocket = (io) => {
-  socketService = new SocketService(io);
-};
-
-// {{ edit_6 }} Modify createComment to emit Socket.io event
-const createComment = async (req, res) => {
-  try {
-    const { postId, content } = req.body;
-    const userId = req.user.id; // Assuming the user ID is available from the auth middleware
-    const newComment = await Comment.create({ postId, content, userId });
-    
-    // Emit the new comment to all clients if socketService is initialized
-    if (socketService) {
-      socketService.sendNewComment(newComment);
-    }
-    
-    res.status(201).json(newComment);
-  } catch (error) {
-    console.error('Error creating comment:', error);
-    res.status(500).json({ message: 'Error creating comment' });
-  }
-};
+const Comment = require('../models/Comment'); // Adjust the path as needed
 
 exports.getAllComments = async (req, res) => {
   try {
     const comments = await Comment.findAll();
     res.json(comments);
   } catch (error) {
-    console.error('Error fetching comments:', error);
+    console.error('Error fetching all comments:', error);
     res.status(500).json({ message: 'Error fetching comments' });
   }
 };
@@ -40,17 +13,43 @@ exports.getAllComments = async (req, res) => {
 exports.getCommentsByPostId = async (req, res) => {
   try {
     const { postId } = req.params;
-    const comments = await Comment.findAllByPostId(postId);
+    const comments = await Comment.findByPostId(postId);
     res.json(comments);
   } catch (error) {
     console.error('Error fetching comments for post:', error);
-    res.status(500).json({ message: 'Error fetching comments for post' });
+    res.status(500).json({ message: 'Error fetching comments' });
   }
 };
 
-module.exports = {
-  initializeSocket,
-  getAllComments: exports.getAllComments,
-  getCommentsByPostId: exports.getCommentsByPostId,
-  createComment: exports.createComment
+exports.createComment = async (req, res) => {
+  try {
+    const { postId, content } = req.body;
+    const userId = req.user.id; // Assuming you have user info in req.user from auth middleware
+
+    if (!postId || !content) {
+      return res.status(400).json({ message: 'PostId and content are required' });
+    }
+
+    const newComment = await Comment.create({
+      postId,
+      userId,
+      content
+    });
+
+    res.status(201).json(newComment);
+  } catch (error) {
+    console.error('Error creating comment:', error);
+    res.status(500).json({ message: 'Error creating comment' });
+  }
+};
+
+// Initialize socket (you might want to move this to a separate file)
+exports.initializeSocket = (io) => {
+  io.on('connection', (socket) => {
+    console.log('A user connected');
+
+    socket.on('disconnect', () => {
+      console.log('User disconnected');
+    });
+  });
 };

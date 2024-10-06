@@ -1,10 +1,12 @@
 import { configureStore } from '@reduxjs/toolkit';
-import thunk from 'redux-thunk';
-import rootReducer from './reducers';
+import postsReducer from './redux/slices/postsSlice';
+import commentsReducer from './redux/slices/commentsSlice';
+import authReducer from './redux/slices/authSlice';
 
-const store = configureStore({
-  reducer: rootReducer,
-  middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(thunk),
+export default configureStore({
+  reducer: {
+    posts: postsReducer,
+    comments: commentsReducer,
+    auth: authReducer,
+  },
 });
-
-export default store;

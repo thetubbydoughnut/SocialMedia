@@ -1,37 +1,38 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import axios from 'axios';
 import LikeButton from './LikeButton';
 import CommentSection from './CommentSection';
-import { useDispatch, useSelector } from 'react-redux';
-import { fetchComments } from '../redux/slices/commentsSlice';
+import { useDispatch } from 'react-redux';
+import { addComment } from '../redux/slices/commentsSlice';
 
 const PostItem = ({ post, onUpdatePost }) => {
   const [isLiked, setIsLiked] = useState(post.isLiked);
   const [likeCount, setLikeCount] = useState(post.likes);
+  const [newComment, setNewComment] = useState('');
+  const [error, setError] = useState(null);
   const dispatch = useDispatch();
-  const comments = useSelector(state => state.comments[post.id] || []);
-
-  useEffect(() => {
-    if (post.id) {
-      dispatch(fetchComments(post.id));
-    } else {
-      console.warn('Missing post ID:', post);
-    }
-  }, [post.id, dispatch]);
 
   const handleLike = async () => {
+    // ... (keep the existing like functionality)
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
     try {
       const token = localStorage.getItem('token');
+      if (!token) {
+        throw new Error('No token found');
+      }
       const config = {
         headers: { Authorization: `Bearer ${token}` }
       };
       
-      const response = await axios.post(`http://localhost:5000/api/posts/${post.id}/like`, {}, config);
-      setIsLiked(response.data.liked);
-      setLikeCount(prevCount => response.data.liked ? prevCount + 1 : prevCount - 1);
-      onUpdatePost({ ...post, isLiked: response.data.liked, likes: response.data.liked ? likeCount + 1 : likeCount - 1 });
+      const commentData = { postId: post.id, content: newComment };
+      await dispatch(addComment(commentData));
+      setNewComment('');
     } catch (error) {
-      console.error('Error liking/unliking post:', error);
+      console.error('Failed to add comment: ', error);
+      setError('Failed to add comment. Please try again.');
     }
   };
 
@@ -46,6 +47,15 @@ const PostItem = ({ post, onUpdatePost }) => {
         likeCount={likeCount} 
         onLike={handleLike} 
       />
+      <form onSubmit={handleSubmit}>
+        <textarea
+          value={newComment}
+          onChange={(e) => setNewComment(e.target.value)}
+          required
+        />
+        <button type="submit">Submit Comment</button>
+      </form>
+      {error && <div style={{color: 'red'}}>{error}</div>}
       <CommentSection postId={post.id} />
     </div>
   );
