@@ -62,8 +62,6 @@ The **SocialMedia** platform is designed to offer users a dynamic and engaging s
 
    - **SQLite3 with Knex.js**: Efficient schema migrations and query building for data persistence.
 
-   - **Sequelize ORM**: Streamlined database interactions with Sequelize models.
-
 ### 6. Testing and Quality Assurance
 
    - **Unit Testing**: Comprehensive coverage using Jest and React Testing Library.

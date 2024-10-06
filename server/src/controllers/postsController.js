@@ -1,4 +1,4 @@
-const Post = require('../models/Post');
+const knex = require('../config/database');
 const multer = require('multer');
 const path = require('path');
 
@@ -23,14 +23,15 @@ exports.createPost = [
       const userId = req.user.id;
       const imageUrl = req.file ? `/uploads/${req.file.filename}` : null;
 
-      const post = await Post.create({
+      const post = await knex('posts').insert({
         title,
         content,
-        userId,
-        imageUrl
-      });
+        userId, // This matches your current column name
+        imageUrl,
+        // No need to set created_at and updated_at, they have default values
+      }).returning('*');
 
-      res.status(201).json(post);
+      res.status(201).json(post[0]);
     } catch (error) {
       console.error(error);
       res.status(500).json({ message: 'Error creating post' });
@@ -40,17 +41,24 @@ exports.createPost = [
 
 exports.getAllPosts = async (req, res) => {
   try {
-    const posts = await Post.findAll();
+    const posts = await knex('posts')
+      .select('posts.*', 'users.username')
+      .join('users', 'posts.userId', '=', 'users.id')
+      .orderBy('posts.created_at', 'desc');
+    
     res.json(posts);
   } catch (error) {
     console.error('Error in getAllPosts:', error);
-    res.status(500).json({ message: 'Server Error', error: error.message });
+    res.status(500).json({ message: 'Error fetching posts', error: error.message });
   }
 };
 
 exports.getPostById = async (req, res) => {
   try {
-    const post = await Post.findById(req.params.id);
+    const post = await knex('posts')
+      .where({ id: req.params.id })
+      .first();
+
     if (!post) {
       return res.status(404).json({ message: 'Post not found' });
     }
@@ -66,7 +74,9 @@ exports.updatePost = [
   async (req, res) => {
     try {
       const { title, content } = req.body;
-      const post = await Post.findById(req.params.id);
+      const post = await knex('posts')
+        .where({ id: req.params.id })
+        .first();
 
       if (!post) {
         return res.status(404).json({ message: 'Post not found' });
@@ -78,13 +88,17 @@ exports.updatePost = [
 
       const imageUrl = req.file ? `/uploads/${req.file.filename}` : post.imageUrl;
 
-      const updatedPost = await Post.update(req.params.id, {
-        title,
-        content,
-        imageUrl
-      });
+      const updatedPost = await knex('posts')
+        .where({ id: req.params.id })
+        .update({
+          title,
+          content,
+          imageUrl,
+          // updated_at will be automatically set by SQLite
+        })
+        .returning('*');
 
-      res.json(updatedPost);
+      res.json(updatedPost[0]);
     } catch (error) {
       console.error(error);
       res.status(500).json({ message: 'Error updating post' });
@@ -94,7 +108,9 @@ exports.updatePost = [
 
 exports.deletePost = async (req, res) => {
   try {
-    const post = await Post.findById(req.params.id);
+    const post = await knex('posts')
+      .where({ id: req.params.id })
+      .first();
 
     if (!post) {
       return res.status(404).json({ message: 'Post not found' });
@@ -104,7 +120,10 @@ exports.deletePost = async (req, res) => {
       return res.status(403).json({ message: 'Not authorized to delete this post' });
     }
 
-    await Post.delete(req.params.id);
+    await knex('posts')
+      .where({ id: req.params.id })
+      .del();
+
     res.json({ message: 'Post deleted successfully' });
   } catch (error) {
     console.error(error);

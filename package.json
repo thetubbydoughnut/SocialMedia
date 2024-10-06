@@ -14,7 +14,10 @@
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "migrate": "knex migrate:latest",
-    "migrate:make": "knex migrate:make"
+    "migrate:make": "knex migrate:make",
+    "seed": "node server/src/seeds/seedPosts.js",
+    "migrate:rollback": "knex migrate:rollback",
+    "migrate:latest": "knex migrate:latest"
   },
   "dependencies": {
     "bcryptjs": "^2.4.3",

@@ -1,40 +1,48 @@
-import React, { useEffect } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
-import { fetchPosts } from '../redux/slices/postsSlice';
-import CreatePost from './features/posts/CreatePost';
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 
 const Home = () => {
-  const dispatch = useDispatch();
-  const { user } = useSelector((state) => state.auth);
-  const { posts, isLoading, error } = useSelector((state) => state.posts);
+  const [posts, setPosts] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
-    dispatch(fetchPosts());
-  }, [dispatch]);
+    const fetchPosts = async () => {
+      try {
+        // Retrieve the token from localStorage
+        const token = localStorage.getItem('token');
+        
+        // Include the token in the request headers
+        const config = {
+          headers: { Authorization: `Bearer ${token}` }
+        };
+        
+        const response = await axios.get('http://localhost:9000/api/posts', config);
+        setPosts(response.data);
+        setLoading(false);
+      } catch (err) {
+        console.error('Error fetching posts:', err);
+        setError('Failed to fetch posts. Please try again later.');
+        setLoading(false);
+      }
+    };
 
-  if (isLoading) return <div>Loading posts...</div>;
-  if (error) return <div>Error: {error}</div>;
+    fetchPosts();
+  }, []);
+
+  if (loading) return <div>Loading...</div>;
+  if (error) return <div>{error}</div>;
 
   return (
     <div>
-      <h1>Welcome to the Home Page</h1>
-      {user && <p>Hello, {user.username}!</p>}
-      <CreatePost />
-      <h2>Recent Posts</h2>
-      {posts.length === 0 ? (
-        <div>
-          <p>There are no posts yet. Why not create the first one?</p>
-          <p>Share your thoughts, ideas, or experiences with the community!</p>
+      <h1>Home Feed</h1>
+      {posts.map(post => (
+        <div key={post.id}>
+          <h2>{post.title}</h2>
+          <p>{post.content}</p>
+          {post.username && <p>Posted by: {post.username}</p>}
         </div>
-      ) : (
-        posts.map((post) => (
-          <div key={post.id}>
-            <h3>{post.user.username}</h3>
-            <p>{post.content}</p>
-            <small>{new Date(post.createdAt).toLocaleString()}</small>
-          </div>
-        ))
-      )}
+      ))}
     </div>
   );
 };

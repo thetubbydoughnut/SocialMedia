@@ -28,10 +28,6 @@ const Post = {
 
   async delete(id) {
     return db('posts').where({ id }).del();
-  },
-
-  async findByUserId(userId) {
-    return db('posts').where({ userId }).orderBy('createdAt', 'desc');
   }
 };
 
